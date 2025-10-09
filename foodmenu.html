@@ -9,7 +9,7 @@
         * {
             margin: 0;
             padding: 0;
-            box-sizing: border-box
+            box-sizing: border-box;
         }
 
         :root {
@@ -31,7 +31,7 @@
             font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
             color: var(--text);
             padding: 20px;
-            min-height: 100vh
+            min-height: 100vh;
         }
 
         .menu-container {
@@ -41,14 +41,14 @@
             border: 3px solid var(--gold);
             border-radius: 12px;
             padding: 40px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, .5)
+            box-shadow: 0 10px 40px rgba(0, 0, 0, .5);
         }
 
         .header {
             text-align: center;
             border-bottom: 2px solid var(--gold);
             padding-bottom: 24px;
-            margin-bottom: 24px
+            margin-bottom: 24px;
         }
 
         .logo {
@@ -57,13 +57,13 @@
             justify-content: center;
             gap: 32px;
             margin-bottom: 12px;
-            flex-wrap: wrap
+            flex-wrap: wrap;
         }
 
         .logo-title {
             font-size: 2.5em;
             font-weight: 800;
-            letter-spacing: .06em
+            letter-spacing: .06em;
         }
 
         .logo-circle {
@@ -75,18 +75,18 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: rgba(60, 60, 60, .8)
+            background: rgba(60, 60, 60, .8);
         }
 
         .sol {
             font-size: 2.2em;
             font-weight: 800;
-            line-height: 1
+            line-height: 1;
         }
 
         .bistro {
             font-size: 1.2em;
-            opacity: .9
+            opacity: .9;
         }
 
         .wifi {
@@ -95,14 +95,14 @@
             border-radius: 20px;
             display: inline-block;
             font-size: .9em;
-            margin-top: 6px
+            margin-top: 6px;
         }
 
         .rules {
             font-size: .9em;
             color: #ccc;
             line-height: 1.6;
-            margin-top: 10px
+            margin-top: 10px;
         }
 
         .tools {
@@ -111,14 +111,14 @@
             justify-content: space-between;
             align-items: center;
             margin-top: 18px;
-            flex-wrap: wrap
+            flex-wrap: wrap;
         }
 
         .language-switcher {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
-            justify-content: center
+            justify-content: center;
         }
 
         .lang-btn {
@@ -129,32 +129,32 @@
             border-radius: 999px;
             cursor: pointer;
             font-weight: 600;
-            transition: .2s
+            transition: .2s;
         }
 
         .lang-btn:hover {
             border-color: var(--gold);
             transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(212, 175, 55, .25)
+            box-shadow: 0 4px 8px rgba(212, 175, 55, .25);
         }
 
         .lang-btn[aria-pressed="true"] {
             background: linear-gradient(135deg, var(--gold), #f4d03f);
             color: #2c3e50;
-            border-color: var(--gold)
+            border-color: var(--gold);
         }
 
         .right-tools {
             display: flex;
             gap: 10px;
             align-items: center;
-            flex-wrap: wrap
+            flex-wrap: wrap;
         }
 
         .search {
             display: flex;
             align-items: center;
-            gap: 8px
+            gap: 8px;
         }
 
         .search input {
@@ -163,7 +163,7 @@
             color: var(--text);
             padding: 8px 12px;
             border-radius: 10px;
-            min-width: 220px
+            min-width: 220px;
         }
 
         .toggle {
@@ -174,7 +174,7 @@
             border: 1px solid #4a4a4a;
             padding: 6px 10px;
             border-radius: 10px;
-            font-size: .9em
+            font-size: .9em;
         }
 
         .btn {
@@ -184,22 +184,22 @@
             padding: 8px 12px;
             border-radius: 10px;
             cursor: pointer;
-            font-weight: 600
+            font-weight: 600;
         }
 
         .btn:hover {
-            border-color: var(--gold)
+            border-color: var(--gold);
         }
 
         .btn[disabled] {
             opacity: .6;
-            cursor: not-allowed
+            cursor: not-allowed;
         }
 
         .spin {
             display: inline-block;
             transform-origin: center;
-            animation: spin 1s linear infinite
+            animation: spin 1s linear infinite;
         }
 
         @keyframes spin {
@@ -208,36 +208,81 @@
             }
         }
 
-        .toc {
+
+        .filter-tags {
             display: flex;
             gap: 8px;
+            margin-top: 8px;
             flex-wrap: wrap;
-            justify-content: center;
-            margin-top: 12px
         }
 
-        .toc a {
-            padding: 6px 10px;
-            border-radius: 10px;
-            border: 1px dashed #666;
+        .filter-btn {
+            background: rgba(60, 60, 60, .85);
+            border: 1px solid #555;
             color: var(--text);
-            text-decoration: none;
-            font-size: .9em
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: .9em;
+            font-weight: 600;
+            transition: .2s;
         }
 
-        .toc a:hover {
-            border-color: var(--gold)
+        .filter-btn:hover {
+            border-color: var(--gold);
+        }
+
+        .filter-btn[aria-pressed="true"] {
+            background: linear-gradient(135deg, var(--gold), #f4d03f);
+            color: #2c3e50;
+            border-color: var(--gold);
+        }
+
+        /* 公告雙欄 */
+        .notice-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 16px;
+            text-align: left;
+        }
+
+        .notice-card {
+            background: rgba(30, 30, 30, .85);
+            border: 1px solid #555;
+            border-radius: 10px;
+            padding: 14px;
+        }
+
+        .notice-title {
+            font-weight: 800;
+            margin-bottom: 10px;
+            color: var(--gold);
+            font-size: 1.05em;
+        }
+
+        .notice-list {
+            list-style: none;
+            display: grid;
+            gap: 8px;
+        }
+
+        .notice-list li {
+            line-height: 1.5;
+            border-left: 3px solid #444;
+            padding-left: 10px;
+            color: #ddd;
         }
 
         .menu-content {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 36px;
-            margin-top: 18px
+            margin-top: 18px;
         }
 
         .menu-section {
-            margin-bottom: 24px
+            margin-bottom: 24px;
         }
 
         .section-title {
@@ -249,7 +294,7 @@
             margin-bottom: 14px;
             clip-path: polygon(0 0, 95% 0, 100% 50%, 95% 100%, 0 100%);
             display: inline-block;
-            min-width: 140px
+            min-width: 140px;
         }
 
         .menu-item {
@@ -259,29 +304,29 @@
             gap: 12px;
             margin-bottom: 12px;
             padding-bottom: 10px;
-            border-bottom: 1px dashed var(--line)
+            border-bottom: 1px dashed var(--line);
         }
 
         .item-name {
-            flex: 1
+            flex: 1;
         }
 
         .name-primary {
             font-size: 1.05em;
             font-weight: 700;
-            margin-bottom: 2px
+            margin-bottom: 2px;
         }
 
         .name-secondary {
             font-size: .92em;
-            color: var(--muted)
+            color: var(--muted);
         }
 
         .badges {
             display: flex;
             gap: 6px;
             flex-wrap: wrap;
-            margin-top: 4px
+            margin-top: 4px;
         }
 
         .badge {
@@ -289,19 +334,19 @@
             border-radius: 8px;
             padding: 2px 6px;
             font-size: .75em;
-            opacity: .95
+            opacity: .95;
         }
 
         .badge.vegan {
-            border-color: var(--ok)
+            border-color: var(--ok);
         }
 
         .badge.spicy {
-            border-color: var(--warn)
+            border-color: var(--warn);
         }
 
         .badge.allergen {
-            border-color: #888
+            border-color: #888;
         }
 
         .price {
@@ -309,13 +354,13 @@
             white-space: nowrap;
             color: var(--gold);
             min-width: 90px;
-            text-align: right
+            text-align: right;
         }
 
         .soldout .name-primary,
         .soldout .name-secondary {
             opacity: .6;
-            text-decoration: line-through
+            text-decoration: line-through;
         }
 
         .thumb {
@@ -325,7 +370,7 @@
             border-radius: 10px;
             border: 1px solid #444;
             background: #2a2a2a;
-            flex-shrink: 0
+            flex-shrink: 0;
         }
 
         .loading {
@@ -333,12 +378,12 @@
             text-align: center;
             padding: 36px;
             font-size: 1.1em;
-            color: var(--gold)
+            color: var(--gold);
         }
 
         .loading::after {
             content: "...";
-            animation: dots 1.5s steps(4, end) infinite
+            animation: dots 1.5s steps(4, end) infinite;
         }
 
         @keyframes dots {
@@ -364,7 +409,7 @@
             border: 2px solid var(--danger);
             border-radius: 10px;
             padding: 20px;
-            color: var(--danger)
+            color: var(--danger);
         }
 
         .error-details {
@@ -374,63 +419,62 @@
             margin-top: 10px;
             font-family: ui-monospace, Consolas, Monaco, monospace;
             font-size: .9em;
-            color: #ffd700
+            color: #ffd700;
         }
 
         :focus-visible {
             outline: 3px solid var(--focus);
             outline-offset: 2px;
-            border-radius: 8px
+            border-radius: 8px;
         }
 
         @media print {
             body {
                 background: white;
-                padding: 0
+                padding: 0;
             }
 
             .menu-container {
                 box-shadow: none;
-                border: none
+                border: none;
             }
 
-            .header,
-            .tools,
-            .toc {
-                border: none
-            }
 
             .wifi {
-                display: none
+                display: none;
             }
 
             .menu-content {
-                grid-template-columns: 1fr 1fr
+                grid-template-columns: 1fr 1fr;
             }
 
             .section-title {
                 clip-path: none;
-                border-radius: 6px
+                border-radius: 6px;
             }
 
             .badge {
                 border-color: #bbb;
-                color: #333
+                color: #333;
             }
 
             .price {
-                color: #000
+                color: #000;
             }
         }
 
-        @media (max-width: 900px) {
+        @media(max-width:900px) {
             .menu-content {
-                grid-template-columns: 1fr
+                grid-template-columns: 1fr;
             }
 
             .thumb {
                 width: 72px;
-                height: 72px
+                height: 72px;
+            }
+
+            .notice-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -448,34 +492,46 @@
                 <div class="logo-title">MENU</div>
             </div>
             <div class="wifi" aria-label="Wi-Fi info">🌐 FREE Wi-Fi | solbistro2018</div>
-            <p class="rules" aria-label="House rules">
-                ☑ No outside food or drink allowed<br />
-                ☑ No playing cards<br />
-                ☑ Minimum charge one drink or one meal per person<br />
-                ☑ Underage drinking or smoking is not allowed
-            </p>
-
             <div class="tools">
                 <div class="language-switcher" role="tablist" aria-label="Language switcher"></div>
-
                 <div class="right-tools">
                     <div class="search">
                         <label for="q" class="visually-hidden" style="position:absolute;left:-9999px">Search</label>
                         <input id="q" type="search" placeholder="Search / 檢索 / 検索（多語關鍵字）" />
                     </div>
-
                     <label class="toggle">
                         <input id="hideSoldout" type="checkbox" />
                         <span>隱藏售罄</span>
                     </label>
-
                     <button id="refreshBtn" class="btn" type="button" title="即時刷新（不重整頁面）">
                         <span id="refreshIcon" aria-hidden="true">🔄</span> 即時刷新
                     </button>
                 </div>
             </div>
-
+            <!--
             <nav class="toc" aria-label="Categories"></nav>
+            -->
+            <!-- 公告雙欄（從 Google Sheet 的 INFO 表載入） -->
+            <section class="notice-grid" aria-label="House rules and notes">
+                <div class="notice-card">
+                    <h3 class="notice-title">House Rules</h3>
+                    <ul id="rulesList" class="notice-list"></ul>
+                </div>
+                <div class="notice-card">
+                    <h3 class="notice-title">Notes</h3>
+                    <ul id="notesList" class="notice-list"></ul>
+                    <!-- 導覽＋篩選區 -->
+                    <div class="toc">
+                    </div>
+                    <div class="toc-wrapper">
+                        <h4 class="notice-title" style="margin-top:12px;">Filter</h4>
+                        <div class="filter-tags">
+                            <button class="filter-btn" data-filter="all" aria-pressed="true">全部</button>
+                            <button class="filter-btn" data-filter="vegan">Vegan</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </header>
 
         <main id="menuContent" class="menu-content" aria-live="polite">
@@ -485,7 +541,8 @@
 
     <script>
         // ===== CONFIG =====
-        const API_URL = 'https://script.google.com/macros/s/AKfycbzJ1oREKuGwBccnkTFsHOZQNcb21i8JB3xtArJ5S50Pkv0N52QTc48I4rISjNLn-m6WiQ/exec';
+        // const API_URL = 'https://script.google.com/macros/s/AKfycbzJ1oREKuGwBccnkTFsHOZQNcb21i8JB3xtArJ5S50Pkv0N52QTc48I4rISjNLn-m6WiQ/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycbw7mCbnvxPqDZGV-0Q5LcjQaAWUhm6MtRA5kQSYy-cinD9LAQF2yyGnw1mpttorq0w3Lw/exec';
 
         const CATEGORIES = [
             { name: 'SALAD', column: 'left' },
@@ -509,14 +566,35 @@
 
         // ===== STATE =====
         let menuData = {};
+        let metaData = { rules: [], notes: [] }; // 新增：公告資料
         let currentLang = 'zh';
         let query = '';
         let hideSoldOut = false;
+        let currentFilter = 'all';
 
+        function setupFilterButtons() {
+            const btns = document.querySelectorAll('.filter-btn');
+            if (!btns.length) return; // 若 DOM 尚未出現則略過（下次 renderNotices 後會再綁）
+
+            btns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const val = btn.getAttribute('data-filter') || 'all';
+                    currentFilter = val;
+
+                    // aria-pressed 狀態切換
+                    btns.forEach(b => b.setAttribute('aria-pressed', 'false'));
+                    btn.setAttribute('aria-pressed', 'true');
+
+                    // 立即重繪菜單
+                    renderMenu(menuData);
+                });
+            });
+        }
         // ===== INITIALIZATION =====
         function init() {
             setupLanguageSwitcher();
             setupEventListeners();
+            setupFilterButtons();
             loadMenu();
         }
 
@@ -527,7 +605,8 @@
                 btn.className = 'lang-btn';
                 btn.textContent = lang.label;
                 btn.setAttribute('role', 'tab');
-                btn.setAttribute('aria-pressed', lang.code === currentLang);
+                btn.setAttribute('data-code', lang.code);
+                btn.setAttribute('aria-pressed', String(lang.code === currentLang));
                 btn.onclick = () => switchLanguage(lang.code);
                 container.appendChild(btn);
             });
@@ -539,13 +618,11 @@
                 query = e.target.value.toLowerCase().trim();
                 renderMenu(menuData);
             });
-
             const soldoutCheckbox = document.getElementById('hideSoldout');
             soldoutCheckbox.addEventListener('change', (e) => {
                 hideSoldOut = e.target.checked;
                 renderMenu(menuData);
             });
-
             const refreshBtn = document.getElementById('refreshBtn');
             refreshBtn.addEventListener('click', () => {
                 refreshBtn.disabled = true;
@@ -561,9 +638,10 @@
         function switchLanguage(lang) {
             currentLang = lang;
             document.querySelectorAll('.lang-btn').forEach(btn => {
-                btn.setAttribute('aria-pressed', 'false');
+                const code = btn.getAttribute('data-code');
+                btn.setAttribute('aria-pressed', String(code === lang));
             });
-            event.target.setAttribute('aria-pressed', 'true');
+            renderNotices(metaData); // 同步更新公告
             renderMenu(menuData);
         }
 
@@ -573,108 +651,88 @@
             if (!silent) {
                 menuContent.innerHTML = '<div class="loading">正在載入菜單</div>';
             }
-
             try {
                 const res = await fetch(API_URL, { cache: 'no-store' });
                 if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
                 const raw = await res.json();
 
-                menuData = coerceDataGrouped(raw);
+                // 抓 _meta（若 API 尚未更新也不會壞）
+                metaData = (raw && typeof raw === 'object' && raw._meta) ? raw._meta : { rules: [], notes: [] };
 
-                if (!menuData || typeof menuData !== 'object' || !Object.keys(menuData).length) {
-                    menuContent.innerHTML = `
-                        <div class="error">
-                            <h3>⚠️ 沒有可顯示的菜單</h3>
-                            <div class="error-details">
-                                收到的資料看起來是空的或無法辨識的格式。<br/>
-                                建議檢查：API_URL 是否正確、以及回傳是否含有品項資料。<br/><br/>
-                                <strong>資料預覽：</strong><br/>
-                                ${escapeHtml(JSON.stringify(raw).slice(0, 600))}...
-                            </div>
-                        </div>`;
-                    return;
+                // 根據 _meta 是否有 rules 來決定是否顯示舊版 fallback 規則段落
+                const rulesFallback = document.getElementById('rulesFallback');
+                if (rulesFallback) {
+                    if (Array.isArray(metaData.rules) && metaData.rules.length > 0) {
+                        rulesFallback.style.display = 'none'; // 有新資料 → 隱藏舊段落
+                    } else {
+                        rulesFallback.style.display = 'block'; // 無新資料 → 顯示舊段落
+                    }
                 }
 
+                menuData = coerceDataGrouped(raw);
+
+                renderNotices(metaData);
                 renderMenu(menuData);
             } catch (err) {
                 console.error(err);
                 menuContent.innerHTML = `
-                    <div class="error">
-                        <h3>❌ 載入菜單失敗</h3>
-                        <p><strong>${escapeHtml(err.message)}</strong></p>
-                        <div class="error-details">
-                            請確認：API URL 正確、已部署，或直接開啟：
-                            <div style="margin-top:6px">
-                                <a href="${API_URL}" target="_blank" style="color:#ffd700;text-decoration:underline">測試 API URL</a>
-                            </div>
-                        </div>
-                    </div>`;
+          <div class="error">
+            <h3>❌ 載入菜單失敗</h3>
+            <p><strong>${escapeHtml(err.message)}</strong></p>
+            <div class="error-details">
+              請確認：API URL 正確、已部署，或直接開啟：
+              <div style="margin-top:6px">
+                <a href="${API_URL}" target="_blank" style="color:#ffd700;text-decoration:underline">測試 API URL</a>
+              </div>
+            </div>
+          </div>`;
             }
         }
 
         function coerceDataGrouped(raw) {
             if (!raw) return {};
-
             if (typeof raw === 'object' && !Array.isArray(raw)) {
                 const out = {};
                 for (const k of Object.keys(raw)) {
+                    if (k === '_meta') continue; // 忽略 _meta
                     const v = raw[k];
                     if (Array.isArray(v)) out[k] = v;
                 }
                 if (Object.keys(out).length) return out;
             }
-
             if (Array.isArray(raw)) {
                 const out = {};
                 for (const it of raw) {
                     const cat = (it && (it.category || it.Category || it.categoryName))
-                        ? String(it.category || it.Category || it.categoryName)
-                        : '';
+                        ? String(it.category || it.Category || it.categoryName) : '';
                     if (!cat) continue;
                     (out[cat] ||= []).push(stripCategory(it));
                 }
                 return out;
             }
-
             return {};
         }
 
         function stripCategory(it) {
             const clone = { ...it };
-            delete clone.category;
-            delete clone.Category;
-            delete clone.categoryName;
+            delete clone.category; delete clone.Category; delete clone.categoryName;
             return clone;
         }
 
         // ===== RENDERING =====
         function renderMenu(data) {
             const menuContent = document.getElementById('menuContent');
-
             const fixedHasData = (Array.isArray(CATEGORIES) ? CATEGORIES : []).some(cat => {
                 const arr = data?.[cat.name];
                 return Array.isArray(arr) && arr.length > 0;
             });
-
-            const effectiveCategories = fixedHasData
-                ? CATEGORIES.map(c => c.name)
-                : Object.keys(data);
+            const effectiveCategories = fixedHasData ? CATEGORIES.map(c => c.name) : Object.keys(data);
 
             const left = document.createElement('div');
             const right = document.createElement('div');
 
-            const toc = document.querySelector('.toc');
-            toc.innerHTML = '';
-            effectiveCategories.forEach((name) => {
-                const items = data[name];
-                if (!Array.isArray(items) || items.length === 0) return;
-                const has = items.some(it => passFilters(it));
-                if (!has) return;
-                const a = document.createElement('a');
-                a.href = `#cat-${name}`;
-                a.textContent = name;
-                toc.appendChild(a);
-            });
+            // 🚫 已移除舊 toc 建立邏輯
+            // 若未來有新的分類導航放在 Notes，可在 renderNotices 裡處理
 
             effectiveCategories.forEach((name, idx) => {
                 const items = data[name];
@@ -695,14 +753,14 @@
 
             if (!left.childNodes.length && !right.childNodes.length) {
                 menuContent.innerHTML = `
-                    <div class="error">
-                        <h3>⚠️ 找不到符合條件的菜單</h3>
-                        <div class="error-details">
-                            可能原因：<br/>
-                            • 類別鍵名與預設不符（已嘗試動態鍵名仍無資料）<br/>
-                            • 目前的搜尋或「隱藏售罄」過濾把品項都排除了
-                        </div>
-                    </div>`;
+      <div class="error">
+        <h3>⚠️ 找不到符合條件的菜單</h3>
+        <div class="error-details">
+          可能原因：<br/>
+          • 類別鍵名與預設不符（已嘗試動態鍵名仍無資料）<br/>
+          • 目前的搜尋或「隱藏售罄」過濾把品項都排除了
+        </div>
+      </div>`;
                 return;
             }
 
@@ -710,15 +768,23 @@
             menuContent.appendChild(left);
             menuContent.appendChild(right);
         }
-
         function passFilters(it) {
             if (hideSoldOut && (it.soldout === true || String(it.soldout).toLowerCase() === 'true')) {
                 return false;
             }
-            if (!query) return true;
-            const fields = [it.zh, it.en, it.ja, it.ko, it.fr, it.th, it.fil, it.vi, it.contains, it.img]
-                .filter(Boolean).join(' ').toLowerCase();
-            return fields.includes(query);
+
+            // 關鍵字搜尋
+            if (query) {
+                const fields = [it.zh, it.en, it.ja, it.ko, it.fr, it.th, it.fil, it.vi, it.contains, it.img]
+                    .filter(Boolean).join(' ').toLowerCase();
+                if (!fields.includes(query)) return false;
+            }
+
+            // 新增：特殊標籤篩選
+            if (currentFilter === 'vegan' && String(it.vegan).toLowerCase() !== 'true') return false;
+            if (currentFilter === 'spicy' && Number(it.spicy) <= 0) return false;
+
+            return true;
         }
 
         function createSection(name, items) {
@@ -734,34 +800,29 @@
             items.forEach(item => {
                 const div = document.createElement('article');
                 div.className = 'menu-item';
-                if (item.soldout === true || String(item.soldout).toLowerCase() === 'true') {
-                    div.classList.add('soldout');
-                }
+                if (item.soldout === true || String(item.soldout).toLowerCase() === 'true') { div.classList.add('soldout'); }
 
                 const { text: primary, langTag: pTag } = pickLang(item, currentLang);
                 const { text: secondary, langTag: sTag } = pickSecondary(item, currentLang);
                 const priceStr = formatTWD(item.price);
 
                 const imgHtml = item.img ? `
-                    <img class="thumb" src="${escapeHtml(item.img)}"
-                         alt="${escapeHtml(item.en || item.zh || 'item image')}"
-                         loading="lazy" decoding="async" width="84" height="84"
-                         onerror="this.style.display='none'" />
-                ` : '';
+          <img class="thumb" src="${escapeHtml(item.img)}"
+            alt="${escapeHtml(item.en || item.zh || 'item image')}"
+            loading="lazy" decoding="async" width="84" height="84"
+            onerror="this.style.display='none'" />` : '';
 
                 div.innerHTML = `
-                    ${imgHtml}
-                    <div class="item-name">
-                        <div class="name-primary">${escapeHtml(primary)}${pTag ? ` <small style="opacity:.7">(${pTag})</small>` : ''}</div>
-                        <div class="name-secondary">${escapeHtml(secondary)}${sTag ? ` <small style="opacity:.6">(${sTag})</small>` : ''}</div>
-                        ${renderBadges(item)}
-                    </div>
-                    <div class="price" aria-label="Price">NT ${priceStr}</div>
-                `;
+          ${imgHtml}
+          <div class="item-name">
+            <div class="name-primary">${escapeHtml(primary)}${pTag ? ` <small style="opacity:.7">(${pTag})</small>` : ''}</div>
+            <div class="name-secondary">${escapeHtml(secondary)}${sTag ? ` <small style="opacity:.6">(${sTag})</small>` : ''}</div>
+            ${renderBadges(item)}
+          </div>
+          <div class="price" aria-label="Price">NT ${priceStr}</div>`;
 
                 sec.appendChild(div);
             });
-
             return sec;
         }
 
@@ -774,7 +835,6 @@
             const alt = ['ja', 'ko', 'fr', 'th', 'fil', 'vi'].map(k => item[k]).find(v => v && v.trim());
             return { text: alt ? alt.trim() : '—', langTag: alt ? 'other' : '' };
         }
-
         function pickSecondary(item, lang) {
             if (lang === 'en') {
                 const s = (item.zh || '').trim() || '';
@@ -785,50 +845,57 @@
             }
         }
 
-        const twdFmt = new Intl.NumberFormat('zh-TW', {
-            style: 'currency',
-            currency: 'TWD',
-            maximumFractionDigits: 0
-        });
-
-        function formatTWD(v) {
-            const n = Number(v);
-            return isFinite(n) ? twdFmt.format(n) : (v ?? '');
-        }
+        const twdFmt = new Intl.NumberFormat('zh-TW', { style: 'currency', currency: 'TWD', maximumFractionDigits: 0 });
+        function formatTWD(v) { const n = Number(v); return isFinite(n) ? twdFmt.format(n) : (v ?? ''); }
 
         function renderBadges(item) {
             const badges = [];
-
-            if (String(item.vegan).toLowerCase() === 'true') {
-                badges.push(`<span class="badge vegan" title="Vegan / 純素">Vegan</span>`);
-            }
-
+            if (String(item.vegan).toLowerCase() === 'true') { badges.push('<span class="badge vegan" title="Vegan / 純素">Vegan</span>'); }
             const spicy = Number(item.spicy);
-            if (isFinite(spicy) && spicy > 0) {
-                badges.push(`<span class="badge spicy" title="Spicy / 辣度">${'🌶'.repeat(Math.min(spicy, 3))}</span>`);
-            }
-
+            if (isFinite(spicy) && spicy > 0) { badges.push(`<span class="badge spicy" title="Spicy / 辣度">${'🌶'.repeat(Math.min(spicy, 3))}</span>`); }
             if (item.contains) {
-                const list = String(item.contains)
-                    .split(/[,\uFF0C;；]/)
-                    .map(s => s.trim())
-                    .filter(Boolean);
-                if (list.length) {
-                    badges.push(`<span class="badge allergen" title="Allergens / 過敏原">${escapeHtml(list.join(' · '))}</span>`);
-                }
+                const list = String(item.contains).split(/[,，;；]/).map(s => s.trim()).filter(Boolean);
+                if (list.length) { badges.push(`<span class="badge allergen" title="Allergens / 過敏原">${escapeHtml(list.join(' · '))}</span>`); }
             }
-
             return badges.length ? `<div class="badges">${badges.join('')}</div>` : '';
         }
 
+        function renderNotices(meta) {
+            const rulesEl = document.getElementById('rulesList');
+            const notesEl = document.getElementById('notesList');
+            if (!rulesEl || !notesEl) return;
+
+            const rules = Array.isArray(meta?.rules) ? meta.rules : [];
+            const notes = Array.isArray(meta?.notes) ? meta.notes : [];
+
+            // 舊版 fallback 顯示邏輯
+            const rulesFallback = document.getElementById('rulesFallback');
+            if (rulesFallback) {
+                rulesFallback.style.display = (rules.length > 0) ? 'none' : 'block';
+            }
+
+            // 先把現有內容更新（即使是空的也做清空，避免殘留）
+            rulesEl.innerHTML = rules.map(it => `<li>${escapeHtml(pickText(it, currentLang))}</li>`).join('');
+            notesEl.innerHTML = notes.map(it => `<li>${escapeHtml(pickText(it, currentLang))}</li>`).join('');
+
+            // 🔁 如果你的 TOC 也被移到 Notes 並且在別處會重建，這裡可一起重繫結
+            // setupToc?.(); // 若有這個函式就打開
+
+            // ✅ 重要：公告區的 DOM 已被改寫（innerHTML），要重新綁定篩選按鈕事件
+            setupFilterButtons();
+        }
+
+        function pickText(item, lang) {
+            const val = (item?.[lang] || '').trim();
+            if (val) return val;
+            if ((item?.en || '').trim()) return item.en.trim();
+            if ((item?.zh || '').trim()) return item.zh.trim();
+            const altKey = ['ja', 'ko', 'fr', 'th', 'fil', 'vi'].find(k => (item?.[k] || '').trim());
+            return altKey ? item[altKey].trim() : '';
+        }
+
         function escapeHtml(s) {
-            return String(s ?? '').replace(/[&<>"']/g, c => ({
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;',
-                "'": '&#39;'
-            }[c]));
+            return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
         }
 
         // ===== START =====
