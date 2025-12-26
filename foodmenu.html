@@ -1049,7 +1049,7 @@
     <script>
         // ===== CONSTANTS =====
         // 統一 API（同時回傳 food 和 drink）
-        const UNIFIED_API_URL = 'https://script.google.com/macros/s/AKfycbzUka8tTAcRCV2yZa_YOw9WN1SLS3kOsN0KmlhEVvhYVhJH-DkxoQt5M9e5XO-r09dP/exec';
+        const UNIFIED_API_URL = 'https://script.google.com/macros/s/AKfycbyyV1DnR1O4pILXberRkkvA9qH89rcd2PFEFopcF-U7jueMZiPjWMr1WKLnXMmgqwBD/exec';
 
         const API_URLS = {
             food: UNIFIED_API_URL,
@@ -1177,7 +1177,7 @@
         // ===== HELPER FUNCTIONS (DRY PRINCIPLE) =====
         const isSoldOut = (item) => {
             // 支援食物菜單的 soldout 和飲料菜單的 sold-out
-            const soldoutValue = item['sold-out'] ?? item.soldout;
+            const soldoutValue = item['soldout'] ?? item.soldout;
             return soldoutValue === true || String(soldoutValue).toLowerCase() === 'true';
         };
 
@@ -1605,19 +1605,19 @@
         // 標準化飲料項目（將後端格式轉換為前端格式）
         function normalizeDrinkItem(item) {
             return {
-                // 主要欄位
-                'zh-TW': item.item || '',  // item → zh-TW
-                en: item.lang?.en || '',
-                ja: item.lang?.ja || '',
-                ko: item.lang?.ko || '',
-                fr: item.lang?.fr || '',
-                th: item.lang?.th || '',
-                fil: item.lang?.fil || '',
-                vi: item.lang?.vi || '',
+                // 主要欄位（後端已經扁平化，直接使用）
+                'zh-TW': item.zh || '',  // 修正：使用 item.zh
+                en: item.en || '',       // 修正：使用 item.en（不是 item.lang.en）
+                ja: item.ja || '',
+                ko: item.ko || '',
+                fr: item.fr || '',
+                th: item.th || '',
+                fil: item.fil || '',
+                vi: item.vi || '',
 
                 // 價格與狀態
                 price: item.price,
-                'sold-out': item.soldout,
+                'soldout': item.soldout,
 
                 // 飲料專用屬性
                 alcohol: item.alcohol,
@@ -1625,8 +1625,12 @@
                 flavor: item.flavor,
                 categories: item.categories,
 
+                // 新增欄位
+                ingredients: item.ingredients || '',
+                notes: item.notes || '',
+
                 // 圖片
-                'img-url': item.img || '',
+                'img': item.img || '',
 
                 // 保留原始來源
                 source: item.source
