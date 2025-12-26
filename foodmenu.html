@@ -1049,7 +1049,7 @@
     <script>
         // ===== CONSTANTS =====
         // 統一 API（同時回傳 food 和 drink）
-        const UNIFIED_API_URL = 'https://script.google.com/macros/s/AKfycbyyV1DnR1O4pILXberRkkvA9qH89rcd2PFEFopcF-U7jueMZiPjWMr1WKLnXMmgqwBD/exec';
+        const UNIFIED_API_URL = 'https://script.google.com/macros/s/AKfycbyupxncbMBRvQE9efRpDMUZcE1lSyELlBMjIlReQ-JtgwYN_7W-KhMBi_YCf2pzJD2u/exec';
 
         const API_URLS = {
             food: UNIFIED_API_URL,
@@ -1111,6 +1111,17 @@
                 fil: 'Tala',
                 vi: 'Ghi chú'
             }
+        };
+
+        const NO_INFO_MESSAGES = {
+            zh: '暫無詳細資訊',
+            en: 'No additional information available',
+            ja: '詳細情報はありません',
+            ko: '추가 정보 없음',
+            fr: 'Aucune information supplémentaire',
+            th: 'ไม่มีข้อมูลเพิ่มเติม',
+            fil: 'Walang karagdagang impormasyon',
+            vi: 'Không có thông tin bổ sung'
         };
 
         // ===== STATE MANAGEMENT =====
@@ -1975,9 +1986,10 @@
                 }
 
                 if (sections.length === 0) {
+                    const noInfoMsg = NO_INFO_MESSAGES[lang] || NO_INFO_MESSAGES.en;
                     popoverBody.innerHTML = `
                         <div style="text-align: center; padding: 20px; color: var(--text-secondary);">
-                            <p style="font-size: 0.95em;">暫無詳細資訊</p>
+                            <p style="font-size: 0.95em;">${escapeHtml(noInfoMsg)}</p>
                         </div>
                     `;
                 } else {
@@ -2074,6 +2086,7 @@
                     }
                 }
             });
+
             // Popover 關閉按鈕
             document.getElementById('popoverClose').addEventListener('click', (e) => {
                 e.stopPropagation();
