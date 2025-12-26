@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>SOL Bistro - Menu</title>
+    <title>SOL Bistro - Menu (Food & Drink)</title>
     <style>
         * {
             margin: 0;
@@ -13,23 +13,35 @@
         }
 
         :root {
-            --bg: #2c3e50;
-            --bg2: #34495e;
-            --gold: #d4af37;
-            --card: rgba(40, 40, 40, .95);
-            --text: #f0f0f0;
-            --muted: #aaa;
-            --line: #555;
-            --ok: #7ed957;
-            --warn: #ffb703;
-            --danger: #ff6b6b;
-            --focus: #f4d03f;
+            /* 主題色 */
+            --color-primary: #d4af37;
+            --color-primary-light: #f4d03f;
+
+            /* 背景 */
+            --bg-page: #2c3e50;
+            --bg-page-alt: #34495e;
+            --bg-card: rgba(40, 40, 40, .95);
+
+            /* 文字 */
+            --text-primary: #f0f0f0;
+            --text-secondary: #aaa;
+
+            /* 邊框/分隔線 */
+            --border-light: #555;
+
+            /* 狀態色 */
+            --status-success: #7ed957;
+            --status-warning: #ffb703;
+            --status-danger: #ff6b6b;
+
+            /* 焦點 */
+            --color-focus: #f4d03f;
         }
 
         body {
-            background: linear-gradient(135deg, var(--bg) 0%, var(--bg2) 100%);
+            background: linear-gradient(135deg, var(--bg-page) 0%, var(--bg-page-alt) 100%);
             font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
-            color: var(--text);
+            color: var(--text-primary);
             padding: 20px;
             min-height: 100vh;
         }
@@ -37,8 +49,8 @@
         .menu-container {
             max-width: 1200px;
             margin: 0 auto;
-            background: var(--card);
-            border: 3px solid var(--gold);
+            background: var(--bg-card);
+            border: 3px solid var(--color-primary);
             border-radius: 12px;
             padding: 40px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, .5);
@@ -46,7 +58,7 @@
 
         .header {
             text-align: center;
-            border-bottom: 2px solid var(--gold);
+            border-bottom: 2px solid var(--color-primary);
             padding-bottom: 24px;
             margin-bottom: 24px;
         }
@@ -69,7 +81,7 @@
         .logo-circle {
             width: 112px;
             height: 112px;
-            border: 3px solid var(--text);
+            border: 3px solid var(--text-primary);
             border-radius: 50%;
             display: flex;
             flex-direction: column;
@@ -124,7 +136,7 @@
         .lang-btn {
             background: rgba(60, 60, 60, .85);
             border: 2px solid #555;
-            color: var(--text);
+            color: var(--text-primary);
             padding: 8px 14px;
             border-radius: 999px;
             cursor: pointer;
@@ -133,15 +145,15 @@
         }
 
         .lang-btn:hover {
-            border-color: var(--gold);
+            border-color: var(--color-primary);
             transform: translateY(-1px);
             box-shadow: 0 4px 8px rgba(212, 175, 55, .25);
         }
 
         .lang-btn[aria-pressed="true"] {
-            background: linear-gradient(135deg, var(--gold), #f4d03f);
+            background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
             color: #2c3e50;
-            border-color: var(--gold);
+            border-color: var(--color-primary);
         }
 
         .right-tools {
@@ -160,7 +172,7 @@
         .search input {
             background: #2e2e2e;
             border: 1px solid #4a4a4a;
-            color: var(--text);
+            color: var(--text-primary);
             padding: 8px 12px;
             border-radius: 10px;
             min-width: 220px;
@@ -180,7 +192,7 @@
         .btn {
             background: rgba(60, 60, 60, .9);
             border: 1px solid #666;
-            color: var(--text);
+            color: var(--text-primary);
             padding: 8px 12px;
             border-radius: 10px;
             cursor: pointer;
@@ -188,7 +200,7 @@
         }
 
         .btn:hover {
-            border-color: var(--gold);
+            border-color: var(--color-primary);
         }
 
         .btn[disabled] {
@@ -219,7 +231,7 @@
         .filter-btn {
             background: rgba(60, 60, 60, .85);
             border: 1px solid #555;
-            color: var(--text);
+            color: var(--text-primary);
             padding: 6px 12px;
             border-radius: 8px;
             cursor: pointer;
@@ -229,16 +241,66 @@
         }
 
         .filter-btn:hover {
-            border-color: var(--gold);
+            border-color: var(--color-primary);
         }
 
         .filter-btn[aria-pressed="true"] {
-            background: linear-gradient(135deg, var(--gold), #f4d03f);
+            background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
             color: #2c3e50;
-            border-color: var(--gold);
+            border-color: var(--color-primary);
         }
 
-        /* 公告雙欄 */
+        /* 分頁切換 */
+        .menu-tabs {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .menu-tab {
+            background: rgba(60, 60, 60, .85);
+            border: 2px solid #555;
+            color: var(--text-primary);
+            padding: 12px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.1em;
+            transition: .2s;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+        }
+
+        .menu-tab:hover {
+            border-color: var(--color-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(212, 175, 55, .3);
+        }
+
+        .menu-tab[aria-selected="true"] {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+            color: #2c3e50;
+            border-color: var(--color-primary);
+            box-shadow: 0 4px 8px rgba(212, 175, 55, .4);
+        }
+
+        /* 飲料專用標籤 */
+        .badge.alcohol {
+            border-color: #e74c3c;
+            color: #e74c3c;
+        }
+
+        .badge.body {
+            border-color: #3498db;
+            color: #3498db;
+        }
+
+        .badge.flavor {
+            border-color: #9b59b6;
+            color: #9b59b6;
+        }
+
         .notice-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -257,7 +319,7 @@
         .notice-title {
             font-weight: 800;
             margin-bottom: 10px;
-            color: var(--gold);
+            color: var(--color-primary);
             font-size: 1.05em;
         }
 
@@ -286,7 +348,7 @@
         }
 
         .section-title {
-            background: linear-gradient(to right, var(--gold), #f4d03f);
+            background: linear-gradient(to right, var(--color-primary), var(--color-primary-light));
             color: #2c3e50;
             padding: 8px 14px;
             font-weight: 800;
@@ -298,28 +360,51 @@
         }
 
         .menu-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            grid-template-areas:
+                "thumb info price"
+                "accordion accordion accordion";
             gap: 12px;
-            margin-bottom: 12px;
-            padding-bottom: 10px;
-            border-bottom: 1px dashed var(--line);
+            margin-bottom: 16px;
+            padding: 12px;
+            background: rgba(40, 40, 40, 0.3);
+            border-radius: 10px;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .menu-item:hover {
+            background: rgba(50, 50, 50, 0.4);
+            border-color: rgba(212, 175, 55, 0.3);
+            transform: translateY(-1px);
         }
 
         .item-name {
-            flex: 1;
+            grid-area: info;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 0;
         }
 
         .name-primary {
-            font-size: 1.05em;
+            font-size: 1.1em;
             font-weight: 700;
-            margin-bottom: 2px;
+            line-height: 1.3;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .name-primary:hover {
+            color: var(--color-primary);
         }
 
         .name-secondary {
-            font-size: .92em;
-            color: var(--muted);
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            line-height: 1.4;
         }
 
         .badges {
@@ -338,11 +423,11 @@
         }
 
         .badge.vegan {
-            border-color: var(--ok);
+            border-color: var(--status-success);
         }
 
         .badge.spicy {
-            border-color: var(--warn);
+            border-color: var(--status-warning);
         }
 
         .badge.allergen {
@@ -350,27 +435,218 @@
         }
 
         .price {
+            grid-area: price;
             font-weight: 800;
+            font-size: 1.15em;
             white-space: nowrap;
-            color: var(--gold);
-            min-width: 90px;
+            color: var(--color-primary);
             text-align: right;
+            align-self: start;
+            padding-top: 2px;
+        }
+
+        .soldout {
+            opacity: 0.7;
+            position: relative;
+        }
+
+        .soldout::after {
+            content: "SOLD OUT";
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: var(--status-danger);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7em;
+            font-weight: 700;
+            letter-spacing: 0.05em;
         }
 
         .soldout .name-primary,
         .soldout .name-secondary {
-            opacity: .6;
+            opacity: 0.7;
             text-decoration: line-through;
         }
 
         .thumb {
-            width: 84px;
-            height: 84px;
+            grid-area: thumb;
+            width: 90px;
+            height: 90px;
             object-fit: cover;
-            border-radius: 10px;
-            border: 1px solid #444;
+            border-radius: 8px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
             background: #2a2a2a;
             flex-shrink: 0;
+            transition: transform 0.2s ease;
+        }
+
+        .menu-item:hover .thumb {
+            transform: scale(1.05);
+            border-color: rgba(212, 175, 55, 0.4);
+        }
+
+        /* 隱藏 Accordion 區域 */
+        .accordion {
+            display: none;
+        }
+
+        /* Popover 浮動提示 */
+        .info-popover {
+            position: fixed;
+            z-index: 10000;
+            min-width: 250px;
+            max-width: 400px;
+            background: linear-gradient(145deg, rgba(35, 35, 35, 0.98), rgba(25, 25, 25, 0.98));
+            border: 2px solid var(--color-primary);
+            border-radius: 12px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+            transform: translateY(8px);
+            pointer-events: none;
+        }
+
+        .info-popover.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .popover-header {
+            padding: 14px 18px;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+            color: #2c3e50;
+            font-weight: 700;
+            font-size: 1.05em;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .popover-close {
+            background: rgba(0, 0, 0, 0.2);
+            border: none;
+            color: #2c3e50;
+            font-size: 1.4em;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s ease;
+            line-height: 1;
+            padding: 0;
+        }
+
+        .popover-close:hover {
+            background: rgba(0, 0, 0, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .popover-body {
+            padding: 16px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .popover-section {
+            margin-bottom: 14px;
+        }
+
+        .popover-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .popover-section-title {
+            font-size: 0.95em;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .popover-section-content {
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-size: 0.9em;
+            padding-left: 18px;
+            border-left: 2px solid var(--color-primary);
+        }
+
+        /* 箭頭指示器 */
+        .popover-arrow {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border: 10px solid transparent;
+        }
+
+        .popover-arrow.top {
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-bottom-color: var(--color-primary);
+        }
+
+        .popover-arrow.bottom {
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-top-color: var(--color-primary);
+        }
+
+        /* 滾動條樣式 */
+        .popover-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .popover-body::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+        }
+
+        .popover-body::-webkit-scrollbar-thumb {
+            background: var(--color-primary);
+            border-radius: 3px;
+        }
+
+        .popover-body::-webkit-scrollbar-thumb:hover {
+            background: var(--color-primary-light);
+        }
+
+        /* Popover 內容區塊樣式 */
+        .popover-section {
+            margin-bottom: 16px;
+        }
+
+        .popover-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .popover-section-title {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: var(--color-primary);
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid rgba(215, 169, 92, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .popover-section-content {
+            font-size: 0.95em;
+            line-height: 1.6;
+            color: var(--text-primary);
         }
 
         .loading {
@@ -378,7 +654,7 @@
             text-align: center;
             padding: 36px;
             font-size: 1.1em;
-            color: var(--gold);
+            color: var(--color-primary);
         }
 
         .loading::after {
@@ -406,10 +682,10 @@
         .error {
             grid-column: 1/-1;
             background: rgba(255, 107, 107, .1);
-            border: 2px solid var(--danger);
+            border: 2px solid var(--status-danger);
             border-radius: 10px;
             padding: 20px;
-            color: var(--danger);
+            color: var(--status-danger);
         }
 
         .error-details {
@@ -423,7 +699,7 @@
         }
 
         :focus-visible {
-            outline: 3px solid var(--focus);
+            outline: 3px solid var(--color-focus);
             outline-offset: 2px;
             border-radius: 8px;
         }
@@ -468,13 +744,234 @@
                 grid-template-columns: 1fr;
             }
 
-            .thumb {
-                width: 72px;
-                height: 72px;
-            }
-
             .notice-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .menu-container {
+                padding: 20px;
+            }
+
+            .logo-title {
+                font-size: 2em;
+            }
+
+            .logo-circle {
+                width: 90px;
+                height: 90px;
+            }
+
+            .sol {
+                font-size: 1.8em;
+            }
+
+            .bistro {
+                font-size: 1em;
+            }
+        }
+
+        @media(max-width:640px) {
+            body {
+                padding: 10px;
+            }
+
+            .menu-container {
+                padding: 16px;
+                border-width: 2px;
+            }
+
+            .header {
+                padding-bottom: 16px;
+                margin-bottom: 16px;
+            }
+
+            .logo {
+                gap: 16px;
+            }
+
+            .logo-title {
+                font-size: 1.6em;
+            }
+
+            .logo-circle {
+                width: 80px;
+                height: 80px;
+            }
+
+            .sol {
+                font-size: 1.5em;
+            }
+
+            .bistro {
+                font-size: 0.9em;
+            }
+
+            .menu-tab {
+                padding: 10px 16px;
+                font-size: 1em;
+            }
+
+            .tools {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .right-tools {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .search {
+                width: 100%;
+            }
+
+            .search input {
+                width: 100%;
+                min-width: auto;
+            }
+
+            /* 手機版菜單項目優化 */
+            .menu-item {
+                grid-template-columns: 80px 1fr;
+                grid-template-areas:
+                    "thumb info"
+                    "thumb price"
+                    "accordion accordion";
+                gap: 10px;
+                padding: 12px;
+                margin-bottom: 12px;
+            }
+
+            .thumb {
+                width: 80px;
+                height: 80px;
+                align-self: start;
+            }
+
+            .item-name {
+                gap: 6px;
+            }
+
+            .name-primary {
+                font-size: 1.05em;
+                line-height: 1.35;
+            }
+
+            .name-secondary {
+                font-size: 0.85em;
+                line-height: 1.5;
+            }
+
+            .price {
+                font-size: 1.1em;
+                text-align: left;
+                padding-top: 0;
+                align-self: end;
+            }
+
+            .badges {
+                flex-wrap: wrap;
+            }
+
+            .badge {
+                font-size: 0.7em;
+                padding: 2px 5px;
+            }
+
+            .accordion {
+                margin-top: 6px;
+                padding-top: 10px;
+                gap: 6px;
+            }
+
+            .accordion-header {
+                padding: 5px 10px;
+                font-size: 0.8em;
+            }
+
+            .accordion-content {
+                min-width: 180px;
+                max-width: 280px;
+                font-size: 0.82em;
+                line-height: 1.6;
+                padding: 10px 12px;
+            }
+
+            /* 手機版：Tooltip 改為從下方彈出 */
+            .accordion-item:hover .accordion-content,
+            .accordion-item.active .accordion-content {
+                bottom: auto;
+                top: calc(100% + 8px);
+                transform: translateX(-50%) translateY(4px);
+            }
+
+            .accordion-content::after {
+                top: auto;
+                bottom: 100%;
+                border-top-color: transparent;
+                border-bottom-color: var(--color-primary);
+            }
+
+            .soldout::after {
+                top: 6px;
+                right: 6px;
+                font-size: 0.65em;
+                padding: 3px 6px;
+            }
+
+            .section-title {
+                font-size: 0.95em;
+                padding: 7px 12px;
+                min-width: 120px;
+            }
+
+            .notice-card {
+                padding: 12px;
+            }
+
+            .notice-title {
+                font-size: 1em;
+            }
+
+            .notice-list li {
+                font-size: 0.9em;
+            }
+        }
+
+        @media(max-width:400px) {
+            .menu-item {
+                grid-template-columns: 70px 1fr;
+                gap: 8px;
+                padding: 10px;
+            }
+
+            .thumb {
+                width: 70px;
+                height: 70px;
+            }
+
+            .name-primary {
+                font-size: 1em;
+            }
+
+            .name-secondary {
+                font-size: 0.82em;
+            }
+
+            .price {
+                font-size: 1.05em;
+            }
+
+            .accordion-header {
+                padding: 5px 8px;
+                font-size: 0.75em;
+            }
+
+            .accordion-content {
+                min-width: 160px;
+                max-width: 250px;
+                font-size: 0.78em;
+                padding: 9px 10px;
             }
         }
     </style>
@@ -492,6 +989,13 @@
                 <div class="logo-title">MENU</div>
             </div>
             <div class="wifi" aria-label="Wi-Fi info">🌐 FREE Wi-Fi | solbistro2018</div>
+
+            <!-- 分頁切換 -->
+            <div class="menu-tabs" role="tablist" aria-label="Menu type selector">
+                <button class="menu-tab" role="tab" data-menu-type="food" aria-selected="true">🍽️ Food Menu</button>
+                <button class="menu-tab" role="tab" data-menu-type="drink" aria-selected="false">🍷 Drink Menu</button>
+            </div>
+
             <div class="tools">
                 <div class="language-switcher" role="tablist" aria-label="Language switcher"></div>
                 <div class="right-tools">
@@ -508,10 +1012,6 @@
                     </button>
                 </div>
             </div>
-            <!--
-            <nav class="toc" aria-label="Categories"></nav>
-            -->
-            <!-- 公告雙欄（從 Google Sheet 的 INFO 表載入） -->
             <section class="notice-grid" aria-label="House rules and notes">
                 <div class="notice-card">
                     <h3 class="notice-title">House Rules</h3>
@@ -520,9 +1020,7 @@
                 <div class="notice-card">
                     <h3 class="notice-title">Notes</h3>
                     <ul id="notesList" class="notice-list"></ul>
-                    <!-- 導覽＋篩選區 -->
-                    <div class="toc">
-                    </div>
+                    <div class="toc"></div>
                     <div class="toc-wrapper">
                         <div class="filter-tags">
                             <button class="filter-btn" data-filter="all" aria-pressed="true">全部</button>
@@ -538,9 +1036,29 @@
         </main>
     </div>
 
+    <!-- Popover 浮動提示 -->
+    <div id="infoPopover" class="info-popover">
+        <div class="popover-arrow"></div>
+        <div class="popover-header">
+            <span id="popoverTitle"></span>
+            <button id="popoverClose" class="popover-close" aria-label="Close">×</button>
+        </div>
+        <div id="popoverBody" class="popover-body"></div>
+    </div>
+
     <script>
-        // ===== CONFIG =====
-        const API_URL = 'https://script.google.com/macros/s/AKfycbwziktwTBiVwXXpOV-lG1eAdOT9byo12-wz1n4CQtkV8UshB6Xj7jF6XuUWUcQU0eFIVQ/exec';
+        // ===== CONSTANTS =====
+        // 統一 API（同時回傳 food 和 drink）
+        const UNIFIED_API_URL = 'https://script.google.com/macros/s/AKfycbzUka8tTAcRCV2yZa_YOw9WN1SLS3kOsN0KmlhEVvhYVhJH-DkxoQt5M9e5XO-r09dP/exec';
+
+        const API_URLS = {
+            food: UNIFIED_API_URL,
+            drink: UNIFIED_API_URL
+        };
+
+        const MAX_SPICY_LEVEL = 3;
+        const SEARCH_DEBOUNCE_MS = 300;
+        const IMAGE_FALLBACK_SIZE = 84;
 
         const CATEGORIES = [
             { name: 'SALAD', column: 'left' },
@@ -562,230 +1080,353 @@
             { code: 'vi', label: 'Tiếng Việt' }
         ];
 
-        // ===== STATE =====
-        let menuData = {};
-        let metaData = { rules: [], notes: [] }; // 新增：公告資料
-        let currentLang = 'zh';
-        let query = '';
-        let hideSoldOut = false;
-        let currentFilter = 'all';
-
-        function setupFilterButtons() {
-            const btns = document.querySelectorAll('.filter-btn');
-            if (!btns.length) return; // 若 DOM 尚未出現則略過（下次 renderNotices 後會再綁）
-
-            btns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const val = btn.getAttribute('data-filter') || 'all';
-                    currentFilter = val;
-
-                    // aria-pressed 狀態切換
-                    btns.forEach(b => b.setAttribute('aria-pressed', 'false'));
-                    btn.setAttribute('aria-pressed', 'true');
-
-                    // 立即重繪菜單
-                    renderMenu(menuData);
-                });
-            });
-        }
-        // ===== INITIALIZATION =====
-        function init() {
-            setupLanguageSwitcher();
-            setupEventListeners();
-            setupFilterButtons();
-            loadMenu();
-        }
-
-        function setupLanguageSwitcher() {
-            const container = document.querySelector('.language-switcher');
-            LANGUAGES.forEach(lang => {
-                const btn = document.createElement('button');
-                btn.className = 'lang-btn';
-                btn.textContent = lang.label;
-                btn.setAttribute('role', 'tab');
-                btn.setAttribute('data-code', lang.code);
-                btn.setAttribute('aria-pressed', String(lang.code === currentLang));
-                btn.onclick = () => switchLanguage(lang.code);
-                container.appendChild(btn);
-            });
-        }
-
-        function setupEventListeners() {
-            const searchInput = document.getElementById('q');
-            searchInput.addEventListener('input', (e) => {
-                query = e.target.value.toLowerCase().trim();
-                renderMenu(menuData);
-            });
-            const soldoutCheckbox = document.getElementById('hideSoldout');
-            soldoutCheckbox.addEventListener('change', (e) => {
-                hideSoldOut = e.target.checked;
-                renderMenu(menuData);
-            });
-            const refreshBtn = document.getElementById('refreshBtn');
-            refreshBtn.addEventListener('click', () => {
-                refreshBtn.disabled = true;
-                const icon = document.getElementById('refreshIcon');
-                icon.classList.add('spin');
-                loadMenu(true).finally(() => {
-                    refreshBtn.disabled = false;
-                    icon.classList.remove('spin');
-                });
-            });
-        }
-
-        function switchLanguage(lang) {
-            currentLang = lang;
-            document.querySelectorAll('.lang-btn').forEach(btn => {
-                const code = btn.getAttribute('data-code');
-                btn.setAttribute('aria-pressed', String(code === lang));
-            });
-            renderNotices(metaData); // 同步更新公告
-            renderMenu(menuData);
-        }
-
-        // ===== DATA LOADING =====
-        async function loadMenu(silent = false) {
-            const menuContent = document.getElementById('menuContent');
-            if (!silent) {
-                menuContent.innerHTML = '<div class="loading">正在載入菜單</div>';
+        const ACCORDION_LABELS = {
+            ingredients: {
+                zh: '成分',
+                en: 'Ingredients',
+                ja: '成分',
+                ko: '성분',
+                fr: 'Ingrédients',
+                th: 'ส่วนผสม',
+                fil: 'Sangkap',
+                vi: 'Thành phần'
+            },
+            allergens: {
+                zh: '過敏原',
+                en: 'Allergens',
+                ja: 'アレルゲン',
+                ko: '알레르겐',
+                fr: 'Allergènes',
+                th: 'สารก่อภูมิแพ้',
+                fil: 'Allergen',
+                vi: 'Chất gây dị ứng'
+            },
+            notes: {
+                zh: '備註',
+                en: 'Notes',
+                ja: '備考',
+                ko: '비고',
+                fr: 'Remarques',
+                th: 'หมายเหตุ',
+                fil: 'Tala',
+                vi: 'Ghi chú'
             }
-            try {
-                const res = await fetch(API_URL, { cache: 'no-store' });
-                if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
-                const raw = await res.json();
+        };
 
-                // 抓 _meta（若 API 尚未更新也不會壞）
-                metaData = (raw && typeof raw === 'object' && raw._meta) ? raw._meta : { rules: [], notes: [] };
+        // ===== STATE MANAGEMENT =====
+        const createStore = (initialState) => {
+            let state = initialState;
+            const listeners = new Set();
 
-                // 根據 _meta 是否有 rules 來決定是否顯示舊版 fallback 規則段落
-                const rulesFallback = document.getElementById('rulesFallback');
-                if (rulesFallback) {
-                    if (Array.isArray(metaData.rules) && metaData.rules.length > 0) {
-                        rulesFallback.style.display = 'none'; // 有新資料 → 隱藏舊段落
-                    } else {
-                        rulesFallback.style.display = 'block'; // 無新資料 → 顯示舊段落
+            return {
+                getState: () => state,
+                setState: (updates) => {
+                    const oldState = state;
+                    state = { ...state, ...updates };
+
+                    // 深度合併 ui 狀態
+                    if (updates.ui) {
+                        state.ui = { ...oldState.ui, ...updates.ui };
+                    }
+
+                    listeners.forEach(fn => fn(state, oldState));
+                },
+                subscribe: (fn) => {
+                    listeners.add(fn);
+                    return () => listeners.delete(fn);
+                }
+            };
+        };
+
+        const store = createStore({
+            foodData: {},
+            drinkData: {},
+            foodMeta: { rules: [], notes: [] },
+            drinkMeta: { rules: [], notes: [] },
+            ui: {
+                currentMenuType: 'food',  // 'food' or 'drink'
+                currentLang: 'zh',
+                query: '',
+                hideSoldOut: false,
+                currentFilter: 'all'
+            }
+        });
+
+        // 訂閱狀態變化自動重繪
+        store.subscribe((state, oldState) => {
+            const uiChanged = state.ui !== oldState.ui;
+            const menuTypeChanged = state.ui.currentMenuType !== oldState.ui.currentMenuType;
+
+            const currentData = state.ui.currentMenuType === 'food' ? state.foodData : state.drinkData;
+            const oldData = oldState.ui.currentMenuType === 'food' ? oldState.foodData : oldState.drinkData;
+            const dataChanged = currentData !== oldData;
+
+            const currentMeta = state.ui.currentMenuType === 'food' ? state.foodMeta : state.drinkMeta;
+            const oldMeta = oldState.ui.currentMenuType === 'food' ? oldState.foodMeta : oldState.drinkMeta;
+            const metaChanged = currentMeta !== oldMeta;
+
+            if (dataChanged || uiChanged || menuTypeChanged) {
+                renderMenu(currentData);
+            }
+
+            if (metaChanged || menuTypeChanged || (uiChanged && state.ui.currentLang !== oldState.ui.currentLang)) {
+                renderNotices(currentMeta);
+            }
+        });
+
+        // ===== HELPER FUNCTIONS (DRY PRINCIPLE) =====
+        const isSoldOut = (item) => {
+            // 支援食物菜單的 soldout 和飲料菜單的 sold-out
+            const soldoutValue = item['sold-out'] ?? item.soldout;
+            return soldoutValue === true || String(soldoutValue).toLowerCase() === 'true';
+        };
+
+        const isVegan = (item) =>
+            String(item.vegan).toLowerCase() === 'true';
+
+        const getSpicyLevel = (item) => {
+            const level = Number(item.spicy);
+            return isFinite(level) ? level : 0;
+        };
+
+        const escapeHtml = (s) => {
+            return String(s ?? '').replace(/[&<>"']/g, c => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            }[c]));
+        };
+
+        // ===== PURE FUNCTIONS FOR MENU RENDERING =====
+        function getEffectiveCategories(data, categories) {
+            const hasFixedData = categories.some(cat =>
+                Array.isArray(data?.[cat.name]) && data[cat.name].length > 0
+            );
+            return hasFixedData
+                ? categories.map(c => c.name)
+                : Object.keys(data);
+        }
+
+        function filterItems(items, { query, hideSoldOut, currentFilter }) {
+            return items.filter(it => {
+                if (hideSoldOut && isSoldOut(it)) {
+                    return false;
+                }
+
+                if (query) {
+                    // 包含飲料菜單的 zh-TW 欄位和其他飲料相關欄位
+                    const searchText = [
+                        it['zh-TW'], it.zh, it.en, it.ja, it.ko, it.fr, it.th, it.fil, it.vi,
+                        it.contains, it.flavor, it.categories, it.img, it['img-url']
+                    ].filter(Boolean).join(' ').toLowerCase();
+                    if (!searchText.includes(query)) return false;
+                }
+
+                if (currentFilter === 'vegan' && !isVegan(it)) {
+                    return false;
+                }
+
+                if (currentFilter === 'spicy' && getSpicyLevel(it) <= 0) {
+                    return false;
+                }
+
+                return true;
+            });
+        }
+
+        function distributeColumns(sections, categories) {
+            const left = [], right = [];
+            sections.forEach((sec, idx) => {
+                const fixed = categories.find(c => c.name === sec.name);
+                const target = fixed
+                    ? (fixed.column === 'left' ? left : right)
+                    : (idx % 2 === 0 ? left : right);
+                target.push(sec);
+            });
+            return { left, right };
+        }
+
+        // ===== LANGUAGE & FORMATTING =====
+        // 多語內容選擇器（支援新舊格式）
+        function pickLangText(field, lang) {
+            if (!field) return '';
+
+            // 新版（多語物件）
+            if (typeof field === 'object' && !Array.isArray(field)) {
+                return (
+                    field[lang] ||
+                    field.en ||
+                    field.zh ||
+                    field['zh-TW'] ||
+                    Object.values(field).find(v => v) ||
+                    ''
+                );
+            }
+
+            // 舊版（單一字串）
+            return String(field);
+        }
+
+        function pickLang(item, lang) {
+            // 處理飲料菜單的 zh-TW 欄位（映射到 zh）
+            const langKey = lang === 'zh' && item['zh-TW'] ? 'zh-TW' : lang;
+
+            const val = (item[langKey] || '').trim();
+            if (val) return { text: val, langTag: lang };
+
+            // Fallback 順序
+            if ((item.en || '').trim()) return { text: item.en.trim(), langTag: 'en' };
+            if ((item['zh-TW'] || '').trim()) return { text: item['zh-TW'].trim(), langTag: 'zh' };
+            if ((item.zh || '').trim()) return { text: item.zh.trim(), langTag: 'zh' };
+
+            const alt = ['ja', 'ko', 'fr', 'th', 'fil', 'vi'].map(k => item[k]).find(v => v && v.trim());
+            return { text: alt ? alt.trim() : '—', langTag: alt ? 'other' : '' };
+        }
+
+        function pickSecondary(item, lang) {
+            if (lang === 'en') {
+                const s = (item['zh-TW'] || item.zh || '').trim();
+                return { text: s, langTag: s ? 'zh' : '' };
+            } else {
+                const s = (item.en || item['zh-TW'] || item.zh || '').trim();
+                return { text: s, langTag: s ? (item.en ? 'en' : 'zh') : '' };
+            }
+        }
+
+        function pickText(item, lang) {
+            // 處理飲料菜單的 zh-TW 欄位
+            const langKey = lang === 'zh' && item?.['zh-TW'] ? 'zh-TW' : lang;
+
+            const val = (item?.[langKey] || '').trim();
+            if (val) return val;
+
+            // Fallback
+            if ((item?.en || '').trim()) return item.en.trim();
+            if ((item?.['zh-TW'] || '').trim()) return item['zh-TW'].trim();
+            if ((item?.zh || '').trim()) return item.zh.trim();
+
+            const altKey = ['ja', 'ko', 'fr', 'th', 'fil', 'vi'].find(k => (item?.[k] || '').trim());
+            return altKey ? item[altKey].trim() : '';
+        }
+
+        const twdFmt = new Intl.NumberFormat('zh-TW', {
+            style: 'currency',
+            currency: 'TWD',
+            maximumFractionDigits: 0
+        });
+
+        function formatTWD(v) {
+            const n = Number(v);
+            return isFinite(n) ? twdFmt.format(n) : (v ?? '');
+        }
+
+        // Accordion 渲染函數（多語支援）
+        function renderAccordion(item) {
+            const state = store.getState();
+            const lang = state.ui.currentLang;
+            const sections = [];
+
+            const allergensText = pickLangText(item.contains, lang);
+            const ingredientsText = pickLangText(item.ingredients, lang);
+            const notesText = pickLangText(item.notes, lang);
+
+            if (allergensText) {
+                sections.push({
+                    key: 'allergens',
+                    content: allergensText
+                });
+            }
+
+            if (ingredientsText) {
+                sections.push({
+                    key: 'ingredients',
+                    content: ingredientsText
+                });
+            }
+
+            if (notesText) {
+                sections.push({
+                    key: 'notes',
+                    content: notesText
+                });
+            }
+
+            if (!sections.length) return '';
+
+            return `
+                <div class="accordion">
+                    ${sections.map(sec => `
+                        <div class="accordion-item">
+                            <div class="accordion-header">
+                                <span>${ACCORDION_LABELS[sec.key]?.[lang] || ACCORDION_LABELS[sec.key]?.en}</span>
+                                <span class="accordion-icon">ℹ️</span>
+                            </div>
+                            <div class="accordion-content">
+                                ${escapeHtml(sec.content)}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function renderBadges(item) {
+            const state = store.getState();
+            const badges = [];
+
+            // Food 專用標籤
+            if (state.ui.currentMenuType === 'food') {
+                if (isVegan(item)) {
+                    badges.push('<span class="badge vegan" title="Vegan / 純素">Vegan</span>');
+                }
+
+                const spicy = getSpicyLevel(item);
+                if (spicy > 0) {
+                    const level = Math.min(spicy, MAX_SPICY_LEVEL);
+                    badges.push(`<span class="badge spicy" title="Spicy / 辣度">${'🌶'.repeat(level)}</span>`);
+                }
+
+                if (item.contains) {
+                    const list = String(item.contains).split(/[,，;；]/).map(s => s.trim()).filter(Boolean);
+                    if (list.length) {
+                        badges.push(`<span class="badge allergen" title="Allergens / 過敏原">${escapeHtml(list.join(' · '))}</span>`);
                     }
                 }
-
-                menuData = coerceDataGrouped(raw);
-
-                renderNotices(metaData);
-                renderMenu(menuData);
-            } catch (err) {
-                console.error(err);
-                menuContent.innerHTML = `
-          <div class="error">
-            <h3>❌ 載入菜單失敗</h3>
-            <p><strong>${escapeHtml(err.message)}</strong></p>
-            <div class="error-details">
-              請確認：API URL 正確、已部署，或直接開啟：
-              <div style="margin-top:6px">
-                <a href="${API_URL}" target="_blank" style="color:#ffd700;text-decoration:underline">測試 API URL</a>
-              </div>
-            </div>
-          </div>`;
             }
-        }
 
-        function coerceDataGrouped(raw) {
-            if (!raw) return {};
-            if (typeof raw === 'object' && !Array.isArray(raw)) {
-                const out = {};
-                for (const k of Object.keys(raw)) {
-                    if (k === '_meta') continue; // 忽略 _meta
-                    const v = raw[k];
-                    if (Array.isArray(v)) out[k] = v;
+            // Drink 專用標籤
+            if (state.ui.currentMenuType === 'drink') {
+                // Alcohol 濃度（用酒杯圖示表示）
+                const alcohol = Number(item.alcohol);
+                if (isFinite(alcohol) && alcohol > 0) {
+                    const level = Math.min(Math.ceil(alcohol / 3), 3); // 分成 3 級
+                    badges.push(`<span class="badge alcohol" title="Alcohol / 酒精濃度: ${alcohol}%">${'🍷'.repeat(level)}</span>`);
                 }
-                if (Object.keys(out).length) return out;
-            }
-            if (Array.isArray(raw)) {
-                const out = {};
-                for (const it of raw) {
-                    const cat = (it && (it.category || it.Category || it.categoryName))
-                        ? String(it.category || it.Category || it.categoryName) : '';
-                    if (!cat) continue;
-                    (out[cat] ||= []).push(stripCategory(it));
+
+                // Body 濃郁度
+                const body = Number(item.body);
+                if (isFinite(body) && body > 0) {
+                    const level = Math.min(body, 3);
+                    badges.push(`<span class="badge body" title="Body / 濃郁度">${'●'.repeat(level)}</span>`);
                 }
-                return out;
-            }
-            return {};
-        }
 
-        function stripCategory(it) {
-            const clone = { ...it };
-            delete clone.category; delete clone.Category; delete clone.categoryName;
-            return clone;
-        }
-
-        // ===== RENDERING =====
-        function renderMenu(data) {
-            const menuContent = document.getElementById('menuContent');
-            const fixedHasData = (Array.isArray(CATEGORIES) ? CATEGORIES : []).some(cat => {
-                const arr = data?.[cat.name];
-                return Array.isArray(arr) && arr.length > 0;
-            });
-            const effectiveCategories = fixedHasData ? CATEGORIES.map(c => c.name) : Object.keys(data);
-
-            const left = document.createElement('div');
-            const right = document.createElement('div');
-
-            // 🚫 已移除舊 toc 建立邏輯
-            // 若未來有新的分類導航放在 Notes，可在 renderNotices 裡處理
-
-            effectiveCategories.forEach((name, idx) => {
-                const items = data[name];
-                if (!Array.isArray(items) || items.length === 0) return;
-
-                const filtered = items.filter(it => passFilters(it));
-                if (filtered.length === 0) return;
-
-                const section = createSection(name, filtered);
-
-                const fixed = CATEGORIES.find(c => c.name === name);
-                if (fixed) {
-                    (fixed.column === 'left' ? left : right).appendChild(section);
-                } else {
-                    (idx % 2 === 0 ? left : right).appendChild(section);
+                // Flavor 風味標籤
+                if (item.flavor) {
+                    const flavors = String(item.flavor).split(/[,，;；]/).map(s => s.trim()).filter(Boolean);
+                    if (flavors.length) {
+                        badges.push(`<span class="badge flavor" title="Flavor / 風味">${escapeHtml(flavors.join(' · '))}</span>`);
+                    }
                 }
-            });
-
-            if (!left.childNodes.length && !right.childNodes.length) {
-                menuContent.innerHTML = `
-      <div class="error">
-        <h3>⚠️ 找不到符合條件的菜單</h3>
-        <div class="error-details">
-          可能原因：<br/>
-          • 類別鍵名與預設不符（已嘗試動態鍵名仍無資料）<br/>
-          • 目前的搜尋或「隱藏售罄」過濾把品項都排除了
-        </div>
-      </div>`;
-                return;
             }
 
-            menuContent.innerHTML = '';
-            menuContent.appendChild(left);
-            menuContent.appendChild(right);
-        }
-        function passFilters(it) {
-            if (hideSoldOut && (it.soldout === true || String(it.soldout).toLowerCase() === 'true')) {
-                return false;
-            }
-
-            // 關鍵字搜尋
-            if (query) {
-                const fields = [it.zh, it.en, it.ja, it.ko, it.fr, it.th, it.fil, it.vi, it.contains, it.img]
-                    .filter(Boolean).join(' ').toLowerCase();
-                if (!fields.includes(query)) return false;
-            }
-
-            // 新增：特殊標籤篩選
-            if (currentFilter === 'vegan' && String(it.vegan).toLowerCase() !== 'true') return false;
-            if (currentFilter === 'spicy' && Number(it.spicy) <= 0) return false;
-
-            return true;
+            return badges.length ? `<div class="badges">${badges.join('')}</div>` : '';
         }
 
+        // ===== RENDERING FUNCTIONS =====
         function createSection(name, items) {
+            const state = store.getState();
             const sec = document.createElement('section');
             sec.className = 'menu-section';
             sec.id = `cat-${name}`;
@@ -798,107 +1439,657 @@
             items.forEach(item => {
                 const div = document.createElement('article');
                 div.className = 'menu-item';
-                if (item.soldout === true || String(item.soldout).toLowerCase() === 'true') { div.classList.add('soldout'); }
+                if (isSoldOut(item)) {
+                    div.classList.add('soldout');
+                }
 
-                const { text: primary, langTag: pTag } = pickLang(item, currentLang);
-                const { text: secondary, langTag: sTag } = pickSecondary(item, currentLang);
+                const { text: primary, langTag: pTag } = pickLang(item, state.ui.currentLang);
+                const { text: secondary, langTag: sTag } = pickSecondary(item, state.ui.currentLang);
                 const priceStr = formatTWD(item.price);
 
-                const imgHtml = item.img ? `
-          <img class="thumb" src="${escapeHtml(item.img)}"
-            alt="${escapeHtml(item.en || item.zh || 'item image')}"
-            loading="lazy" decoding="async" width="84" height="84"
-            onerror="this.style.display='none'" />` : '';
+                // 支援飲料菜單的 img-url 欄位
+                const imgSrc = item['img-url'] || item.img;
+                const imgAlt = item.en || item['zh-TW'] || item.zh || 'item image';
+
+                const imgHtml = imgSrc ? `
+                    <img class="thumb" src="${escapeHtml(imgSrc)}"
+                        alt="${escapeHtml(imgAlt)}"
+                        loading="lazy" decoding="async" width="${IMAGE_FALLBACK_SIZE}" height="${IMAGE_FALLBACK_SIZE}"
+                        onerror="this.style.display='none'" />` : '';
 
                 div.innerHTML = `
-          ${imgHtml}
-          <div class="item-name">
-            <div class="name-primary">${escapeHtml(primary)}${pTag ? ` <small style="opacity:.7">(${pTag})</small>` : ''}</div>
-            <div class="name-secondary">${escapeHtml(secondary)}${sTag ? ` <small style="opacity:.6">(${sTag})</small>` : ''}</div>
-            ${renderBadges(item)}
-          </div>
-          <div class="price" aria-label="Price">NT ${priceStr}</div>`;
+                    ${imgHtml}
+                    <div class="item-name">
+                        <div class="name-primary">${escapeHtml(primary)}${pTag ? ` <small style="opacity:.7">(${pTag})</small>` : ''}</div>
+                        <div class="name-secondary">${escapeHtml(secondary)}${sTag ? ` <small style="opacity:.6">(${sTag})</small>` : ''}</div>
+                        ${renderBadges(item)}
+                    </div>
+                    ${renderAccordion(item)}
+                    <div class="price" aria-label="Price">NT ${priceStr}</div>`;
 
                 sec.appendChild(div);
             });
+
             return sec;
         }
 
-        // ===== LANGUAGE & FORMATTING =====
-        function pickLang(item, lang) {
-            const val = (item[lang] || '').trim();
-            if (val) return { text: val, langTag: lang };
-            if ((item.en || '').trim()) return { text: item.en.trim(), langTag: 'en' };
-            if ((item.zh || '').trim()) return { text: item.zh.trim(), langTag: 'zh' };
-            const alt = ['ja', 'ko', 'fr', 'th', 'fil', 'vi'].map(k => item[k]).find(v => v && v.trim());
-            return { text: alt ? alt.trim() : '—', langTag: alt ? 'other' : '' };
-        }
-        function pickSecondary(item, lang) {
-            if (lang === 'en') {
-                const s = (item.zh || '').trim() || '';
-                return { text: s, langTag: s ? 'zh' : '' };
-            } else {
-                const s = (item.en || '').trim() || (item.zh || '').trim() || '';
-                return { text: s, langTag: s ? (item.en ? 'en' : 'zh') : '' };
-            }
+        function renderColumns(left, right) {
+            const menuContent = document.getElementById('menuContent');
+            menuContent.innerHTML = '';
+
+            const leftCol = document.createElement('div');
+            const rightCol = document.createElement('div');
+
+            left.forEach(sec => leftCol.appendChild(sec));
+            right.forEach(sec => rightCol.appendChild(sec));
+
+            menuContent.appendChild(leftCol);
+            menuContent.appendChild(rightCol);
         }
 
-        const twdFmt = new Intl.NumberFormat('zh-TW', { style: 'currency', currency: 'TWD', maximumFractionDigits: 0 });
-        function formatTWD(v) { const n = Number(v); return isFinite(n) ? twdFmt.format(n) : (v ?? ''); }
+        function showEmptyState() {
+            const menuContent = document.getElementById('menuContent');
+            menuContent.innerHTML = `
+                <div class="error">
+                    <h3>⚠️ 找不到符合條件的菜單</h3>
+                    <div class="error-details">
+                        可能原因：<br/>
+                        • 類別鍵名與預設不符（已嘗試動態鍵名仍無資料）<br/>
+                        • 目前的搜尋或「隱藏售罄」過濾把品項都排除了
+                    </div>
+                </div>`;
+        }
 
-        function renderBadges(item) {
-            const badges = [];
-            if (String(item.vegan).toLowerCase() === 'true') { badges.push('<span class="badge vegan" title="Vegan / 純素">Vegan</span>'); }
-            const spicy = Number(item.spicy);
-            if (isFinite(spicy) && spicy > 0) { badges.push(`<span class="badge spicy" title="Spicy / 辣度">${'🌶'.repeat(Math.min(spicy, 3))}</span>`); }
-            if (item.contains) {
-                const list = String(item.contains).split(/[,，;；]/).map(s => s.trim()).filter(Boolean);
-                if (list.length) { badges.push(`<span class="badge allergen" title="Allergens / 過敏原">${escapeHtml(list.join(' · '))}</span>`); }
+        function renderMenu(data) {
+            const state = store.getState();
+            const categories = getEffectiveCategories(data, CATEGORIES);
+
+            const sections = categories
+                .map(name => {
+                    const items = data[name];
+                    if (!Array.isArray(items) || items.length === 0) return null;
+
+                    const filtered = filterItems(items, state.ui);
+                    if (filtered.length === 0) return null;
+
+                    return createSection(name, filtered);
+                })
+                .filter(Boolean);
+
+            if (sections.length === 0) {
+                showEmptyState();
+                return;
             }
-            return badges.length ? `<div class="badges">${badges.join('')}</div>` : '';
+
+            const { left, right } = distributeColumns(sections, CATEGORIES);
+            renderColumns(left, right);
         }
 
         function renderNotices(meta) {
+            const state = store.getState();
             const rulesEl = document.getElementById('rulesList');
             const notesEl = document.getElementById('notesList');
+
             if (!rulesEl || !notesEl) return;
 
             const rules = Array.isArray(meta?.rules) ? meta.rules : [];
             const notes = Array.isArray(meta?.notes) ? meta.notes : [];
 
-            // 舊版 fallback 顯示邏輯
-            const rulesFallback = document.getElementById('rulesFallback');
-            if (rulesFallback) {
-                rulesFallback.style.display = (rules.length > 0) ? 'none' : 'block';
+            rulesEl.innerHTML = rules.map(it => `<li>${escapeHtml(pickText(it, state.ui.currentLang))}</li>`).join('');
+            notesEl.innerHTML = notes.map(it => `<li>${escapeHtml(pickText(it, state.ui.currentLang))}</li>`).join('');
+        }
+
+        // ===== DATA LOADING =====
+        function coerceDataGrouped(raw, menuType) {
+            if (!raw) return {};
+
+            // 如果是陣列格式（來自後端的 food 或 drink）
+            if (Array.isArray(raw)) {
+                const out = {};
+
+                // 飲料菜單：使用 categories 陣列分組
+                if (menuType === 'drink') {
+                    for (const it of raw) {
+                        // 標準化飲料項目格式
+                        const normalized = normalizeDrinkItem(it);
+
+                        // categories 是陣列，一個飲料可能屬於多個分類
+                        const cats = Array.isArray(normalized.categories)
+                            ? normalized.categories
+                            : [normalized.categories || 'Other'];
+
+                        cats.forEach(cat => {
+                            const catName = String(cat).trim();
+                            if (catName) {
+                                (out[catName] ||= []).push(normalized);
+                            }
+                        });
+                    }
+                    return out;
+                }
+
+                // 食物菜單：根據後端資料結構，可能需要手動分類或全部放在一個分類
+                // 如果後端已經按 sheet 名稱分組，直接使用
+                // 否則，將所有項目放在 'ALL' 分類中
+                for (const it of raw) {
+                    const cat = (it && (it.category || it.Category || it.categoryName))
+                        ? String(it.category || it.Category || it.categoryName)
+                        : 'FOOD';  // 預設分類名稱
+
+                    if (cat) {
+                        (out[cat] ||= []).push(stripCategory(it));
+                    }
+                }
+                return out;
             }
 
-            // 先把現有內容更新（即使是空的也做清空，避免殘留）
-            rulesEl.innerHTML = rules.map(it => `<li>${escapeHtml(pickText(it, currentLang))}</li>`).join('');
-            notesEl.innerHTML = notes.map(it => `<li>${escapeHtml(pickText(it, currentLang))}</li>`).join('');
+            // 如果已經是分組格式
+            if (typeof raw === 'object' && !Array.isArray(raw)) {
+                const out = {};
+                for (const k of Object.keys(raw)) {
+                    if (k === '_meta') continue;
+                    const v = raw[k];
+                    if (Array.isArray(v)) {
+                        // 如果是飲料菜單，標準化每個項目
+                        out[k] = menuType === 'drink'
+                            ? v.map(normalizeDrinkItem)
+                            : v;
+                    }
+                }
+                if (Object.keys(out).length) return out;
+            }
 
-            // 🔁 如果你的 TOC 也被移到 Notes 並且在別處會重建，這裡可一起重繫結
-            // setupToc?.(); // 若有這個函式就打開
-
-            // ✅ 重要：公告區的 DOM 已被改寫（innerHTML），要重新綁定篩選按鈕事件
-            setupFilterButtons();
+            return {};
         }
 
-        function pickText(item, lang) {
-            const val = (item?.[lang] || '').trim();
-            if (val) return val;
-            if ((item?.en || '').trim()) return item.en.trim();
-            if ((item?.zh || '').trim()) return item.zh.trim();
-            const altKey = ['ja', 'ko', 'fr', 'th', 'fil', 'vi'].find(k => (item?.[k] || '').trim());
-            return altKey ? item[altKey].trim() : '';
+        // 標準化飲料項目（將後端格式轉換為前端格式）
+        function normalizeDrinkItem(item) {
+            return {
+                // 主要欄位
+                'zh-TW': item.item || '',  // item → zh-TW
+                en: item.lang?.en || '',
+                ja: item.lang?.ja || '',
+                ko: item.lang?.ko || '',
+                fr: item.lang?.fr || '',
+                th: item.lang?.th || '',
+                fil: item.lang?.fil || '',
+                vi: item.lang?.vi || '',
+
+                // 價格與狀態
+                price: item.price,
+                'sold-out': item.soldout,
+
+                // 飲料專用屬性
+                alcohol: item.alcohol,
+                body: item.body,
+                flavor: item.flavor,
+                categories: item.categories,
+
+                // 圖片
+                'img-url': item.img || '',
+
+                // 保留原始來源
+                source: item.source
+            };
         }
 
-        function escapeHtml(s) {
-            return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        function stripCategory(it) {
+            const clone = { ...it };
+            delete clone.categories;
+            delete clone.category;
+            delete clone.Category;
+            delete clone.categoryName;
+            return clone;
+        }
+
+        async function loadMenuData(menuType, silent = false) {
+            const menuContent = document.getElementById('menuContent');
+            if (!silent) {
+                menuContent.innerHTML = '<div class="loading">正在載入菜單</div>';
+            }
+
+            const apiUrl = API_URLS[menuType];
+            if (!apiUrl) {
+                console.error(`Unknown menu type: ${menuType}`);
+                return;
+            }
+
+            try {
+                const res = await fetch(apiUrl, { cache: 'no-store' });
+                if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+
+                const raw = await res.json();
+
+                // 檢查是否有錯誤
+                if (raw.error) {
+                    throw new Error(raw.message || 'API 回傳錯誤');
+                }
+
+                // 提取 _meta
+                const metaData = (raw && typeof raw === 'object' && raw._meta)
+                    ? raw._meta
+                    : { rules: [], notes: [] };
+
+                // 根據菜單類型提取對應的資料陣列
+                // 後端格式：{ food: [...], drink: [...], _meta: {...} }
+                const rawMenuArray = raw[menuType];
+
+                if (!Array.isArray(rawMenuArray)) {
+                    console.warn(`${menuType} 資料不是陣列格式:`, rawMenuArray);
+                    throw new Error(`後端回傳的 ${menuType} 資料格式不正確`);
+                }
+
+                // 將陣列轉換為分類分組格式
+                const menuData = coerceDataGrouped(rawMenuArray, menuType);
+
+                console.log(`${menuType} 載入完成:`, {
+                    原始項目數: rawMenuArray.length,
+                    分類數: Object.keys(menuData).length,
+                    分類列表: Object.keys(menuData)
+                });
+
+                // 根據菜單類型更新對應的狀態
+                if (menuType === 'food') {
+                    store.setState({
+                        foodData: menuData,
+                        foodMeta: metaData
+                    });
+                } else if (menuType === 'drink') {
+                    store.setState({
+                        drinkData: menuData,
+                        drinkMeta: metaData
+                    });
+                }
+            } catch (err) {
+                console.error(`載入 ${menuType} 菜單失敗:`, err);
+                menuContent.innerHTML = `
+                    <div class="error">
+                        <h3>❌ 載入${menuType === 'food' ? '食物' : '飲料'}菜單失敗</h3>
+                        <p><strong>${escapeHtml(err.message)}</strong></p>
+                        <div class="error-details">
+                            請確認：API URL 正確、已部署，或直接開啟：
+                            <div style="margin-top:6px">
+                                <a href="${apiUrl}" target="_blank" style="color:#ffd700;text-decoration:underline">測試 API URL</a>
+                            </div>
+                            <div style="margin-top:8px;font-size:0.9em;opacity:0.8">
+                                錯誤詳情: ${escapeHtml(err.stack || err.toString())}
+                            </div>
+                        </div>
+                    </div>`;
+            }
+        }
+
+        // 載入所有菜單（從同一個 API，但使用不同的 key）
+        async function loadAllMenus() {
+            // 注意：如果兩個 API URL 相同，只需呼叫一次
+            if (API_URLS.food === API_URLS.drink) {
+                // 同一個 API 回傳 { food: [...], drink: [...] }
+                const menuContent = document.getElementById('menuContent');
+                menuContent.innerHTML = '<div class="loading">正在載入菜單</div>';
+
+                try {
+                    const res = await fetch(API_URLS.food, { cache: 'no-store' });
+                    if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+
+                    const raw = await res.json();
+
+                    if (raw.error) {
+                        throw new Error(raw.message || 'API 回傳錯誤');
+                    }
+
+                    const metaData = raw._meta || { rules: [], notes: [] };
+
+                    // 分別處理 food 和 drink
+                    const foodData = coerceDataGrouped(raw.food || [], 'food');
+                    const drinkData = coerceDataGrouped(raw.drink || [], 'drink');
+
+                    console.log('統一 API 載入完成:', {
+                        food: { 項目數: raw.food?.length, 分類數: Object.keys(foodData).length },
+                        drink: { 項目數: raw.drink?.length, 分類數: Object.keys(drinkData).length }
+                    });
+
+                    store.setState({
+                        foodData,
+                        drinkData,
+                        foodMeta: metaData,
+                        drinkMeta: metaData
+                    });
+                } catch (err) {
+                    console.error('載入菜單失敗:', err);
+                    menuContent.innerHTML = `
+                        <div class="error">
+                            <h3>❌ 載入菜單失敗</h3>
+                            <p><strong>${escapeHtml(err.message)}</strong></p>
+                            <div class="error-details">
+                                請確認 API 已正確部署
+                            </div>
+                        </div>`;
+                }
+            } else {
+                // 兩個不同的 API
+                await Promise.all([
+                    loadMenuData('food', false),
+                    loadMenuData('drink', true)
+                ]);
+            }
+        }
+
+        // ===== EVENT HANDLERS (EVENT DELEGATION) =====
+        function switchMenuType(menuType) {
+            const state = store.getState();
+            store.setState({ ui: { ...state.ui, currentMenuType: menuType } });
+
+            // 更新分頁按鈕狀態
+            document.querySelectorAll('.menu-tab').forEach(btn => {
+                const type = btn.getAttribute('data-menu-type');
+                btn.setAttribute('aria-selected', String(type === menuType));
+            });
+
+            // 如果該菜單資料尚未載入，則載入
+            const dataKey = menuType === 'food' ? 'foodData' : 'drinkData';
+            if (Object.keys(state[dataKey]).length === 0) {
+                loadMenuData(menuType, false);
+            }
+        }
+
+        function switchLanguage(lang) {
+            const state = store.getState();
+            store.setState({ ui: { ...state.ui, currentLang: lang } });
+
+            // 更新語言按鈕狀態
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                const code = btn.getAttribute('data-code');
+                btn.setAttribute('aria-pressed', String(code === lang));
+                btn.setAttribute('tabindex', code === lang ? '0' : '-1');
+            });
+        }
+
+        function handleTabKeydown(e) {
+            const tabs = Array.from(document.querySelectorAll('.lang-btn'));
+            const currentIndex = tabs.indexOf(e.target);
+
+            let nextIndex = currentIndex;
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                nextIndex = (currentIndex + 1) % tabs.length;
+            }
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+            }
+
+            if (nextIndex !== currentIndex) {
+                e.preventDefault();
+                tabs.forEach(t => t.setAttribute('tabindex', '-1'));
+                tabs[nextIndex].setAttribute('tabindex', '0');
+                tabs[nextIndex].focus();
+                tabs[nextIndex].click();
+            }
+        }
+
+        // ===== INITIALIZATION =====
+        function setupLanguageSwitcher() {
+            const container = document.querySelector('.language-switcher');
+            const state = store.getState();
+
+            LANGUAGES.forEach((lang, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'lang-btn';
+                btn.textContent = lang.label;
+                btn.setAttribute('role', 'tab');
+                btn.setAttribute('data-code', lang.code);
+                btn.setAttribute('tabindex', idx === 0 ? '0' : '-1');
+                btn.setAttribute('aria-pressed', String(lang.code === state.ui.currentLang));
+
+                container.appendChild(btn);
+            });
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        function init() {
+            setupLanguageSwitcher();
+
+            // 事件委派：分頁切換
+            document.addEventListener('click', (e) => {
+                const tab = e.target.closest('.menu-tab');
+                if (!tab) return;
+
+                const menuType = tab.getAttribute('data-menu-type');
+                if (menuType) switchMenuType(menuType);
+            });
+
+            // 事件委派：語言切換
+            document.addEventListener('click', (e) => {
+                const btn = e.target.closest('.lang-btn');
+                if (!btn) return;
+
+                const lang = btn.getAttribute('data-code');
+                if (lang) switchLanguage(lang);
+            });
+
+            // 事件委派：語言切換鍵盤支援
+            document.addEventListener('keydown', (e) => {
+                const btn = e.target.closest('.lang-btn');
+                if (!btn) return;
+                handleTabKeydown(e);
+            });
+
+            // 事件委派：篩選按鈕
+            document.addEventListener('click', (e) => {
+                const btn = e.target.closest('.filter-btn');
+                if (!btn) return;
+
+                const filter = btn.getAttribute('data-filter') || 'all';
+                const state = store.getState();
+                store.setState({ ui: { ...state.ui, currentFilter: filter } });
+
+                // 更新 aria-pressed
+                document.querySelectorAll('.filter-btn').forEach(b =>
+                    b.setAttribute('aria-pressed', String(b === btn))
+                );
+            });
+
+            // 搜尋輸入（加入防抖）
+            const searchInput = document.getElementById('q');
+            const debouncedSearch = debounce((value) => {
+                const state = store.getState();
+                store.setState({ ui: { ...state.ui, query: value.toLowerCase().trim() } });
+            }, SEARCH_DEBOUNCE_MS);
+
+            searchInput.addEventListener('input', (e) => {
+                debouncedSearch(e.target.value);
+            });
+
+            // 隱藏售罄
+            const soldoutCheckbox = document.getElementById('hideSoldout');
+            soldoutCheckbox.addEventListener('change', (e) => {
+                const state = store.getState();
+                store.setState({ ui: { ...state.ui, hideSoldOut: e.target.checked } });
+            });
+
+            // 刷新按鈕
+            const refreshBtn = document.getElementById('refreshBtn');
+            refreshBtn.addEventListener('click', () => {
+                refreshBtn.disabled = true;
+                const icon = document.getElementById('refreshIcon');
+                icon.classList.add('spin');
+
+                const state = store.getState();
+                loadMenuData(state.ui.currentMenuType, true).finally(() => {
+                    refreshBtn.disabled = false;
+                    icon.classList.remove('spin');
+                });
+            });
+
+            // Popover 控制函數
+            function openPopover(itemData, itemName, clickedElement) {
+                const state = store.getState();
+                const lang = state.ui.currentLang;
+
+                const popover = document.getElementById('infoPopover');
+                const popoverTitle = document.getElementById('popoverTitle');
+                const popoverBody = document.getElementById('popoverBody');
+
+                // 設定標題
+                popoverTitle.textContent = itemName;
+
+                // 建立內容
+                const sections = [];
+
+                const allergensText = pickLangText(itemData.contains, lang);
+                const ingredientsText = pickLangText(itemData.ingredients, lang);
+                const notesText = pickLangText(itemData.notes, lang);
+
+                if (allergensText) {
+                    sections.push({
+                        key: 'allergens',
+                        content: allergensText
+                    });
+                }
+
+                if (ingredientsText) {
+                    sections.push({
+                        key: 'ingredients',
+                        content: ingredientsText
+                    });
+                }
+
+                if (notesText) {
+                    sections.push({
+                        key: 'notes',
+                        content: notesText
+                    });
+                }
+
+                if (sections.length === 0) {
+                    popoverBody.innerHTML = `
+                        <div style="text-align: center; padding: 20px; color: var(--text-secondary);">
+                            <p style="font-size: 0.95em;">暫無詳細資訊</p>
+                        </div>
+                    `;
+                } else {
+                    popoverBody.innerHTML = sections.map(sec => `
+                        <div class="popover-section">
+                            <div class="popover-section-title">
+                                <span>${ACCORDION_LABELS[sec.key]?.[lang] || ACCORDION_LABELS[sec.key]?.en}</span>
+                            </div>
+                            <div class="popover-section-content">
+                                ${escapeHtml(sec.content)}
+                            </div>
+                        </div>
+                    `).join('');
+                }
+
+                // 計算 Popover 位置（相對於點擊的元素）
+                const rect = clickedElement.getBoundingClientRect();
+                const popoverWidth = 350; // 預估寬度
+                const popoverHeight = 200; // 預估高度
+                const spacing = 12;
+
+                // 預設顯示在右側
+                let left = rect.right + spacing;
+                let top = rect.top;
+
+                // 如果右側空間不足，顯示在左側
+                if (left + popoverWidth > window.innerWidth) {
+                    left = rect.left - popoverWidth - spacing;
+                }
+
+                // 如果左側也不足，改為顯示在下方
+                if (left < 0) {
+                    left = rect.left;
+                    top = rect.bottom + spacing;
+                }
+
+                // 確保不超出視窗
+                left = Math.max(10, Math.min(left, window.innerWidth - popoverWidth - 10));
+                top = Math.max(10, Math.min(top, window.innerHeight - popoverHeight - 10));
+
+                popover.style.left = `${left}px`;
+                popover.style.top = `${top}px`;
+
+                // 顯示 Popover
+                popover.classList.add('active');
+            }
+
+            function closePopover() {
+                const popover = document.getElementById('infoPopover');
+                popover.classList.remove('active');
+            }
+
+            // 事件委派：點擊品名顯示 Popover
+            document.addEventListener('click', (e) => {
+                const namePrimary = e.target.closest('.name-primary');
+
+                if (namePrimary) {
+                    // 找到對應的菜單項目
+                    const menuItem = namePrimary.closest('.menu-item');
+                    if (!menuItem) return;
+
+                    // 從 DOM 中取得品名
+                    const itemName = namePrimary.textContent.replace(/\s*\(.*?\)\s*/g, '').trim();
+
+                    // 從當前資料中找到對應的項目
+                    const state = store.getState();
+                    const currentData = state.ui.currentMenuType === 'food' ? state.foodData : state.drinkData;
+
+                    // 搜尋所有分類中的項目
+                    let itemData = null;
+                    for (const category in currentData) {
+                        const items = currentData[category];
+                        if (Array.isArray(items)) {
+                            itemData = items.find(item => {
+                                const names = [item.zh, item['zh-TW'], item.en, item.ja, item.ko, item.fr, item.th, item.fil, item.vi]
+                                    .filter(Boolean)
+                                    .map(n => n.trim());
+                                return names.some(n => n === itemName || itemName.includes(n));
+                            });
+                            if (itemData) break;
+                        }
+                    }
+
+                    if (itemData) {
+                        openPopover(itemData, itemName, namePrimary);
+                    }
+                } else {
+                    // 點擊其他地方關閉 Popover
+                    const popover = document.getElementById('infoPopover');
+                    const popoverClose = document.getElementById('popoverClose');
+
+                    if (popover && !popover.contains(e.target) && e.target !== popoverClose) {
+                        closePopover();
+                    }
+                }
+            });
+
+            // Popover 關閉按鈕
+            document.getElementById('popoverClose').addEventListener('click', (e) => {
+                e.stopPropagation();
+                closePopover();
+            });
+
+            // ESC 鍵關閉
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closePopover();
+                }
+            });
+
+            // 載入初始資料（同時載入兩個菜單）
+            loadAllMenus();
         }
 
         // ===== START =====
         init();
     </script>
 </body>
-
 </html>
