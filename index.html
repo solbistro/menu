@@ -3,2969 +3,2190 @@
 
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>雞尾酒譜瀏覽</title>
-
-    <!-- PWA Meta -->
-    <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#667eea">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="雞尾酒譜">
-    <link rel="apple-touch-icon" href="icons/icon-192.png">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SOL Bistro - Menu (Food & Drink)</title>
     <style>
-        /* ============ 設計變數（Speakeasy / 微醺酒吧質感）============ */
-        :root {
-            --bg-base: #161210;
-            --ink: #f4ece0;
-            --ink-muted: rgba(244, 236, 224, .62);
-            --ink-faint: rgba(244, 236, 224, .40);
-            --accent: #d4a460;
-            --accent-strong: #ecca8d;
-            --accent-deep: #a9743a;
-            --glass: rgba(255, 255, 255, .055);
-            --glass-strong: rgba(255, 255, 255, .09);
-            --hairline: rgba(236, 202, 141, .18);
-            --card: #faf5ec;
-            --card-ink: #2b2218;
-            --card-muted: #8a7a64;
-            --card-line: #ece2d2;
-            --danger: #c25a44;
-            --danger-soft: #f3d7cf;
-            --success: #6f9c66;
-            --radius: 18px;
-            --radius-sm: 12px;
-            --shadow: 0 18px 48px rgba(0, 0, 0, .45);
-            --font-display: 'Fraunces', 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
-            --font-body: 'Manrope', 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        html {
-            scroll-behavior: smooth;
+        :root {
+            /* 主題色 */
+            --color-primary: #d4af37;
+            --color-primary-light: #f4d03f;
+
+            /* 背景 */
+            --bg-page: #2c3e50;
+            --bg-page-alt: #34495e;
+            --bg-card: rgba(40, 40, 40, .95);
+
+            /* 文字 */
+            --text-primary: #f0f0f0;
+            --text-secondary: #aaa;
+
+            /* 邊框/分隔線 */
+            --border-light: #555;
+
+            /* 狀態色 */
+            --status-success: #7ed957;
+            --status-warning: #ffb703;
+            --status-danger: #ff6b6b;
+
+            /* 焦點 */
+            --color-focus: #f4d03f;
         }
 
         body {
-            font-family: var(--font-body);
-            color: var(--ink);
-            background-color: var(--bg-base);
-            background-image:
-                radial-gradient(900px 600px at 12% -8%, rgba(212, 164, 96, .18), transparent 60%),
-                radial-gradient(800px 620px at 92% 8%, rgba(150, 70, 55, .16), transparent 58%),
-                radial-gradient(1000px 800px at 50% 120%, rgba(80, 60, 110, .14), transparent 60%);
-            background-attachment: fixed;
-            min-height: 100vh;
-            line-height: 1.55;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        body::before {
-            content: "";
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 0;
-            opacity: .045;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-        }
-
-        .container {
-            max-width: 1180px;
-            margin: 0 auto;
-            padding: 28px 22px 64px;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* ============ 標題區 ============ */
-        header {
-            text-align: center;
-            color: var(--ink);
-            margin-bottom: 34px;
-        }
-
-        h1 {
-            font-family: var(--font-display);
-            font-size: clamp(2.1rem, 5vw, 3.1rem);
-            font-weight: 600;
-            letter-spacing: .01em;
-            line-height: 1.1;
-            margin-bottom: 10px;
-            background: linear-gradient(180deg, #fff8ec 0%, var(--accent-strong) 70%, var(--accent) 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .subtitle {
-            font-size: 1.05rem;
-            color: var(--ink-muted);
-            letter-spacing: .14em;
-            text-transform: uppercase;
-            margin-bottom: 26px;
-        }
-
-        /* ============ 提示橫幅 ============ */
-        .age-warning {
-            background: rgba(212, 164, 96, .12);
-            border: 1px solid var(--hairline);
-            color: var(--accent-strong);
-            padding: 12px 20px;
-            border-radius: var(--radius-sm);
-            margin: 0 auto 20px;
-            max-width: 560px;
-            text-align: center;
-            font-weight: 500;
-            font-size: .92rem;
-            backdrop-filter: blur(10px);
-        }
-
-        .install-prompt {
-            background: linear-gradient(135deg, rgba(212, 164, 96, .92), rgba(169, 116, 58, .92));
-            color: #1d160e;
-            padding: 14px 20px;
-            border-radius: var(--radius-sm);
-            margin-bottom: 18px;
-            text-align: center;
-            font-weight: 600;
-            backdrop-filter: blur(10px);
-            display: none;
-        }
-
-        .install-btn {
-            background: #1d160e;
-            color: var(--accent-strong);
-            border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            margin-left: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: .25s;
-        }
-
-        .install-btn:hover {
-            transform: translateY(-1px);
-        }
-
-        .offline-indicator {
-            background: rgba(194, 90, 68, .92);
-            color: #fff;
-            padding: 9px 16px;
-            border-radius: 10px;
-            margin-bottom: 14px;
-            text-align: center;
-            display: none;
-            backdrop-filter: blur(10px);
-        }
-
-        .connection-status {
-            background: var(--glass);
-            color: var(--ink);
-            padding: 10px 16px;
-            border-radius: 10px;
-            margin-bottom: 14px;
-            text-align: center;
-            font-size: .9rem;
-            border: 1px solid var(--hairline);
-            backdrop-filter: blur(10px);
-        }
-
-        .connection-status.success {
-            background: rgba(111, 156, 102, .9);
-            color: #fff;
-            border-color: transparent;
-        }
-
-        .connection-status.error {
-            background: rgba(194, 90, 68, .92);
-            color: #fff;
-            border-color: transparent;
-        }
-
-        .connection-status.warning {
-            background: rgba(212, 164, 96, .92);
-            color: #1d160e;
-            border-color: transparent;
-        }
-
-        /* ============ 管理員控制 ============ */
-        .admin-controls {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--glass);
-            padding: 6px 12px;
-            border-radius: 24px;
-            border: 1px solid var(--hairline);
-        }
-
-        .admin-status-text {
-            font-size: .85rem;
-            color: var(--ink-muted);
-            font-weight: 600;
-            min-width: 76px;
-        }
-
-        .admin-mode .admin-controls {
-            background: rgba(111, 156, 102, .18);
-            border-color: rgba(111, 156, 102, .45);
-        }
-
-        .admin-mode .admin-status-text {
-            color: #a9d3a0;
-        }
-
-        .guest-mode .admin-controls {
-            background: var(--glass);
-            border-color: var(--hairline);
-        }
-
-        /* ============ 管理員登入彈窗 ============ */
-        .admin-login-modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(12, 9, 7, .68);
-            backdrop-filter: blur(4px);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
+            background: linear-gradient(135deg, var(--bg-page) 0%, var(--bg-page-alt) 100%);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+            color: var(--text-primary);
             padding: 20px;
-        }
-
-        .admin-login-modal.show {
-            display: flex;
-        }
-
-        .admin-login-form {
-            background: var(--card);
-            padding: 32px;
-            border-radius: 20px;
-            box-shadow: var(--shadow);
-            width: min(420px, 92vw);
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .admin-login-form h3 {
-            font-family: var(--font-display);
-            font-size: 1.5rem;
-            margin: 0 0 24px;
-            text-align: center;
-            color: var(--card-ink);
-        }
-
-        .admin-login-form .form-group {
-            margin-bottom: 18px;
-        }
-
-        .admin-login-form label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--card-ink);
-        }
-
-        .admin-login-form input {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1px solid var(--card-line);
-            border-radius: 10px;
-            font-size: 1rem;
-            background: #fff;
-            transition: .2s;
-        }
-
-        .admin-login-form input:focus {
-            outline: none;
-            border-color: var(--accent-deep);
-            box-shadow: 0 0 0 3px rgba(169, 116, 58, .15);
-        }
-
-        .admin-login-actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 24px;
-        }
-
-        .admin-login-actions button {
-            flex: 1;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: .2s;
-        }
-
-        .btn-login {
-            background: var(--accent-deep);
-            color: #fff;
-        }
-
-        .btn-login:hover {
-            background: #8f6230;
-        }
-
-        .btn-cancel {
-            background: #ece2d2;
-            color: var(--card-ink);
-        }
-
-        .btn-cancel:hover {
-            background: #ddd0bb;
-        }
-
-        .admin-error {
-            background: var(--danger-soft);
-            color: #7a2e1f;
-            padding: 12px;
-            border-radius: 10px;
-            margin-bottom: 16px;
-            font-size: .9rem;
-        }
-
-        .admin-success {
-            background: #d8ecd4;
-            color: #2f6a2a;
-            padding: 12px;
-            border-radius: 10px;
-            margin-bottom: 16px;
-            font-size: .9rem;
-        }
-
-        /* ============ 訪客模式隱藏編輯 ============ */
-        .guest-mode .edit-only {
-            display: none !important;
-        }
-
-        .guest-mode .cocktail-card .btn {
-            display: none !important;
-        }
-
-        .edit-disabled {
-            opacity: .5;
-            pointer-events: none;
-            user-select: none;
-        }
-
-        /* ============ 篩選列 ============ */
-        .filters {
-            background: var(--glass);
-            backdrop-filter: blur(14px);
-            border-radius: var(--radius);
-            padding: 22px;
-            margin-bottom: 28px;
-            border: 1px solid var(--hairline);
-            box-shadow: var(--shadow);
-        }
-
-        .filter-row {
-            display: grid;
-            grid-template-columns: 2fr 1fr auto;
-            gap: 14px;
-            align-items: center;
-        }
-
-        input[type="text"],
-        select,
-        input[type="number"],
-        input[type="url"],
-        textarea {
-            padding: 12px 16px;
-            border: 1px solid transparent;
-            border-radius: var(--radius-sm);
-            background: rgba(255, 255, 255, .94);
-            color: var(--card-ink);
-            font-family: var(--font-body);
-            font-size: 1rem;
-            transition: .25s;
-            width: 100%;
-        }
-
-        input::placeholder,
-        textarea::placeholder {
-            color: #9b8d78;
-        }
-
-        input:focus,
-        select:focus,
-        textarea:focus {
-            outline: none;
-            background: #fff;
-            border-color: var(--accent);
-            transform: translateY(-1px);
-            box-shadow: 0 8px 22px rgba(0, 0, 0, .28);
-        }
-
-        .view-toggle {
-            display: flex;
-            background: var(--glass-strong);
-            border: 1px solid var(--hairline);
-            border-radius: var(--radius-sm);
-            overflow: hidden;
-        }
-
-        .view-btn {
-            padding: 10px 18px;
-            border: none;
-            background: transparent;
-            color: var(--ink-muted);
-            cursor: pointer;
-            font-weight: 600;
-            transition: .25s;
-        }
-
-        .view-btn.active {
-            background: var(--accent);
-            color: #1d160e;
-        }
-
-        .stats {
-            text-align: center;
-            color: var(--ink-muted);
-            margin-bottom: 24px;
-            font-size: .9rem;
-            letter-spacing: .04em;
-        }
-
-        /* ============ 酒譜卡片 ============ */
-        .cocktails-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-            gap: 22px;
-        }
-
-        .cocktails-list {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 16px;
-        }
-
-        .cocktail-card {
-            background: var(--card);
-            border-radius: var(--radius);
-            overflow: hidden;
-            border: 1px solid rgba(0, 0, 0, .04);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, .28);
-            transition: transform .3s ease, box-shadow .3s ease;
-            animation: fadeIn .5s ease both;
-        }
-
-        .cocktail-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 20px 44px rgba(0, 0, 0, .4);
-        }
-
-        .cocktails-list .cocktail-card {
-            display: grid;
-            grid-template-columns: 200px 1fr;
-        }
-
-        .cocktail-image {
-            width: 100%;
-            aspect-ratio: 16/10;
-            background: linear-gradient(135deg, #efe6d6, #e2d4bd);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            font-size: 2.4rem;
-        }
-
-        .cocktails-list .cocktail-image {
-            height: 100%;
-            aspect-ratio: auto;
-        }
-
-        .cocktail-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .cocktail-content {
-            padding: 20px 22px 22px;
-        }
-
-        .cocktail-title {
-            font-family: var(--font-display);
-            font-size: 1.4rem;
-            font-weight: 600;
-            color: var(--card-ink);
-            flex: 1;
-            margin: 0 0 8px;
-            line-height: 1.2;
-        }
-
-        .cocktail-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 12px;
-            font-size: .82rem;
-            color: var(--card-muted);
-        }
-
-        .meta-item {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .cocktail-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 15px;
-        }
-
-        .tag {
-            background: rgba(169, 116, 58, .12);
-            color: var(--accent-deep);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: .72rem;
-            font-weight: 600;
-        }
-
-        .cocktail-details .ingredients-list,
-        .cocktail-details .instructions-list {
-            padding: 10px 2px 4px;
-            color: #4a3f30;
-            font-size: .92rem;
-            line-height: 1.7;
-        }
-
-        .cocktail-details .instruction {
-            margin-bottom: 4px;
-        }
-
-        /* ============ 熱門標籤 ============ */
-        .popular-tags-section {
-            background: var(--glass);
-            border-radius: var(--radius-sm);
-            padding: 16px;
-            margin-top: 16px;
-            border: 1px solid var(--hairline);
-        }
-
-        .popular-tags-title {
-            font-size: .78rem;
-            color: var(--accent-strong);
-            font-weight: 700;
-            margin-bottom: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .popular-tags-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .tag-btn {
-            background: var(--glass-strong);
-            color: var(--ink);
-            padding: 6px 13px;
-            border-radius: 20px;
-            border: 1px solid var(--hairline);
-            cursor: pointer;
-            font-size: .8rem;
-            font-weight: 600;
-            transition: all .25s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            white-space: nowrap;
-        }
-
-        .tag-btn:hover {
-            background: rgba(212, 164, 96, .2);
-            border-color: var(--accent);
-            transform: translateY(-2px);
-        }
-
-        .tag-btn.active {
-            background: var(--accent);
-            border-color: var(--accent-strong);
-            color: #1d160e;
-        }
-
-        .tag-count {
-            font-size: .7rem;
-            opacity: .8;
-            font-weight: 700;
-        }
-
-        /* ============ 展開明細 ============ */
-        details {
-            margin-bottom: 8px;
-        }
-
-        summary {
-            cursor: pointer;
-            font-weight: 600;
-            color: var(--accent-deep);
-            padding: 8px 0;
-            border-bottom: 1px solid var(--card-line);
-            list-style: none;
-        }
-
-        summary:hover {
-            color: #8f6230;
-        }
-
-        /* ============ 導覽分頁 ============ */
-        .nav-tabs {
-            display: inline-flex;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 22px;
-            padding: 6px;
-            background: var(--glass);
-            border: 1px solid var(--hairline);
-            border-radius: 30px;
-            backdrop-filter: blur(10px);
-        }
-
-        .nav-btn {
-            background: transparent;
-            border: none;
-            color: var(--ink-muted);
-            padding: 11px 22px;
-            border-radius: 22px;
-            cursor: pointer;
-            transition: .25s;
-            font-size: .98rem;
-            font-weight: 600;
-        }
-
-        .nav-btn:hover {
-            color: var(--ink);
-        }
-
-        .nav-btn.active {
-            background: var(--accent);
-            color: #1d160e;
-            box-shadow: 0 6px 18px rgba(212, 164, 96, .3);
-        }
-
-        .nav-btn:disabled {
-            opacity: .5;
-            cursor: not-allowed;
-            pointer-events: auto;
-        }
-
-        .nav-btn:disabled:hover {
-            background: transparent;
-            transform: none;
-        }
-
-        .nav-btn.edit-disabled {
-            opacity: .5;
-            cursor: not-allowed;
-        }
-
-        /* ============ 分頁 ============ */
-        .page {
-            display: none;
-        }
-
-        .page.active {
-            display: block;
-            animation: fadeIn .4s ease both;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--ink-muted);
-        }
-
-        .empty-state .icon {
-            font-size: 3.6rem;
-            margin-bottom: 18px;
-            opacity: .8;
-        }
-
-        .empty-state h3 {
-            font-family: var(--font-display);
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .loading {
-            text-align: center;
+            min-height: 100vh;
+        }
+
+        .menu-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            border: 3px solid var(--color-primary);
+            border-radius: 12px;
             padding: 40px;
-            color: var(--ink-muted);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, .5);
         }
 
-        .loading::after {
-            content: '';
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--hairline);
+        .header {
+            text-align: center;
+            border-bottom: 2px solid var(--color-primary);
+            padding-bottom: 24px;
+            margin-bottom: 24px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 32px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .logo-title {
+            font-size: 2.5em;
+            font-weight: 800;
+            letter-spacing: .06em;
+        }
+
+        .logo-circle {
+            width: 112px;
+            height: 112px;
+            border: 3px solid var(--text-primary);
             border-radius: 50%;
-            border-top-color: var(--accent);
-            animation: spin 1s linear infinite;
-            margin-left: 10px;
-            vertical-align: middle;
-        }
-
-        /* ============ 表單 ============ */
-        .add-cocktail-form {
-            text-align: left;
-        }
-
-        .form-section {
-            background: var(--glass);
-            border-radius: var(--radius);
-            padding: 22px;
-            margin: 18px 0;
-            border: 1px solid var(--hairline);
-            backdrop-filter: blur(12px);
-        }
-
-        .form-section h3 {
-            font-family: var(--font-display);
-            color: var(--accent-strong);
-            margin-bottom: 16px;
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-            gap: 16px;
-        }
-
-        .form-group {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            align-items: center;
+            justify-content: center;
+            background: rgba(60, 60, 60, .8);
         }
 
-        .form-group label {
-            color: var(--ink-muted);
-            font-weight: 600;
-            font-size: .9rem;
-            margin-bottom: 4px;
+        .sol {
+            font-size: 2.2em;
+            font-weight: 800;
+            line-height: 1;
         }
 
-        .tags-display {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
+        .bistro {
+            font-size: 1.2em;
+            opacity: .9;
+        }
+
+        .wifi {
+            background: #555;
+            padding: 6px 14px;
+            border-radius: 20px;
+            display: inline-block;
+            font-size: .9em;
+            margin-top: 6px;
+        }
+
+        .rules {
+            font-size: .9em;
+            color: #ccc;
+            line-height: 1.6;
             margin-top: 10px;
         }
 
-        .tags-display .tag {
-            cursor: pointer;
-        }
-
-        .ingredient-item,
-        .instruction-item {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-
-        .instruction-item span {
-            color: var(--accent-strong);
-        }
-
-        .ingredient-item input,
-        .instruction-item input {
-            flex: 1;
-        }
-
-        .add-btn,
-        .remove-btn,
-        .btn {
-            cursor: pointer;
-            border: none;
-            border-radius: var(--radius-sm);
-            padding: 10px 18px;
-            font-family: var(--font-body);
-            font-weight: 600;
-            transition: .25s;
-        }
-
-        .add-btn {
-            background: var(--glass-strong);
-            color: var(--accent-strong);
-            border: 1px dashed var(--hairline);
-            margin-top: 8px;
-        }
-
-        .add-btn:hover {
-            background: rgba(212, 164, 96, .16);
-            transform: translateY(-1px);
-        }
-
-        .remove-btn {
-            background: var(--danger-soft);
-            color: #7a2e1f;
-            padding: 8px 14px;
-            font-size: .85rem;
-        }
-
-        .remove-btn:hover {
-            background: #ecc4ba;
-        }
-
-        .btn-primary {
-            background: var(--accent);
-            color: #1d160e;
-            padding: 12px 24px;
-        }
-
-        .btn-primary:hover {
-            background: var(--accent-strong);
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-            background: var(--glass-strong);
-            color: var(--ink);
-            padding: 12px 24px;
-            border: 1px solid var(--hairline);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, .14);
-        }
-
-        .btn-danger {
-            background: var(--danger-soft);
-            color: #7a2e1f;
-        }
-
-        .btn-danger:hover {
-            background: #ecc4ba;
-        }
-
-        .form-actions {
+        .tools {
             display: flex;
             gap: 12px;
-            justify-content: flex-end;
-            margin-top: 22px;
-        }
-
-        /* ============ 頂部列 ============ */
-        .topbar {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 14px;
-            padding: 12px 22px;
-            background: rgba(22, 18, 16, .82);
-            backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--hairline);
-        }
-
-        .brand {
-            font-family: var(--font-display);
-            font-weight: 600;
-            color: var(--accent-strong);
-            font-size: 1.25rem;
-            letter-spacing: .01em;
-        }
-
-        .topbar .actions {
-            display: flex;
-            gap: 8px;
-            align-items: center;
+            margin-top: 18px;
             flex-wrap: wrap;
         }
 
-        .topbar .btn {
-            padding: 9px 16px;
-            font-size: .9rem;
-        }
-
-        /* ============ 編輯抽屜 ============ */
-        .drawer {
-            position: fixed;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            width: min(440px, 96vw);
-            background: var(--card);
-            box-shadow: -10px 0 40px rgba(0, 0, 0, .5);
-            padding: 24px;
-            overflow: auto;
-            z-index: 1001;
-            transform: translateX(100%);
-            transition: transform .32s cubic-bezier(.4, 0, .2, 1);
-        }
-
-        .drawer:not(.hidden) {
-            transform: translateX(0);
-        }
-
-        .drawer.hidden {
-            transform: translateX(100%);
-        }
-
-        .drawer-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid var(--card-line);
-        }
-
-        .drawer-header h3 {
-            font-family: var(--font-display);
-            font-size: 1.5rem;
-            margin: 0;
-            color: var(--card-ink);
-        }
-
-        .header-actions {
+        .language-switcher {
             display: flex;
             gap: 8px;
-        }
-
-        .btn-close {
-            background: #ece2d2;
-            color: var(--card-ink);
-            border: none;
-            border-radius: 50%;
-            width: 34px;
-            height: 34px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
+            flex-wrap: wrap;
             justify-content: center;
-            transition: all .2s;
         }
 
-        .btn-close:hover {
-            background: var(--danger);
-            color: #fff;
-            transform: rotate(90deg);
-        }
-
-        .edit-form label {
-            display: block;
-            margin: 16px 0 6px;
-            font-size: .88rem;
-            font-weight: 600;
-            color: var(--card-muted);
-        }
-
-        .edit-form input,
-        .edit-form textarea,
-        .edit-form select {
+        /* 手機版下拉選單 (預設隱藏) */
+        .language-select {
+            display: none;
             width: 100%;
-            padding: 12px;
-            border-radius: 10px;
-            border: 1px solid var(--card-line);
-            background: #fff;
-            color: var(--card-ink);
+            max-width: 200px;
+            padding: 10px 14px;
+            background: rgba(60, 60, 60, .85);
+            border: 2px solid #555;
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 0.95em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23D4AF37' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 36px;
         }
 
-        .edit-form input:focus,
-        .edit-form textarea:focus,
-        .edit-form select:focus {
+        .language-select:hover {
+            border-color: var(--color-primary);
+            box-shadow: 0 4px 8px rgba(212, 175, 55, .25);
+        }
+
+        .language-select:focus {
             outline: none;
-            border-color: var(--accent-deep);
-            transform: none;
-            box-shadow: 0 0 0 3px rgba(169, 116, 58, .14);
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, .2);
         }
 
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
+        .lang-btn {
+            background: rgba(60, 60, 60, .85);
+            border: 2px solid #555;
+            color: var(--text-primary);
+            padding: 8px 14px;
+            border-radius: 999px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: .2s;
         }
 
-        .drawer-actions {
+        .lang-btn:hover {
+            border-color: var(--color-primary);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(212, 175, 55, .25);
+        }
+
+        .lang-btn[aria-pressed="true"] {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+            color: #2c3e50;
+            border-color: var(--color-primary);
+        }
+
+        .right-tools {
             display: flex;
-            gap: 8px;
-            margin-top: 22px;
-            padding-top: 16px;
-            border-top: 1px solid var(--card-line);
+            gap: 10px;
+            align-items: center;
             flex-wrap: wrap;
         }
 
-        .drawer-actions .btn {
-            flex: 1;
-            min-width: 100px;
+        .search {
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        #imagePreview img,
-        #addImagePreview img {
-            max-width: 100%;
+        .search input {
+            background: #2e2e2e;
+            border: 1px solid #4a4a4a;
+            color: var(--text-primary);
+            padding: 8px 12px;
             border-radius: 10px;
-            margin-top: 8px;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, .18);
+            min-width: 220px;
         }
 
-        #addImagePreview {
-            padding: 8px 0;
-            text-align: center;
+        .toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #2e2e2e;
+            border: 1px solid #4a4a4a;
+            padding: 6px 10px;
+            border-radius: 10px;
+            font-size: .9em;
         }
 
-        #imagePreview {
-            margin: 8px 0;
+        .btn {
+            background: rgba(60, 60, 60, .9);
+            border: 1px solid #666;
+            color: var(--text-primary);
+            padding: 8px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
         }
 
-        .debug-panel {
-            background: rgba(0, 0, 0, .5);
-            color: var(--ink);
-            padding: 16px;
-            border-radius: 12px;
-            margin: 16px 0;
-            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-            font-size: .85rem;
-            line-height: 1.4;
-            max-height: 200px;
-            overflow-y: auto;
-            border: 1px solid var(--hairline);
+        .btn:hover {
+            border-color: var(--color-primary);
         }
 
-        .debug-panel h4 {
-            margin: 0 0 8px;
-            color: var(--accent-strong);
+        .btn[disabled] {
+            opacity: .6;
+            cursor: not-allowed;
         }
 
-        /* ============ 動畫 ============ */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(18px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .spin {
+            display: inline-block;
+            transform-origin: center;
+            animation: spin 1s linear infinite;
         }
 
         @keyframes spin {
             to {
-                transform: rotate(360deg);
+                transform: rotate(360deg)
             }
         }
 
-        /* ============ 響應式 ============ */
-        @media (max-width: 480px) {
-            .drawer-actions {
-                flex-direction: column;
+
+        .filter-tags {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: rgba(60, 60, 60, .85);
+            border: 1px solid #555;
+            color: var(--text-primary);
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: .9em;
+            font-weight: 600;
+            transition: .2s;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--color-primary);
+        }
+
+        .filter-btn[aria-pressed="true"] {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+            color: #2c3e50;
+            border-color: var(--color-primary);
+        }
+
+        /* 分頁切換 */
+        .menu-tabs {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .menu-tab {
+            background: rgba(60, 60, 60, .85);
+            border: 2px solid #555;
+            color: var(--text-primary);
+            padding: 12px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.1em;
+            transition: .2s;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+        }
+
+        .menu-tab:hover {
+            border-color: var(--color-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(212, 175, 55, .3);
+        }
+
+        .menu-tab[aria-selected="true"] {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+            color: #2c3e50;
+            border-color: var(--color-primary);
+            box-shadow: 0 4px 8px rgba(212, 175, 55, .4);
+        }
+
+        /* 飲料專用標籤 */
+        .badge.alcohol {
+            border-color: #e74c3c;
+            color: #e74c3c;
+        }
+
+        .badge.body {
+            border-color: #3498db;
+            color: #3498db;
+        }
+
+        .badge.flavor {
+            border-color: #9b59b6;
+            color: #9b59b6;
+        }
+
+        .notice-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 16px;
+            text-align: left;
+        }
+
+        .notice-card {
+            background: rgba(30, 30, 30, .85);
+            border: 1px solid #555;
+            border-radius: 10px;
+            padding: 14px;
+        }
+
+        .notice-title {
+            font-weight: 800;
+            margin-bottom: 10px;
+            color: var(--color-primary);
+            font-size: 1.05em;
+        }
+
+        .notice-list {
+            list-style: none;
+            display: grid;
+            gap: 8px;
+        }
+
+        .notice-list li {
+            line-height: 1.5;
+            border-left: 3px solid #444;
+            padding-left: 10px;
+            color: #ddd;
+        }
+
+        .menu-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 36px;
+            margin-top: 18px;
+        }
+
+        .menu-section {
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            background: linear-gradient(to right, var(--color-primary), var(--color-primary-light));
+            color: #2c3e50;
+            padding: 8px 14px;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+            clip-path: polygon(0 0, 95% 0, 100% 50%, 95% 100%, 0 100%);
+            display: inline-block;
+            min-width: 140px;
+        }
+
+        .menu-item {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            grid-template-areas:
+                "thumb info price"
+                "accordion accordion accordion";
+            gap: 12px;
+            margin-bottom: 16px;
+            padding: 12px;
+            background: rgba(40, 40, 40, 0.3);
+            border-radius: 10px;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .menu-item:hover {
+            background: rgba(50, 50, 50, 0.4);
+            border-color: rgba(212, 175, 55, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .item-name {
+            grid-area: info;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 0;
+        }
+
+        .name-primary {
+            font-size: 1.1em;
+            font-weight: 700;
+            line-height: 1.3;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .name-primary:hover {
+            color: var(--color-primary);
+        }
+
+        .name-secondary {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .badges {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 4px;
+        }
+
+        .badge {
+            border: 1px solid #666;
+            border-radius: 8px;
+            padding: 2px 6px;
+            font-size: .75em;
+            opacity: .95;
+        }
+
+        .badge.vegan {
+            border-color: var(--status-success);
+        }
+
+        .badge.spicy {
+            border-color: var(--status-warning);
+        }
+
+        .badge.allergen {
+            border-color: #888;
+        }
+
+        .price {
+            grid-area: price;
+            font-weight: 800;
+            font-size: 1.15em;
+            white-space: nowrap;
+            color: var(--color-primary);
+            text-align: right;
+            align-self: start;
+            padding-top: 2px;
+        }
+
+        .soldout {
+            opacity: 0.7;
+            position: relative;
+        }
+
+        .soldout::after {
+            content: "SOLD OUT";
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: var(--status-danger);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7em;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        .soldout .name-primary,
+        .soldout .name-secondary {
+            opacity: 0.7;
+            text-decoration: line-through;
+        }
+
+        .thumb {
+            grid-area: thumb;
+            width: 90px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: #2a2a2a;
+            flex-shrink: 0;
+            transition: transform 0.2s ease;
+        }
+
+        .menu-item:hover .thumb {
+            transform: scale(1.05);
+            border-color: rgba(212, 175, 55, 0.4);
+        }
+
+        /* 隱藏 Accordion 區域 */
+        .accordion {
+            display: none;
+        }
+
+        /* Popover 浮動提示 */
+        .info-popover {
+            position: fixed;
+            z-index: 10000;
+            min-width: 250px;
+            max-width: 400px;
+            background: linear-gradient(145deg, rgba(35, 35, 35, 0.98), rgba(25, 25, 25, 0.98));
+            border: 2px solid var(--color-primary);
+            border-radius: 12px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+            transform: translateY(8px);
+            pointer-events: none;
+        }
+
+        .info-popover.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .popover-header {
+            padding: 14px 18px;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+            color: #2c3e50;
+            font-weight: 700;
+            font-size: 1.05em;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .popover-close {
+            background: rgba(0, 0, 0, 0.2);
+            border: none;
+            color: #2c3e50;
+            font-size: 1.4em;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s ease;
+            line-height: 1;
+            padding: 0;
+        }
+
+        .popover-close:hover {
+            background: rgba(0, 0, 0, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .popover-body {
+            padding: 16px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .popover-section {
+            margin-bottom: 14px;
+        }
+
+        .popover-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .popover-section-title {
+            font-size: 0.95em;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .popover-section-content {
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-size: 0.9em;
+            padding-left: 18px;
+            border-left: 2px solid var(--color-primary);
+        }
+
+        /* 箭頭指示器 */
+        .popover-arrow {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border: 10px solid transparent;
+        }
+
+        .popover-arrow.top {
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-bottom-color: var(--color-primary);
+        }
+
+        .popover-arrow.bottom {
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-top-color: var(--color-primary);
+        }
+
+        /* 滾動條樣式 */
+        .popover-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .popover-body::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+        }
+
+        .popover-body::-webkit-scrollbar-thumb {
+            background: var(--color-primary);
+            border-radius: 3px;
+        }
+
+        .popover-body::-webkit-scrollbar-thumb:hover {
+            background: var(--color-primary-light);
+        }
+
+        /* Popover 內容區塊樣式 */
+        .popover-section {
+            margin-bottom: 16px;
+        }
+
+        .popover-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .popover-section-title {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: var(--color-primary);
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid rgba(215, 169, 92, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .popover-section-content {
+            font-size: 0.95em;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+
+        .loading {
+            grid-column: 1/-1;
+            text-align: center;
+            padding: 36px;
+            font-size: 1.1em;
+            color: var(--color-primary);
+        }
+
+        .loading::after {
+            content: "...";
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+
+            0%,
+            20% {
+                content: "."
             }
 
-            .drawer-actions .btn {
+            40% {
+                content: ".."
+            }
+
+            60%,
+            100% {
+                content: "..."
+            }
+        }
+
+        .error {
+            grid-column: 1/-1;
+            background: rgba(255, 107, 107, .1);
+            border: 2px solid var(--status-danger);
+            border-radius: 10px;
+            padding: 20px;
+            color: var(--status-danger);
+        }
+
+        .error-details {
+            background: rgba(0, 0, 0, .3);
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-family: ui-monospace, Consolas, Monaco, monospace;
+            font-size: .9em;
+            color: #ffd700;
+        }
+
+        :focus-visible {
+            outline: 3px solid var(--color-focus);
+            outline-offset: 2px;
+            border-radius: 8px;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .menu-container {
+                box-shadow: none;
+                border: none;
+            }
+
+
+            .wifi {
+                display: none;
+            }
+
+            .menu-content {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .section-title {
+                clip-path: none;
+                border-radius: 6px;
+            }
+
+            .badge {
+                border-color: #bbb;
+                color: #333;
+            }
+
+            .price {
+                color: #000;
+            }
+        }
+
+        @media(max-width:900px) {
+            .menu-content {
+                grid-template-columns: 1fr;
+            }
+
+            .notice-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .menu-container {
+                padding: 20px;
+            }
+
+            .logo-title {
+                font-size: 2em;
+            }
+
+            .logo-circle {
+                width: 90px;
+                height: 90px;
+            }
+
+            .sol {
+                font-size: 1.8em;
+            }
+
+            .bistro {
+                font-size: 1em;
+            }
+        }
+
+        @media(max-width:640px) {
+            body {
+                padding: 10px;
+            }
+
+            .menu-container {
+                padding: 16px;
+                border-width: 2px;
+            }
+
+            /* 手機版：隱藏語言按鈕，顯示下拉選單 */
+            .language-switcher .lang-btn {
+                display: none;
+            }
+
+            .language-select {
+                display: block;
+                margin: 0 auto;
+            }
+
+            .tools {
+                gap: 12px;
+            }
+
+            .header {
+                padding-bottom: 16px;
+                margin-bottom: 16px;
+            }
+
+            .logo {
+                gap: 16px;
+            }
+
+            .logo-title {
+                font-size: 1.6em;
+            }
+
+            .logo-circle {
+                width: 80px;
+                height: 80px;
+            }
+
+            .sol {
+                font-size: 1.5em;
+            }
+
+            .bistro {
+                font-size: 0.9em;
+            }
+
+            .menu-tab {
+                padding: 10px 16px;
+                font-size: 1em;
+            }
+
+            .tools {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .right-tools {
+                flex-direction: column;
                 width: 100%;
             }
 
-            .popular-tags-container {
+            .search {
+                width: 100%;
+            }
+
+            .search input {
+                width: 100%;
+                min-width: auto;
+            }
+
+            /* 手機版菜單項目優化 */
+            .menu-item {
+                grid-template-columns: 80px 1fr;
+                grid-template-areas:
+                    "thumb info"
+                    "thumb price"
+                    "accordion accordion";
+                gap: 10px;
+                padding: 12px;
+                margin-bottom: 12px;
+            }
+
+            .thumb {
+                width: 80px;
+                height: 80px;
+                align-self: start;
+            }
+
+            .item-name {
                 gap: 6px;
             }
 
-            .tag-btn {
-                padding: 5px 10px;
-                font-size: .75rem;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 20px 16px 56px;
+            .name-primary {
+                font-size: 1.05em;
+                line-height: 1.35;
             }
 
-            #cocktailsContainer.cocktails-grid {
-                grid-template-columns: 1fr !important;
+            .name-secondary {
+                font-size: 0.85em;
+                line-height: 1.5;
             }
 
-            .cocktails-list .cocktail-card {
-                grid-template-columns: 1fr;
+            .price {
+                font-size: 1.1em;
+                text-align: left;
+                padding-top: 0;
+                align-self: end;
             }
 
-            .cocktails-list .cocktail-image {
-                aspect-ratio: 16/10;
-            }
-
-            .filter-row {
-                grid-template-columns: 1fr;
-                gap: 12px;
-            }
-
-            .topbar {
-                flex-direction: column;
-                gap: 12px;
-                padding: 14px 16px;
-            }
-
-            .topbar .actions {
-                justify-content: center;
-            }
-
-            .admin-controls {
-                order: -1;
-            }
-
-            .nav-tabs {
+            .badges {
                 flex-wrap: wrap;
-                border-radius: 24px;
             }
 
-            .nav-btn {
-                padding: 10px 18px;
+            .badge {
+                font-size: 0.7em;
+                padding: 2px 5px;
             }
 
-            .drawer {
-                width: 100vw;
+            .accordion {
+                margin-top: 6px;
+                padding-top: 10px;
+                gap: 6px;
             }
 
-            .form-actions {
-                flex-direction: column;
+            .accordion-header {
+                padding: 5px 10px;
+                font-size: 0.8em;
             }
 
-            .form-actions .btn {
-                width: 100%;
+            .accordion-content {
+                min-width: 180px;
+                max-width: 280px;
+                font-size: 0.82em;
+                line-height: 1.6;
+                padding: 10px 12px;
+            }
+
+            /* 手機版：Tooltip 改為從下方彈出 */
+            .accordion-item:hover .accordion-content,
+            .accordion-item.active .accordion-content {
+                bottom: auto;
+                top: calc(100% + 8px);
+                transform: translateX(-50%) translateY(4px);
+            }
+
+            .accordion-content::after {
+                top: auto;
+                bottom: 100%;
+                border-top-color: transparent;
+                border-bottom-color: var(--color-primary);
+            }
+
+            .soldout::after {
+                top: 6px;
+                right: 6px;
+                font-size: 0.65em;
+                padding: 3px 6px;
+            }
+
+            .section-title {
+                font-size: 0.95em;
+                padding: 7px 12px;
+                min-width: 120px;
+            }
+
+            .notice-card {
+                padding: 12px;
+            }
+
+            .notice-title {
+                font-size: 1em;
+            }
+
+            .notice-list li {
+                font-size: 0.9em;
             }
         }
 
-        .hidden {
-            display: none !important;
-        }
+        @media(max-width:400px) {
+            .menu-item {
+                grid-template-columns: 70px 1fr;
+                gap: 8px;
+                padding: 10px;
+            }
 
-        /* ============ 收藏按鈕 ============ */
-        .favorite-btn {
-            transition: all .3s ease;
-            font-size: .8rem;
-            padding: 4px 10px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            white-space: nowrap;
-        }
+            .thumb {
+                width: 70px;
+                height: 70px;
+            }
 
-        .favorite-btn:hover {
-            transform: scale(1.05);
-        }
+            .name-primary {
+                font-size: 1em;
+            }
 
-        .favorite-btn.active {
-            background: linear-gradient(135deg, var(--accent-strong), var(--accent));
-            color: #1d160e;
-            font-weight: 700;
-        }
+            .name-secondary {
+                font-size: 0.82em;
+            }
 
-        .favorite-btn.inactive {
-            background: var(--glass-strong);
-            color: var(--ink);
-        }
+            .price {
+                font-size: 1.05em;
+            }
 
-        #favoriteCount {
-            animation: fadeIn .3s ease;
-        }
+            .accordion-header {
+                padding: 5px 8px;
+                font-size: 0.75em;
+            }
 
-
-        /* ============ 編輯抽屜：淺底專屬配色覆寫（沿用新增版面但確保可讀性）============ */
-        .drawer .form-section {
-            background: #fff;
-            border: 1px solid var(--card-line);
-            backdrop-filter: none;
-            padding: 18px;
-            margin: 14px 0;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, .04);
-        }
-
-        .drawer .form-section h3 {
-            color: var(--card-ink);
-        }
-
-        .drawer .form-group label {
-            color: var(--card-muted);
-        }
-
-        .drawer input,
-        .drawer select,
-        .drawer textarea {
-            background: #fff;
-            color: var(--card-ink);
-        }
-
-        .drawer .add-btn {
-            background: #fbf3e6;
-            color: var(--accent-deep);
-            border: 1px dashed var(--accent);
-        }
-
-        .drawer .add-btn:hover {
-            background: #f6e9d3;
-        }
-
-        .drawer .btn-secondary {
-            background: #ece2d2;
-            color: var(--card-ink);
-            border: none;
-        }
-
-        .drawer .btn-secondary:hover {
-            background: #ddd0bb;
-        }
-
-        .drawer .tag {
-            background: rgba(169, 116, 58, .12);
-            color: var(--accent-deep);
+            .accordion-content {
+                min-width: 160px;
+                max-width: 250px;
+                font-size: 0.78em;
+                padding: 9px 10px;
+            }
         }
     </style>
-    <!-- 字型：線上載入，離線自動退回優雅襯線/系統字型 -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Manrope:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
 </head>
 
 <body>
-    <!-- 管理員登入彈窗 -->
-    <div id="adminLoginModal" class="admin-login-modal">
-        <div class="admin-login-form">
-            <h3>🔐 管理員登入</h3>
-            <div id="adminLoginError" class="admin-error" style="display: none;"></div>
-            <div id="adminLoginSuccess" class="admin-success" style="display: none;"></div>
-
-            <form id="adminLoginForm">
-                <div class="form-group">
-                    <label for="adminUsername">用戶名</label>
-                    <input type="text" id="adminUsername" required autocomplete="username">
+    <div class="menu-container">
+        <header class="header">
+            <div class="logo" aria-label="SOL Bistro logo">
+                <div class="menu-tabs" role="tablist" aria-label="Menu type selector">
+                    <button class="menu-tab" role="tab" data-menu-type="food" aria-selected="true">🍽️ Food
+                        Menu</button>                <div class="logo-circle">
+                    <div class="sol">SOL</div>
+                    <div class="bistro">bistro</div>
                 </div>
-                <div class="form-group">
-                    <label for="adminPassword">密碼</label>
-                    <input type="password" id="adminPassword" required autocomplete="current-password">
+                    <button class="menu-tab" role="tab" data-menu-type="drink" aria-selected="false">🍷 Drink 
+                        Menu</button>
                 </div>
-                <div class="admin-login-actions">
-                    <button type="submit" class="btn-login">登入</button>
-                    <button type="button" class="btn-cancel" onclick="adminAuth.hideLoginModal()">取消</button>
-                </div>
-            </form>
-
-            <div
-                style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #e2e8f0; font-size: 0.85rem; color: #718096; text-align: center;">
-                <p>⚠️ 管理員模式才能編輯和刪除酒譜</p>
-                <p>預設帳號：admin / cocktail2024</p>
-                <p>（首次使用請務必修改密碼）</p>
             </div>
-        </div>
-    </div>
+            <div class="wifi" aria-label="Wi-Fi info">🌐 FREE Wi-Fi | solbistro2018</div>
 
-    <!-- PWA 安裝提示 -->
-    <div id="installPrompt" class="install-prompt">
-        <span>🍸 將雞尾酒譜安裝到您的手機，隨時離線使用！</span>
-        <button id="installBtn" class="install-btn">立即安裝</button>
-        <button onclick="this.parentElement.style.display='none'" class="install-btn"
-            style="background:#f56565;color:white;">稍後</button>
-    </div>
-
-    <!-- 離線狀態指示 -->
-    <div id="offlineIndicator" class="offline-indicator">📡 目前處於離線模式，部分功能可能受限</div>
-
-    <!-- 連線狀態指示 -->
-    <div id="connectionStatus" class="connection-status hidden">正在檢查連線狀態...</div>
-
-    <header class="topbar">
-        <div class="brand">雞尾酒譜 WebApp</div>
-        <div class="actions">
-            <button id="btnSync" class="btn btn-primary" type="button">🔄 同步（從雲端讀取）</button>
-            <button id="btnClearData" class="btn btn-danger" type="button">🗑️ 清除本機快取</button>
-
-            <!-- 管理員控制整合 -->
-            <div id="adminControls" class="admin-controls guest-mode">
-                <span id="adminStatusText" class="admin-status-text">訪客模式</span>
-                <button id="adminLoginBtn" class="btn btn-primary"
-                    style="padding: 6px 12px; font-size: 0.85rem;">管理員登入</button>
-                <button id="adminLogoutBtn" class="btn btn-secondary"
-                    style="padding: 6px 12px; font-size: 0.85rem; display: none;">登出</button>
+            <div class="tools">
+                <div class="language-switcher" role="tablist" aria-label="Language switcher">
+                    <!-- 手機版下拉選單 -->
+                    <select class="language-select" id="languageSelect" aria-label="Select language">
+                        <option value="zh">中文</option>
+                        <option value="en">English</option>
+                        <option value="ja">日本語</option>
+                        <option value="ko">한국어</option>
+                        <option value="fr">Français</option>
+                        <option value="th">ไทย</option>
+                        <option value="fil">Filipino</option>
+                        <option value="vi">Tiếng Việt</option>
+                    </select>
+                </div>
+                <div class="right-tools">
+                    <div class="search">
+                        <label for="q" class="visually-hidden" style="position:absolute;left:-9999px">Search</label>
+                        <input id="q" type="search" placeholder="Search / 檢索 / 検索（多語關鍵字）" />
+                    </div>
+                    <label class="toggle">
+                        <input id="hideSoldout" type="checkbox" />
+                        <span>隱藏售罄</span>
+                    </label>
+                    <button id="refreshBtn" class="btn" type="button" title="即時刷新（不重整頁面）">
+                        <span id="refreshIcon" aria-hidden="true">🔄</span> 即時刷新
+                    </button>
+                </div>
             </div>
-        </div>
-    </header>
-
-    <div class="container">
-        <header>
-            <h1>🍸 雞尾酒譜瀏覽</h1>
-            <p class="subtitle">探索經典調酒，享受品味時光</p>
-            <div class="age-warning">⚠️ 未滿18歲請勿飲酒，飲酒過量有害健康</div>
-            <nav class="nav-tabs">
-                <button class="nav-btn active" data-page="settings" type="button">⚙️ 設定</button>
-                <button class="nav-btn" data-page="browse" type="button">📖 瀏覽酒譜</button>
-                <button class="nav-btn" data-page="add" type="button">➕ 新增酒譜</button>
-            </nav>
+            <section class="notice-grid" aria-label="House rules and notes">
+                <div class="notice-card">
+                    <h3 class="notice-title">House Rules</h3>
+                    <ul id="rulesList" class="notice-list"></ul>
+                </div>
+                <div class="notice-card">
+                    <h3 class="notice-title">Notes</h3>
+                    <ul id="notesList" class="notice-list"></ul>
+                    <div class="toc"></div>
+                    <div class="toc-wrapper">
+                        <div class="filter-tags">
+                            <button class="filter-btn" data-filter="all" aria-pressed="true">全部</button>
+                            <button class="filter-btn" data-filter="vegan">Vegan</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </header>
 
-        <!-- 瀏覽區 -->
-        <div class="page" id="browsePage">
-            <div class="filters">
-                <div class="filter-row">
-                    <input type="text" id="searchInput" placeholder="🔍 搜尋酒譜名稱、基酒或材料（如：鳳梨）..." />
-                    <select id="categorySelect">
-                        <option value="">📋 全部分類</option>
-                    </select>
-                    <div class="view-toggle">
-                        <button class="view-btn active" data-view="grid" type="button">網格</button>
-                        <button class="view-btn" data-view="list" type="button">列表</button>
-                    </div>
-                </div>
-                <div class="filter-row" style="margin-top: 12px;">
-                    <label
-                        style="display: flex; align-items: center; gap: 8px; color: #fff; cursor: pointer; background: rgba(255,255,255,0.1); padding: 10px 15px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); flex-wrap: wrap;">
-                        <input type="checkbox" id="favoriteOnlyFilter" onchange="app.filterCocktails()"
-                            style="cursor: pointer; width: 18px; height: 18px;">
-                        <span>⭐ 只顯示收藏</span>
-                    </label>
-                    <span id="favoriteCount"
-                        style="color: rgba(255,255,255,0.8); font-size: 0.9rem; margin-left: auto;"></span>
-                </div>
-                <!-- 熱門標籤搜索欄 -->
-                <div class="popular-tags-section">
-                    <div class="popular-tags-title">🏷️ 熱門標籤</div>
-                    <div class="popular-tags-container" id="popularTagsContainer">
-                        <div style="color: rgba(255,255,255,0.6); font-size: 0.9rem;">載入中...</div>
-                    </div>
-                </div>
-            </div>
-            <div class="stats" id="stats">載入中...</div>
-            <div id="cocktailsContainer" class="cocktails-grid">
-                <div class="loading">正在載入雞尾酒資料</div>
-            </div>
-        </div>
-
-        <!-- 新增區 -->
-        <div class="page" id="addPage">
-            <div class="add-cocktail-form">
-                <div class="success-message" id="successMessage"
-                    style="display:none;background:rgba(72,187,120,.9);color:#fff;padding:16px 20px;border-radius:12px;margin-bottom:20px;font-weight:600;backdrop-filter:blur(10px);">
-                    ✅ 雞尾酒譜新增成功！
-                </div>
-
-                <form id="addCocktailForm">
-                    <div class="form-section">
-                        <h3>📄 基本資訊</h3>
-                        <div class="form-group">
-                            <label for="cocktailTitle">雞尾酒名稱 *</label>
-                            <input type="text" id="cocktailTitle" placeholder="例如：莫希托、馬丁尼（可留空）" />
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="cocktailCategory">分類</label>
-                                <select id="cocktailCategory">
-                                    <option value="">選擇分類</option>
-                                    <option value="經典雞尾酒">經典雞尾酒</option>
-                                    <option value="無酒精調飲">無酒精特調</option>
-                                    <option value="特調雞尾酒">特調雞尾酒</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="glassType">杯型</label>
-                                <select id="glassType">
-                                    <option value="">選擇杯型</option>
-                                    <option value="馬丁尼杯">馬丁尼杯</option>
-                                    <option value="威士忌杯">威士忌杯</option>
-                                    <option value="高球杯">高球杯</option>
-                                    <option value="岩石杯">岩石杯</option>
-                                    <option value="香檳杯">香檳杯</option>
-                                    <option value="颶風杯">颶風杯</option>
-                                    <option value="雞尾酒杯">雞尾酒杯</option>
-                                    <option value="柯林杯">柯林杯</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="alcoholContent">酒精濃度</label>
-                                <select id="alcoholContent">
-                                    <option value="">選擇濃度</option>
-                                    <option value="低">濃度低</option>
-                                    <option value="中">濃度中</option>
-                                    <option value="高">濃度高</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="difficulty">難度等級</label>
-                                <select id="difficulty">
-                                    <option value="">選擇難度</option>
-                                    <option value="簡單">簡單</option>
-                                    <option value="中等">中等</option>
-                                    <option value="困難">困難</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="servings">份量</label>
-                                <input type="number" id="servings" min="1" placeholder="1" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-section">
-                        <h3>🏷️ 標籤</h3>
-                        <div class="tags-input">
-                            <input type="text" id="tagsInput" placeholder="輸入標籤後按 Enter（例如：清爽、夏日）" />
-                            <div class="tags-display" id="tagsDisplay"></div>
-                        </div>
-                    </div>
-
-                    <div class="form-section">
-                        <h3>🥃 配料清單</h3>
-                        <div class="ingredients-list" id="ingredientsList">
-                            <div class="ingredient-item">
-                                <input type="text" placeholder="例如：白蘭地 60ml" />
-                                <button type="button" class="remove-btn"
-                                    onclick="app.removeIngredient(this)">移除</button>
-                            </div>
-                        </div>
-                        <button type="button" class="add-btn" onclick="app.addIngredient()">➕ 新增配料</button>
-                    </div>
-
-                    <div class="form-section">
-                        <h3>🍴 調製方法</h3>
-                        <div class="instructions-list" id="instructionsList">
-                            <div class="instruction-item">
-                                <span style="font-weight: bold; min-width: 30px;">1.</span>
-                                <input type="text" placeholder="詳細描述第一個步驟" />
-                                <button type="button" class="remove-btn"
-                                    onclick="app.removeInstruction(this)">移除</button>
-                            </div>
-                        </div>
-                        <button type="button" class="add-btn" onclick="app.addInstruction()">➕ 新增步驟</button>
-                    </div>
-
-                    <div class="form-section">
-                        <h3>🖼️ 上傳圖片（選填）</h3>
-                        <div class="form-group">
-                            <label for="cocktailImageFile">選擇圖片檔案</label>
-                            <input type="file" id="cocktailImageFile" accept="image/*" />
-                            <div id="addImagePreview" style="margin-top: 12px;"></div>
-                        </div>
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="button" class="btn btn-secondary" onclick="app.clearForm()">清空表單</button>
-                        <button type="submit" class="btn btn-primary">💾 儲存到雲端</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <!-- 設定區 -->
-        <div class="page active" id="settingsPage">
-            <div class="form-section">
-                <h3>🌐 GAS 連線</h3>
-                <div class="form-group">
-                    <label for="gasUrl">Web App URL（例：https://script.google.com/macros/s/XXX/exec）</label>
-                    <input type="url" id="gasUrl" placeholder="貼上你的 GAS Web App URL"
-                        selection="https://script.google.com/macros/s/AKfycbzo1BsYOsAHXIOs6ReOUhJr979390WkW49J11Mz1rlEPfp2D8Drbf3sNbkQICrmRxdI/exec">
-                </div>
-                <div class="form-actions">
-                    <button class="btn btn-primary" id="btnSaveGasUrl">儲存連線設定</button>
-                    <button class="btn btn-secondary" id="btnTestGas">測試連線</button>
-                </div>
-
-                <!-- 調試資訊 -->
-                <div id="debugInfo" class="debug-panel hidden">
-                    <h4>連線調試資訊</h4>
-                    <div id="debugContent">尚未進行連線測試</div>
-                </div>
-            </div>
-
-            <div class="form-section">
-                <h3>📊 儲存統計</h3>
-                <div id="storageStats" style="color: white; line-height: 1.6;">載入中...</div>
-            </div>
-
-            <div class="form-section">
-                <h3>ℹ️ 應用程式資訊</h3>
-                <div style="color: rgba(255,255,255,0.8); line-height: 1.6;">
-                    <p><strong>版本：</strong> 2.3（強化 GAS 連線：自動重試、逾時保護、防呆解析）</p>
-                    <p><strong>儲存方式：</strong> 雲端（GAS）＋ 本機 IndexedDB 圖片快取</p>
-                    <p><strong>支援功能：</strong> 離線瀏覽、雲端同步、圖片快取、管理員認證</p>
-                </div>
-            </div>
-        </div>
+        <main id="menuContent" class="menu-content" aria-live="polite">
+            <div class="loading">正在載入菜單</div>
+        </main>
     </div>
 
-    <!-- 編輯抽屜 - 增強版 -->
-    <aside id="editDrawer" class="drawer hidden" aria-hidden="true">
-        <div class="drawer-header">
-            <h3>編輯酒譜</h3>
-            <div class="header-actions">
-                <button id="closeDrawerX" class="btn-close" type="button" title="關閉">✕</button>
-            </div>
+    <!-- Popover 浮動提示 -->
+    <div id="infoPopover" class="info-popover">
+        <div class="popover-arrow"></div>
+        <div class="popover-header">
+            <span id="popoverTitle"></span>
+            <button id="popoverClose" class="popover-close" aria-label="Close">×</button>
         </div>
-        <form id="editForm" class="edit-form">
-            <div class="form-section">
-                <h3>📄 基本資訊</h3>
-                <div class="form-group">
-                    <label for="editTitle">雞尾酒名稱</label>
-                    <input type="text" id="editTitle" placeholder="例如：莫希托、馬丁尼（可留空）" />
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="editCategory">分類</label>
-                        <select id="editCategory">
-                            <option value="">選擇分類</option>
-                            <option value="經典雞尾酒">經典雞尾酒</option>
-                            <option value="無酒精調飲">無酒精特調</option>
-                            <option value="特調雞尾酒">特調雞尾酒</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="editGlassType">杯型</label>
-                        <select id="editGlassType">
-                            <option value="">選擇杯型</option>
-                            <option value="馬丁尼杯">馬丁尼杯</option>
-                            <option value="威士忌杯">威士忌杯</option>
-                            <option value="高球杯">高球杯</option>
-                            <option value="岩石杯">岩石杯</option>
-                            <option value="香檳杯">香檳杯</option>
-                            <option value="颶風杯">颶風杯</option>
-                            <option value="雞尾酒杯">雞尾酒杯</option>
-                            <option value="柯林杯">柯林杯</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="editAlcoholContent">酒精濃度</label>
-                        <select id="editAlcoholContent">
-                            <option value="">選擇濃度</option>
-                            <option value="低">濃度低</option>
-                            <option value="中">濃度中</option>
-                            <option value="高">濃度高</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="editDifficulty">難度等級</label>
-                        <select id="editDifficulty">
-                            <option value="">選擇難度</option>
-                            <option value="簡單">簡單</option>
-                            <option value="中等">中等</option>
-                            <option value="困難">困難</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="editServings">份量</label>
-                        <input type="number" id="editServings" min="1" placeholder="1" />
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-section">
-                <h3>🏷️ 標籤</h3>
-                <div class="tags-input">
-                    <input type="text" id="editTagsInput" placeholder="輸入標籤後按 Enter（例如：清爽、夏日）" />
-                    <div class="tags-display" id="editTagsDisplay"></div>
-                </div>
-            </div>
-
-            <div class="form-section">
-                <h3>🥃 配料清單</h3>
-                <div class="ingredients-list" id="editIngredientsList"></div>
-                <button type="button" class="add-btn" onclick="app.addEditIngredient()">➕ 新增配料</button>
-            </div>
-
-            <div class="form-section">
-                <h3>🍴 調製方法</h3>
-                <div class="instructions-list" id="editInstructionsList"></div>
-                <button type="button" class="add-btn" onclick="app.addEditInstruction()">➕ 新增步驟</button>
-            </div>
-
-            <div class="form-section">
-                <h3>🖼️ 更換圖片（選填）</h3>
-                <div class="form-group">
-                    <label for="imageFile">選擇圖片檔案</label>
-                    <input id="imageFile" name="image_file" type="file" accept="image/*">
-                    <div id="imagePreview" style="margin-top:12px;"></div>
-                </div>
-            </div>
-
-            <div class="drawer-actions">
-                <button id="saveCocktail" class="btn btn-primary" type="button">💾 儲存</button>
-                <button id="cancelEdit" class="btn btn-secondary" type="button">🚫 取消</button>
-                <button id="deleteCocktail" class="btn btn-danger" type="button">🗑️ 刪除</button>
-            </div>
-        </form>
-    </aside>
+        <div id="popoverBody" class="popover-body"></div>
+    </div>
 
     <script>
-        // ===== 正規化工具（避免舊資料型別造成 .split 錯誤） =====
-        const COLS = ['id', 'title', 'category', 'tags', 'instructions', 'glass_type', 'alcohol_content', 'difficulty', 'servings', 'image_b64'];
-        function normalizeText(v) { if (Array.isArray(v)) return v.join('+'); if (v == null) return ''; return String(v); }
-        function normalizeRecord(c = {}) { const out = {}; for (const k of COLS) out[k] = normalizeText(c[k]); return out; }
+        // ===== CONSTANTS =====
+        // 統一 API（同時回傳 food 和 drink）
+        const UNIFIED_API_URL = 'https://script.google.com/macros/s/AKfycbyupxncbMBRvQE9efRpDMUZcE1lSyELlBMjIlReQ-JtgwYN_7W-KhMBi_YCf2pzJD2u/exec';
 
-        // ===== IndexedDB：圖片與資料快取 =====
-        class MobileStorageManager {
-            constructor() { this.dbName = 'CocktailDB'; this.dbVersion = 3; this.db = null; this.imageStore = 'images'; this.cocktailStore = 'cocktails'; this.ingredientsStore = 'ingredients'; }
-            async init() { return new Promise((resolve, reject) => { const req = indexedDB.open(this.dbName, this.dbVersion); req.onerror = () => reject(req.error); req.onsuccess = () => { this.db = req.result; resolve(this.db); }; req.onupgradeneeded = (ev) => { const db = ev.target.result; if (!db.objectStoreNames.contains(this.cocktailStore)) { const s = db.createObjectStore(this.cocktailStore, { keyPath: 'id' }); s.createIndex('title', 'title', { unique: false }); s.createIndex('category', 'category', { unique: false }); s.createIndex('tags', 'tags', { unique: false }); } if (!db.objectStoreNames.contains(this.imageStore)) { db.createObjectStore(this.imageStore, { keyPath: 'id' }); } if (!db.objectStoreNames.contains(this.ingredientsStore)) { const s = db.createObjectStore(this.ingredientsStore, { keyPath: 'id', autoIncrement: true }); s.createIndex('item_id', 'item_id', { unique: false }); } }; }); }
-            async saveCocktail(c) { return new Promise((res, rej) => { const tx = this.db.transaction(['cocktails'], 'readwrite'); const st = tx.objectStore('cocktails'); const r = st.put(c); r.onsuccess = () => res(); r.onerror = () => rej(r.error); }); }
-            async getAllCocktails() { return new Promise((res, rej) => { const tx = this.db.transaction(['cocktails'], 'readonly'); const st = tx.objectStore('cocktails'); const r = st.getAll(); r.onsuccess = () => res(r.result || []); r.onerror = () => rej(r.error); }); }
-            async deleteCocktail(id) { return new Promise((res, rej) => { const tx = this.db.transaction(['cocktails'], 'readwrite'); const st = tx.objectStore('cocktails'); const r = st.delete(id); r.onsuccess = () => res(); r.onerror = () => rej(r.error); }); }
-            async clearAllData() { return new Promise((res, rej) => { const tx = this.db.transaction(['cocktails', 'images', 'ingredients'], 'readwrite'); const a = tx.objectStore('cocktails').clear(); const b = tx.objectStore('images').clear(); const c = tx.objectStore('ingredients').clear(); let ok = 0; a.onsuccess = () => { ok++; if (ok === 3) res(); }; b.onsuccess = () => { ok++; if (ok === 3) res(); }; c.onsuccess = () => { ok++; if (ok === 3) res(); }; a.onerror = b.onerror = c.onerror = (e) => rej(e.target.error); }); }
-            async saveImage(file, id) { return new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => { const imageData = { id, data: reader.result, type: file.type, name: file.name, size: file.size, timestamp: Date.now() }; const tx = this.db.transaction(['images'], 'readwrite'); const st = tx.objectStore('images'); const r = st.put(imageData); r.onsuccess = () => resolve({ id, dataUrl: reader.result }); r.onerror = () => reject(r.error); }; reader.onerror = () => reject(reader.error); reader.readAsDataURL(file); }); }
-            async getImage(id) { return new Promise((res, rej) => { const tx = this.db.transaction(['images'], 'readonly'); const st = tx.objectStore('images'); const r = st.get(id); r.onsuccess = () => res(r.result ? r.result.data : null); r.onerror = () => rej(r.error); }); }
-            async saveIngredients(cocktailId, ingredientsList) { return new Promise((res, rej) => { const tx = this.db.transaction([this.ingredientsStore], 'readwrite'); const st = tx.objectStore(this.ingredientsStore); const idx = st.index('item_id'); const delReq = idx.openCursor(IDBKeyRange.only(cocktailId)); delReq.onsuccess = (ev) => { const cursor = ev.target.result; if (cursor) { st.delete(cursor.primaryKey); cursor.continue(); } }; delReq.onerror = () => rej(delReq.error); tx.oncomplete = () => { const addTx = this.db.transaction([this.ingredientsStore], 'readwrite'); const addSt = addTx.objectStore(this.ingredientsStore); ingredientsList.forEach(ing => { addSt.add({ ...ing, item_id: cocktailId }); }); addTx.onsuccess = () => res(); addTx.onerror = () => rej(addTx.error); }; }); }
-            async getIngredients(cocktailId) { return new Promise((res, rej) => { const tx = this.db.transaction([this.ingredientsStore], 'readonly'); const st = tx.objectStore(this.ingredientsStore); const idx = st.index('item_id'); const range = IDBKeyRange.only(cocktailId); const r = idx.getAll(range); r.onsuccess = () => res(r.result || []); r.onerror = () => rej(r.error); }); }
-            async deleteIngredientsByCocktailId(cocktailId) { return new Promise((res, rej) => { const tx = this.db.transaction([this.ingredientsStore], 'readwrite'); const st = tx.objectStore(this.ingredientsStore); const idx = st.index('item_id'); const r = idx.openCursor(IDBKeyRange.only(cocktailId)); r.onsuccess = (ev) => { const cursor = ev.target.result; if (cursor) { st.delete(cursor.primaryKey); cursor.continue(); } else res(); }; r.onerror = () => rej(r.error); }); }
-            async getStorageStats() { const cocktails = await this.getAllCocktails(); const imgs = await new Promise((res, rej) => { const tx = this.db.transaction(['images'], 'readonly'); const st = tx.objectStore('images'); const r = st.getAll(); r.onsuccess = () => res(r.result || []); r.onerror = () => rej(r.error); }); const totalImageSize = imgs.reduce((s, i) => s + (i.size || 0), 0); return { cocktailCount: cocktails.length, imageCount: imgs.length, totalImageSize, formattedImageSize: this.formatBytes(totalImageSize) }; }
-            formatBytes(bytes, decimals = 2) { if (bytes === 0) return '0 Bytes'; const k = 1024, dm = decimals < 0 ? 0 : decimals, sizes = ['Bytes', 'KB', 'MB', 'GB']; const i = Math.floor(Math.log(bytes) / Math.log(k)); return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]; }
+        const API_URLS = {
+            food: UNIFIED_API_URL,
+            drink: UNIFIED_API_URL
+        };
+
+        const MAX_SPICY_LEVEL = 3;
+        const SEARCH_DEBOUNCE_MS = 300;
+        const IMAGE_FALLBACK_SIZE = 84;
+
+        const CATEGORIES = [
+            { name: 'SALAD', column: 'left' },
+            { name: 'PAELLA', column: 'left' },
+            { name: 'PASTA', column: 'left' },
+            { name: 'PIZZA', column: 'left' },
+            { name: 'TAPAS', column: 'right' },
+            { name: 'DESSERT', column: 'right' }
+        ];
+
+        const LANGUAGES = [
+            { code: 'zh', label: '中文' },
+            { code: 'en', label: 'English' },
+            { code: 'ja', label: '日本語' },
+            { code: 'ko', label: '한국어' },
+            { code: 'fr', label: 'Français' },
+            { code: 'th', label: 'ไทย' },
+            { code: 'fil', label: 'Filipino' },
+            { code: 'vi', label: 'Tiếng Việt' }
+        ];
+
+        const ACCORDION_LABELS = {
+            ingredients: {
+                zh: '成分',
+                en: 'Ingredients',
+                ja: '成分',
+                ko: '성분',
+                fr: 'Ingrédients',
+                th: 'ส่วนผสม',
+                fil: 'Sangkap',
+                vi: 'Thành phần'
+            },
+            allergens: {
+                zh: '過敏原',
+                en: 'Allergens',
+                ja: 'アレルゲン',
+                ko: '알레르겐',
+                fr: 'Allergènes',
+                th: 'สารก่อภูมิแพ้',
+                fil: 'Allergen',
+                vi: 'Chất gây dị ứng'
+            },
+            notes: {
+                zh: '備註',
+                en: 'Notes',
+                ja: '備考',
+                ko: '비고',
+                fr: 'Remarques',
+                th: 'หมายเหตุ',
+                fil: 'Tala',
+                vi: 'Ghi chú'
+            }
+        };
+
+        const NO_INFO_MESSAGES = {
+            zh: '暫無詳細資訊',
+            en: 'No additional information available',
+            ja: '詳細情報はありません',
+            ko: '추가 정보 없음',
+            fr: 'Aucune information supplémentaire',
+            th: 'ไม่มีข้อมูลเพิ่มเติม',
+            fil: 'Walang karagdagang impormasyon',
+            vi: 'Không có thông tin bổ sung'
+        };
+
+        // ===== STATE MANAGEMENT =====
+        const createStore = (initialState) => {
+            let state = initialState;
+            const listeners = new Set();
+
+            return {
+                getState: () => state,
+                setState: (updates) => {
+                    const oldState = state;
+                    state = { ...state, ...updates };
+
+                    // 深度合併 ui 狀態
+                    if (updates.ui) {
+                        state.ui = { ...oldState.ui, ...updates.ui };
+                    }
+
+                    listeners.forEach(fn => fn(state, oldState));
+                },
+                subscribe: (fn) => {
+                    listeners.add(fn);
+                    return () => listeners.delete(fn);
+                }
+            };
+        };
+
+        const store = createStore({
+            foodData: {},
+            drinkData: {},
+            foodMeta: { rules: [], notes: [] },
+            drinkMeta: { rules: [], notes: [] },
+            ui: {
+                currentMenuType: 'food',  // 'food' or 'drink'
+                currentLang: 'zh',
+                query: '',
+                hideSoldOut: false,
+                currentFilter: 'all'
+            }
+        });
+
+        // 訂閱狀態變化自動重繪
+        store.subscribe((state, oldState) => {
+            const uiChanged = state.ui !== oldState.ui;
+            const menuTypeChanged = state.ui.currentMenuType !== oldState.ui.currentMenuType;
+
+            const currentData = state.ui.currentMenuType === 'food' ? state.foodData : state.drinkData;
+            const oldData = oldState.ui.currentMenuType === 'food' ? oldState.foodData : oldState.drinkData;
+            const dataChanged = currentData !== oldData;
+
+            const currentMeta = state.ui.currentMenuType === 'food' ? state.foodMeta : state.drinkMeta;
+            const oldMeta = oldState.ui.currentMenuType === 'food' ? oldState.foodMeta : oldState.drinkMeta;
+            const metaChanged = currentMeta !== oldMeta;
+
+            if (dataChanged || uiChanged || menuTypeChanged) {
+                renderMenu(currentData);
+            }
+
+            if (metaChanged || menuTypeChanged || (uiChanged && state.ui.currentLang !== oldState.ui.currentLang)) {
+                renderNotices(currentMeta);
+            }
+        });
+
+        // ===== HELPER FUNCTIONS (DRY PRINCIPLE) =====
+        const isSoldOut = (item) => {
+            // 支援食物菜單的 soldout 和飲料菜單的 sold-out
+            const soldoutValue = item['soldout'] ?? item.soldout;
+            return soldoutValue === true || String(soldoutValue).toLowerCase() === 'true';
+        };
+
+        const isVegan = (item) =>
+            String(item.vegan).toLowerCase() === 'true';
+
+        const getSpicyLevel = (item) => {
+            const level = Number(item.spicy);
+            return isFinite(level) ? level : 0;
+        };
+
+        const escapeHtml = (s) => {
+            return String(s ?? '').replace(/[&<>"']/g, c => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            }[c]));
+        };
+
+        // ===== PURE FUNCTIONS FOR MENU RENDERING =====
+        function getEffectiveCategories(data, categories) {
+            const hasFixedData = categories.some(cat =>
+                Array.isArray(data?.[cat.name]) && data[cat.name].length > 0
+            );
+            return hasFixedData
+                ? categories.map(c => c.name)
+                : Object.keys(data);
         }
 
-        // ===== GAS 客戶端（增強版，支援管理員認證） =====
-        const gas = {
-            // ===== 連線設定（可調整）=====
-            config: {
-                timeoutGet: 20000,    // 讀取類逾時（ms）
-                timeoutPost: 35000,   // 寫入類逾時（ms）
-                maxRetries: 2,        // 額外重試次數（總嘗試 = 1 + maxRetries）
-                retryBaseDelay: 700   // 退避基礎延遲（ms）
-            },
-
-            _listInflight: null,      // list() 併發去重用
-
-            get url() { return localStorage.getItem('gasUrl') || ''; },
-            set url(v) {
-                localStorage.setItem('gasUrl', this._clean(v));
-            },
-
-            // 清除常見的「看不見」雜質：零寬字元、BOM、方向標記、NBSP、一般空白、結尾斜線
-            _clean(v) {
-                let s = (v || '')
-                    .replace(/[\u200B-\u200F\u202A-\u202E\u2060\uFEFF\u00A0]/g, '')
-                    .replace(/\s+/g, '')
-                    .trim()
-                    .replace(/\/+$/, '');
-                if (!s) return '';
-                if (/^http:\/\//i.test(s)) s = s.replace(/^http:\/\//i, 'https://'); // 強制 https
-                if (!/^https?:\/\//i.test(s)) s = 'https://' + s;                   // 缺協定自動補上
-                return s;
-            },
-
-            // 寬鬆但正確的驗證：用原生 URL 解析，支援個人版與 Workspace（/a/macros/網域/）兩種網址
-            _isValidUrl(url) {
-                try {
-                    const u = new URL(url);
-                    if (u.protocol !== 'https:') return false;
-                    const host = u.hostname.toLowerCase();
-                    if (host !== 'script.google.com' && host !== 'script.googleusercontent.com') return false;
-                    return /\/exec$/.test(u.pathname);
-                } catch (e) { return false; }
-            },
-
-            logDebug(message, data = null) {
-                const timestamp = new Date().toLocaleTimeString();
-                console.log(`[${timestamp}] [GAS] ${message}`, data || '');
-
-                const debugContent = document.getElementById('debugContent');
-                if (debugContent) {
-                    const logEntry = `[${timestamp}] ${message}${data ? ': ' + JSON.stringify(data, null, 2).substring(0, 200) : ''}`;
-                    debugContent.innerHTML = logEntry + '<br>' + debugContent.innerHTML;
-                    const lines = debugContent.innerHTML.split('<br>');
-                    if (lines.length > 10) {
-                        debugContent.innerHTML = lines.slice(0, 10).join('<br>');
-                    }
-                }
-            },
-
-            showConnectionStatus(message, type = 'info') {
-                const status = document.getElementById('connectionStatus');
-                if (status) {
-                    status.textContent = message;
-                    status.className = `connection-status ${type}`;
-                    status.classList.remove('hidden');
-
-                    if (type !== 'error') {
-                        setTimeout(() => {
-                            if (status.classList.contains(type)) {
-                                status.classList.add('hidden');
-                            }
-                        }, 5000);
-                    }
-                }
-                this.logDebug(`狀態更新 [${type}]`, message);
-            },
-
-            _sleep(ms) { return new Promise(r => setTimeout(r, ms)); },
-
-            // 正規化並驗證 URL，回傳可用的 URL 或丟出友善錯誤
-            _resolveUrl() {
-                const url = this._clean(this.url);
-                if (!url) throw new Error('尚未設定 GAS Web App URL，請到「設定」貼上 /exec 連結');
-                if (!this._isValidUrl(url)) {
-                    throw new Error('網址無法辨識。請貼上「部署為網頁應用程式」後、以 /exec 結尾的連結（個人版或 Workspace 皆可）');
-                }
-                return url;
-            },
-
-            // 保留舊介面（async）以維持相容
-            async validateUrl(url) {
-                const target = this._clean(url);
-                if (!target) return { valid: false, error: '未設定 URL' };
-                return this._isValidUrl(target)
-                    ? { valid: true, url: target }
-                    : { valid: false, error: '網址無法辨識，請貼上以 /exec 結尾的 Web App 連結（個人版或 Workspace 皆可）' };
-            },
-
-            // 判斷是否為「值得重試」的瞬時錯誤
-            _isRetriable(err, httpStatus) {
-                if (httpStatus && [429, 500, 502, 503, 504].includes(httpStatus)) return true;
-                if (!err) return false;
-                if (err.name === 'AbortError') return true;             // 逾時（含冷啟動）
-                if (err.name === 'TypeError') return true;              // 多為網路錯誤 / Failed to fetch
-                if (/Failed to fetch|NetworkError|network/i.test(err.message || '')) return true;
-                return false;
-            },
-
-            _friendlyError(err) {
-                const msg = err && err.message ? err.message : String(err);
-                if (err && err.name === 'AbortError') return '連線逾時，請檢查網路或稍後再試';
-                if (/Failed to fetch|NetworkError/i.test(msg)) return '無法連線到 Google Apps Script，請確認網路與 URL 是否正確';
-                if (/CORS/i.test(msg)) return 'CORS 設定問題，請確認 Web App「誰可以存取」設為「任何人」並重新部署';
-                return msg;
-            },
-
-            /**
-             * 統一請求核心：含逾時、指數退避自動重試、HTML/JSON 防呆解析
-             * opts: { method, query, body, timeout, retries, label }
-             * 回傳：解析後的 JSON 物件（含 ok 欄位）；失敗丟出友善錯誤
-             */
-            async _request(opts = {}) {
-                const baseUrl = this._resolveUrl();
-                const isPost = opts.method === 'POST';
-                const timeout = opts.timeout || (isPost ? this.config.timeoutPost : this.config.timeoutGet);
-                const maxRetries = (opts.retries != null) ? opts.retries : this.config.maxRetries;
-                const label = opts.label || (isPost ? '寫入' : '讀取');
-
-                // 組 URL（GET 帶 query；一律加上時間戳避免快取）
-                let target = baseUrl;
-                const qs = new URLSearchParams(opts.query || {});
-                qs.set('_t', Date.now().toString());
-                if (!isPost) target = `${baseUrl}?${qs.toString()}`;
-
-                let lastErr = null;
-
-                for (let attempt = 0; attempt <= maxRetries; attempt++) {
-                    if (attempt > 0) {
-                        const delay = Math.round(this.config.retryBaseDelay * Math.pow(2, attempt - 1) + Math.random() * 300);
-                        this.showConnectionStatus(`⏳ ${label}重試中（第 ${attempt}/${maxRetries} 次）…`, 'warning');
-                        this.logDebug(`重試 ${label}`, { attempt, delay });
-                        await this._sleep(delay);
-                    }
-
-                    const controller = new AbortController();
-                    const timer = setTimeout(() => controller.abort(), timeout);
-
-                    try {
-                        const fetchOpts = {
-                            method: opts.method || 'GET',
-                            mode: 'cors',
-                            cache: 'no-store',
-                            redirect: 'follow',
-                            signal: controller.signal
-                        };
-                        if (isPost) {
-                            // text/plain 為 CORS 安全請求，可避免 GAS 觸發 preflight（降低失敗率）
-                            fetchOpts.headers = { 'Content-Type': 'text/plain;charset=utf-8' };
-                            fetchOpts.body = typeof opts.body === 'string' ? opts.body : JSON.stringify(opts.body || {});
-                        }
-
-                        const response = await fetch(target, fetchOpts);
-                        clearTimeout(timer);
-
-                        this.logDebug(`${label}回應`, `${response.status} ${response.statusText}`);
-
-                        if (!response.ok) {
-                            const err = new Error(`HTTP ${response.status}: ${response.statusText}`);
-                            if (this._isRetriable(null, response.status) && attempt < maxRetries) {
-                                lastErr = err; continue;
-                            }
-                            throw err;
-                        }
-
-                        const text = (await response.text() || '').trim();
-                        if (!text) throw new Error('伺服器回應為空（可能部署未生效，請重新部署）');
-                        if (text[0] === '<') {
-                            // 收到 HTML：通常是權限/部署問題
-                            throw new Error('伺服器回應為網頁而非資料，請確認 Web App「執行身分＝我」「誰可以存取＝任何人」，並使用最新部署的 /exec 連結');
-                        }
-
-                        let json;
-                        try { json = JSON.parse(text); }
-                        catch (e) { throw new Error('伺服器回應非有效 JSON：' + text.slice(0, 100)); }
-
-                        return json;
-
-                    } catch (err) {
-                        clearTimeout(timer);
-                        lastErr = err;
-                        const retriable = this._isRetriable(err);
-                        this.logDebug(`${label}異常`, { name: err.name, message: err.message, attempt, retriable });
-                        if (retriable && attempt < maxRetries) continue;  // 還能重試
-                        break; // 不可重試或已用盡次數
-                    }
-                }
-
-                throw new Error(this._friendlyError(lastErr));
-            },
-
-            // ===== 對外 API =====
-            async test() {
-                try {
-                    this.showConnectionStatus('正在測試連線…', 'info');
-                    const json = await this._request({ method: 'GET', query: { action: 'test' }, label: '連線測試', timeout: 15000 });
-                    if (json.ok === true) {
-                        this.showConnectionStatus('✅ 連線測試成功', 'success');
-                        return true;
-                    }
-                    this.showConnectionStatus('⌫ 測試失敗：' + (json.error || '伺服器回報未成功'), 'error');
-                    return false;
-                } catch (error) {
-                    this.showConnectionStatus('⌫ ' + error.message, 'error');
+        function filterItems(items, { query, hideSoldOut, currentFilter }) {
+            return items.filter(it => {
+                if (hideSoldOut && isSoldOut(it)) {
                     return false;
                 }
-            },
 
-            async list() {
-                // 併發去重：若已有進行中的 list，直接共用同一個 Promise
-                if (this._listInflight) return this._listInflight;
-
-                this._listInflight = (async () => {
-                    this.showConnectionStatus('正在從雲端讀取資料…', 'info');
-                    const json = await this._request({ method: 'GET', query: { action: 'list' }, label: '讀取清單' });
-                    if (!json.ok) throw new Error(json.error || 'list 操作失敗');
-                    const data = json.data || [];
-                    this.showConnectionStatus(`✅ 已讀取 ${data.length} 筆資料`, 'success');
-                    return data;
-                })();
-
-                try {
-                    return await this._listInflight;
-                } catch (error) {
-                    this.showConnectionStatus('⌫ ' + error.message, 'error');
-                    throw error;
-                } finally {
-                    this._listInflight = null;
-                }
-            },
-
-            async upsert(data) {
-                this.showConnectionStatus('正在儲存到雲端…', 'info');
-                try {
-                    const json = await this._request({ method: 'POST', body: { action: 'upsert', data }, label: '儲存' });
-                    if (!json.ok) throw new Error(json.error || 'upsert 操作失敗');
-                    this.showConnectionStatus('✅ 儲存成功', 'success');
-                    return json.id;
-                } catch (error) {
-                    this.showConnectionStatus('⌫ 儲存失敗：' + error.message, 'error');
-                    throw error;
-                }
-            },
-
-            async remove(id) {
-                this.showConnectionStatus('正在刪除…', 'info');
-                try {
-                    const json = await this._request({ method: 'POST', body: { action: 'delete', id }, label: '刪除' });
-                    if (!json.ok) throw new Error(json.error || 'delete 操作失敗');
-                    this.showConnectionStatus('✅ 刪除成功', 'success');
-                    return true;
-                } catch (error) {
-                    this.showConnectionStatus('⌫ 刪除失敗：' + error.message, 'error');
-                    throw error;
-                }
-            },
-
-            async adminLogin(username, password) {
-                // 登入不重試，避免帳密鎖定；但保留逾時保護
-                const json = await this._request({
-                    method: 'POST',
-                    body: { action: 'admin_login', username, password },
-                    label: '管理員登入',
-                    retries: 0
-                });
-                if (!json.ok) throw new Error(json.error || '登入請求失敗');
-                return json.data;
-            }
-        };
-
-        // ===== 管理員認證系統 =====
-        const adminAuth = {
-            isAdmin: false,
-            adminUser: null,
-            adminToken: null,
-
-            init() {
-                this.loadAdminStatus();
-                this.bindEvents();
-                this.updateUI();
-            },
-
-            bindEvents() {
-                document.getElementById('adminLoginBtn').addEventListener('click', () => this.showLoginModal());
-                document.getElementById('adminLogoutBtn').addEventListener('click', () => this.logout());
-                document.getElementById('adminLoginForm').addEventListener('submit', (e) => this.handleLogin(e));
-
-                // ESC 鍵關閉彈窗
-                document.addEventListener('keydown', (e) => {
-                    if (e.key === 'Escape' && document.getElementById('adminLoginModal').classList.contains('show')) {
-                        this.hideLoginModal();
-                    }
-                });
-
-                // 點擊外部關閉彈窗
-                document.getElementById('adminLoginModal').addEventListener('click', (e) => {
-                    if (e.target === e.currentTarget) {
-                        this.hideLoginModal();
-                    }
-                });
-            },
-
-            loadAdminStatus() {
-                try {
-                    const savedAuth = localStorage.getItem('adminAuth');
-                    if (savedAuth) {
-                        const authData = JSON.parse(savedAuth);
-                        if (this.isTokenValid(authData.token, authData.timestamp)) {
-                            this.isAdmin = true;
-                            this.adminUser = authData.user;
-                            this.adminToken = authData.token;
-                        } else {
-                            localStorage.removeItem('adminAuth');
-                        }
-                    }
-                } catch (e) {
-                    console.warn('載入管理員狀態失敗:', e);
-                    localStorage.removeItem('adminAuth');
-                }
-            },
-
-            saveAdminStatus() {
-                if (this.isAdmin && this.adminUser && this.adminToken) {
-                    const authData = {
-                        user: this.adminUser,
-                        token: this.adminToken,
-                        timestamp: Date.now()
-                    };
-                    localStorage.setItem('adminAuth', JSON.stringify(authData));
-                } else {
-                    localStorage.removeItem('adminAuth');
-                }
-            },
-
-            isTokenValid(token, timestamp) {
-                if (!token || !timestamp) return false;
-                const now = Date.now();
-                return (now - timestamp) < (24 * 60 * 60 * 1000);
-            },
-
-            showLoginModal() {
-                document.getElementById('adminLoginModal').classList.add('show');
-                document.getElementById('adminUsername').focus();
-                this.clearMessages();
-            },
-
-            hideLoginModal() {
-                document.getElementById('adminLoginModal').classList.remove('show');
-                document.getElementById('adminLoginForm').reset();
-                this.clearMessages();
-            },
-
-            async handleLogin(e) {
-                e.preventDefault();
-
-                const username = document.getElementById('adminUsername').value.trim();
-                const password = document.getElementById('adminPassword').value;
-
-                if (!username || !password) {
-                    this.showError('請輸入用戶名和密碼');
-                    return;
+                if (query) {
+                    // 包含飲料菜單的 zh-TW 欄位和其他飲料相關欄位
+                    const searchText = [
+                        it['zh-TW'], it.zh, it.en, it.ja, it.ko, it.fr, it.th, it.fil, it.vi,
+                        it.contains, it.flavor, it.categories, it.img, it['img-url']
+                    ].filter(Boolean).join(' ').toLowerCase();
+                    if (!searchText.includes(query)) return false;
                 }
 
-                try {
-                    this.showMessage('正在驗證...', 'info');
-
-                    const response = await gas.adminLogin(username, password);
-
-                    if (response.success && response.admin) {
-                        this.isAdmin = true;
-                        this.adminUser = response.user;
-                        this.adminToken = response.token;
-
-                        this.saveAdminStatus();
-                        this.updateUI();
-
-                        this.showSuccess('登入成功！管理員模式已啟用');
-
-                        setTimeout(() => {
-                            this.hideLoginModal();
-                        }, 1500);
-
-                    } else {
-                        this.showError(response.error || '登入失敗');
-                    }
-
-                } catch (error) {
-                    console.error('管理員登入錯誤:', error);
-                    this.showError('登入失敗: ' + error.message);
-                }
-            },
-
-            logout() {
-                if (confirm('確定要登出管理員模式嗎？')) {
-                    this.isAdmin = false;
-                    this.adminUser = null;
-                    this.adminToken = null;
-
-                    localStorage.removeItem('adminAuth');
-                    this.updateUI();
-
-                    gas.showConnectionStatus('✅ 已登出管理員模式', 'success');
-                }
-            },
-
-            updateUI() {
-                const statusEl = document.getElementById('adminControls');
-                const statusTextEl = document.getElementById('adminStatusText');
-                const loginBtn = document.getElementById('adminLoginBtn');
-                const logoutBtn = document.getElementById('adminLogoutBtn');
-
-                if (this.isAdmin) {
-                    statusEl.className = 'admin-controls admin-mode';
-                    statusTextEl.textContent = `管理員: ${this.adminUser?.username || 'Admin'}`;
-                    loginBtn.style.display = 'none';
-                    logoutBtn.style.display = 'block';
-                    document.body.classList.add('admin-mode');
-                    document.body.classList.remove('guest-mode');
-                } else {
-                    statusEl.className = 'admin-controls guest-mode';
-                    statusTextEl.textContent = '訪客模式';
-                    loginBtn.style.display = 'block';
-                    logoutBtn.style.display = 'none';
-                    document.body.classList.add('guest-mode');
-                    document.body.classList.remove('admin-mode');
-                }
-
-                this.updateEditButtons();
-            },
-
-            updateEditButtons() {
-                const editButtons = document.querySelectorAll('[onclick*="editCocktail"]');
-                const browseButton = document.querySelector('[data-page="browse"]');
-                const addButton = document.querySelector('[data-page="add"]');
-                const deleteButtons = document.querySelectorAll('#deleteCocktail');
-
-                const elements = [...editButtons, browseButton, addButton, ...deleteButtons].filter(Boolean);
-
-                elements.forEach(button => {
-                    if (this.isAdmin) {
-                        button.classList.remove('edit-disabled');
-                        button.removeAttribute('disabled');
-                        button.title = '';
-                    } else {
-                        button.classList.add('edit-disabled');
-                        button.setAttribute('disabled', 'disabled');
-                        button.title = '需要管理員權限，請先登入';
-                    }
-                });
-            },
-
-            checkPermission(operation = '編輯') {
-                if (!this.isAdmin) {
-                    alert(`⚠️ ${operation}功能需要管理員權限\n\n請先登入管理員帳號`);
-                    this.showLoginModal();
+                if (currentFilter === 'vegan' && !isVegan(it)) {
                     return false;
                 }
+
+                if (currentFilter === 'spicy' && getSpicyLevel(it) <= 0) {
+                    return false;
+                }
+
                 return true;
-            },
+            });
+        }
 
-            showError(message) {
-                this.showMessage(message, 'error');
-            },
+        function distributeColumns(sections, categories) {
+            const left = [], right = [];
+            sections.forEach((sec, idx) => {
+                const fixed = categories.find(c => c.name === sec.name);
+                const target = fixed
+                    ? (fixed.column === 'left' ? left : right)
+                    : (idx % 2 === 0 ? left : right);
+                target.push(sec);
+            });
+            return { left, right };
+        }
 
-            showSuccess(message) {
-                this.showMessage(message, 'success');
-            },
+        // ===== LANGUAGE & FORMATTING =====
+        // 多語內容選擇器（支援新舊格式）
+        function pickLangText(field, lang) {
+            if (!field) return '';
 
-            showMessage(message, type) {
-                this.clearMessages();
-
-                const errorEl = document.getElementById('adminLoginError');
-                const successEl = document.getElementById('adminLoginSuccess');
-
-                if (type === 'error') {
-                    errorEl.textContent = message;
-                    errorEl.style.display = 'block';
-                } else if (type === 'success') {
-                    successEl.textContent = message;
-                    successEl.style.display = 'block';
-                } else {
-                    successEl.textContent = message;
-                    successEl.style.display = 'block';
-                }
-            },
-
-            clearMessages() {
-                document.getElementById('adminLoginError').style.display = 'none';
-                document.getElementById('adminLoginSuccess').style.display = 'none';
-            }
-        };
-
-        // ===== 主應用程式 =====
-        class CocktailApp {
-            constructor() {
-                this.storage = new MobileStorageManager();
-                this.cocktails = []; this.filteredCocktails = []; this.currentView = 'grid';
-                this.editTargetId = null; this.pages = { browse: document.getElementById('browsePage'), add: document.getElementById('addPage'), settings: document.getElementById('settingsPage') };
-                this.navButtons = Array.from(document.querySelectorAll('.nav-btn'));
-                this.successMessage = null;
-                this.init();
+            // 新版（多語物件）
+            if (typeof field === 'object' && !Array.isArray(field)) {
+                return (
+                    field[lang] ||
+                    field.en ||
+                    field.zh ||
+                    field['zh-TW'] ||
+                    Object.values(field).find(v => v) ||
+                    ''
+                );
             }
 
-            norm(v) { return (v == null ? '' : String(v)).trim().toLowerCase(); }
+            // 舊版（單一字串）
+            return String(field);
+        }
 
-            async init() {
-                try {
-                    await this.storage.init();
-                    this.bindUI();
-                    await this.pullFromCloud({ silent: true });
-                    if (this.cocktails.length === 0) { this.render(); }
-                    this.setupPWA();
-                    await this.updateStorageStats();
-                    const savedUrl = gas.url; if (savedUrl) document.getElementById('gasUrl').value = savedUrl;
+        function pickLang(item, lang) {
+            // 處理飲料菜單的 zh-TW 欄位（映射到 zh）
+            const langKey = lang === 'zh' && item['zh-TW'] ? 'zh-TW' : lang;
 
-                    // 初始化管理員認證系統
-                    adminAuth.init();
-                } catch (err) {
-                    console.error('初始化失敗:', err);
-                    gas.showConnectionStatus('⌫ 初始化失敗: ' + err.message, 'error');
-                    this.showError('初始化失敗，請檢查 GAS 設定或重新整理。');
-                }
+            const val = (item[langKey] || '').trim();
+            if (val) return { text: val, langTag: lang };
+
+            // Fallback 順序
+            if ((item.en || '').trim()) return { text: item.en.trim(), langTag: 'en' };
+            if ((item['zh-TW'] || '').trim()) return { text: item['zh-TW'].trim(), langTag: 'zh' };
+            if ((item.zh || '').trim()) return { text: item.zh.trim(), langTag: 'zh' };
+
+            const alt = ['ja', 'ko', 'fr', 'th', 'fil', 'vi'].map(k => item[k]).find(v => v && v.trim());
+            return { text: alt ? alt.trim() : '—', langTag: alt ? 'other' : '' };
+        }
+
+        function pickSecondary(item, lang) {
+            if (lang === 'en') {
+                const s = (item['zh-TW'] || item.zh || '').trim();
+                return { text: s, langTag: s ? 'zh' : '' };
+            } else {
+                const s = (item.en || item['zh-TW'] || item.zh || '').trim();
+                return { text: s, langTag: s ? (item.en ? 'en' : 'zh') : '' };
             }
+        }
 
-            bindUI() {
-                const searchInput = document.getElementById('searchInput');
-                const categorySelect = document.getElementById('categorySelect');
-                const viewButtons = document.querySelectorAll('.view-btn');
+        function pickText(item, lang) {
+            // 處理飲料菜單的 zh-TW 欄位
+            const langKey = lang === 'zh' && item?.['zh-TW'] ? 'zh-TW' : lang;
 
-                if (searchInput) { const onSearch = () => this.filterCocktails(); searchInput.addEventListener('input', onSearch); searchInput.addEventListener('compositionend', onSearch); }
-                if (categorySelect) categorySelect.addEventListener('change', () => this.filterCocktails());
-                viewButtons.forEach(btn => { btn.addEventListener('click', (e) => { viewButtons.forEach(b => b.classList.remove('active')); e.currentTarget.classList.add('active'); this.currentView = e.currentTarget.dataset.view; this.updateViewClass(); }); });
+            const val = (item?.[langKey] || '').trim();
+            if (val) return val;
 
-                document.getElementById('btnSync').addEventListener('click', () => this.pullFromCloud());
-                document.getElementById('btnClearData').addEventListener('click', () => this.confirmClearData());
+            // Fallback
+            if ((item?.en || '').trim()) return item.en.trim();
+            if ((item?.['zh-TW'] || '').trim()) return item['zh-TW'].trim();
+            if ((item?.zh || '').trim()) return item.zh.trim();
 
-                document.getElementById('btnSaveGasUrl').addEventListener('click', async () => {
-                    const input = document.getElementById('gasUrl');
-                    const check = await gas.validateUrl(input.value);
-                    if (!check.valid) {
-                        gas.showConnectionStatus('⌫ ' + check.error, 'error');
-                        return;
-                    }
-                    gas.url = input.value;            // setter 會自動正規化
-                    input.value = gas.url;            // 回填正規化後的結果
-                    gas.showConnectionStatus('✅ 連線設定已儲存，正在驗證…', 'success');
-                    document.getElementById('debugInfo').classList.remove('hidden');
-                    try { await gas.test(); } catch (e) { /* 狀態已於 test 內顯示 */ }
-                });
+            const altKey = ['ja', 'ko', 'fr', 'th', 'fil', 'vi'].find(k => (item?.[k] || '').trim());
+            return altKey ? item[altKey].trim() : '';
+        }
 
-                document.getElementById('btnTestGas').addEventListener('click', async () => {
-                    document.getElementById('debugInfo').classList.remove('hidden');
-                    try {
-                        const ok = await gas.test();
-                    } catch (e) {
-                    }
-                });
+        const twdFmt = new Intl.NumberFormat('zh-TW', {
+            style: 'currency',
+            currency: 'TWD',
+            maximumFractionDigits: 0
+        });
 
-                this.navButtons.forEach((btn) => {
-                    btn.addEventListener('click', () => {
-                        const pageKey = btn.dataset.page;
+        function formatTWD(v) {
+            const n = Number(v);
+            return isFinite(n) ? twdFmt.format(n) : (v ?? '');
+        }
 
-                        // 檢查權限：訪客模式下不允許訪問瀏覽和新增頁面
-                        if (!adminAuth.isAdmin && (pageKey === 'browse' || pageKey === 'add')) {
-                            adminAuth.showLoginModal();
-                            return;
-                        }
+        // Accordion 渲染函數（多語支援）
+        function renderAccordion(item) {
+            const state = store.getState();
+            const lang = state.ui.currentLang;
+            const sections = [];
 
-                        this.navButtons.forEach(b => b.classList.remove('active'));
-                        btn.classList.add('active');
-                        Object.values(this.pages).forEach(p => p.classList.remove('active'));
-                        if (this.pages[pageKey]) this.pages[pageKey].classList.add('active');
-                        if (pageKey === 'add' && this.successMessage) this.successMessage.style.display = 'none';
-                        if (pageKey === 'settings') this.updateStorageStats();
-                    });
-                });
+            const allergensText = pickLangText(item.contains, lang);
+            const ingredientsText = pickLangText(item.ingredients, lang);
+            const notesText = pickLangText(item.notes, lang);
 
-                const form = document.getElementById('addCocktailForm');
-                this.successMessage = document.getElementById('successMessage');
-                form.addEventListener('submit', async (e) => { e.preventDefault(); await this.handleAdd(); });
-
-                const tagsInput = document.getElementById('tagsInput');
-                const tagsDisplay = document.getElementById('tagsDisplay');
-                tagsInput.addEventListener('keydown', (e) => { if (e.key === 'Enter' && tagsInput.value.trim()) { e.preventDefault(); const tag = tagsInput.value.trim(); const chip = document.createElement('span'); chip.className = 'tag'; chip.dataset.tag = tag; chip.textContent = `#${tag} ×`; chip.addEventListener('click', () => chip.remove()); tagsDisplay.appendChild(chip); tagsInput.value = ''; } });
-
-                const editTagsInput = document.getElementById('editTagsInput');
-                const editTagsDisplay = document.getElementById('editTagsDisplay');
-                if (editTagsInput) {
-                    editTagsInput.addEventListener('keydown', (e) => {
-                        if (e.key === 'Enter' && editTagsInput.value.trim()) {
-                            e.preventDefault();
-                            this._addTagChip(editTagsDisplay, editTagsInput.value.trim());
-                            editTagsInput.value = '';
-                        }
-                    });
-                }
-
-                // 編輯抽屜事件綁定 - 增強版
-                this.bindEditDrawerEvents();
-
-                const addImageInput = document.getElementById('cocktailImageFile');
-                const addImagePreview = document.getElementById('addImagePreview');
-                addImageInput.addEventListener('change', (e) => { addImagePreview.innerHTML = ''; const file = e.target.files[0]; if (file) { const url = URL.createObjectURL(file); const img = document.createElement('img'); img.src = url; Object.assign(img.style, { maxWidth: '200px', maxHeight: '150px', borderRadius: '8px', objectFit: 'cover' }); addImagePreview.appendChild(img); } });
-
-                document.getElementById('imageFile').addEventListener('change', (e) => { const preview = document.getElementById('imagePreview'); preview.innerHTML = ''; const file = e.target.files[0]; if (file) { const url = URL.createObjectURL(file); const img = document.createElement('img'); img.src = url; Object.assign(img.style, { maxWidth: '100%', borderRadius: '8px' }); preview.appendChild(img); const caption = document.createElement('div'); caption.textContent = '新上傳的圖片預覽'; Object.assign(caption.style, { fontSize: '.9rem', color: '#666', marginTop: '8px' }); preview.appendChild(caption); } });
-            }
-
-            // 編輯抽屜事件綁定 - 增強版
-            bindEditDrawerEvents() {
-                // X 按鈕關閉
-                document.getElementById('closeDrawerX').addEventListener('click', () => this.closeEditDrawer());
-
-                // 取消按鈕
-                document.getElementById('cancelEdit').addEventListener('click', () => {
-                    if (confirm('確定要取消編輯嗎？未儲存的變更將會遺失。')) {
-                        this.closeEditDrawer();
-                    }
-                });
-
-                // 儲存按鈕
-                document.getElementById('saveCocktail').addEventListener('click', async (e) => {
-                    e.preventDefault();
-                    await this.saveEdited();
-                });
-
-                // 刪除按鈕
-                document.getElementById('deleteCocktail').addEventListener('click', async (e) => {
-                    e.preventDefault();
-                    if (confirm('確定要刪除這個酒譜嗎？此操作無法復原！')) {
-                        await this.deleteCocktail();
-                    }
-                });
-
-                // ESC 鍵關閉
-                document.addEventListener('keydown', (e) => {
-                    if (e.key === 'Escape') {
-                        const drawer = document.getElementById('editDrawer');
-                        if (!drawer.classList.contains('hidden')) {
-                            this.closeEditDrawer();
-                        }
-                    }
-                });
-
-                // 點擊外部關閉
-                document.addEventListener('click', (e) => {
-                    const drawer = document.getElementById('editDrawer');
-                    if (!drawer.classList.contains('hidden') && !drawer.contains(e.target)) {
-                        if (!e.target.matches('[onclick*="editCocktail"]')) {
-                            this.closeEditDrawer();
-                        }
-                    }
+            if (allergensText) {
+                sections.push({
+                    key: 'allergens',
+                    content: allergensText
                 });
             }
 
-            closeEditDrawer() {
-                const drawer = document.getElementById('editDrawer');
-                drawer.classList.add('hidden');
-                drawer.setAttribute('aria-hidden', 'true');
-                this.editTargetId = null;
-            }
-
-            setupPWA() {
-                this.updateOnlineStatus();
-                window.addEventListener('online', () => this.updateOnlineStatus());
-                window.addEventListener('offline', () => this.updateOnlineStatus());
-                window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); this.deferredPrompt = e; document.getElementById('installPrompt').style.display = 'block'; });
-                document.getElementById('installBtn').addEventListener('click', async () => { if (this.deferredPrompt) { this.deferredPrompt.prompt(); await this.deferredPrompt.userChoice; document.getElementById('installPrompt').style.display = 'none'; this.deferredPrompt = null; } });
-                if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').catch(() => { }); }); }
-            }
-
-            updateOnlineStatus() { const offlineIndicator = document.getElementById('offlineIndicator'); offlineIndicator.style.display = navigator.onLine ? 'none' : 'block'; }
-
-            async pullFromCloud({ silent } = {}) {
-                try {
-                    const data = await gas.list();
-                    const norm = data.map(normalizeRecord);
-                    for (const c of norm) await this.storage.saveCocktail(c);
-                    this.cocktails = (await this.storage.getAllCocktails()).map(c => ({
-                        ...c,
-                        favorite: c.favorite === true  // 确保favorite字段存在
-                    }));
-                    
-                    // 為每個 cocktail 讀取配料
-                    for (const c of this.cocktails) {
-                        try {
-                            c.ingredientsList = await this.storage.getIngredients(c.id);
-                        } catch (e) {
-                            console.warn(`讀取配料 ${c.id} 失敗:`, e);
-                            c.ingredientsList = [];
-                        }
-                    }
-                    
-                    this.filteredCocktails = [...this.cocktails];
-                    this.updateCategories();
-                    this.render();
-                    if (!silent) {
-                        gas.showConnectionStatus(`✅ 已成功同步 ${this.cocktails.length} 筆資料`, 'success');
-                    }
-                } catch (err) {
-                    console.warn('雲端讀取失敗，改用本機快取：', err);
-                    if (!silent) {
-                        gas.showConnectionStatus('⚠️ 雲端連線失敗，顯示本機快取資料', 'warning');
-                    }
-                    this.cocktails = (await this.storage.getAllCocktails()).map(c => ({
-                        ...c,
-                        favorite: c.favorite === true  // 确保favorite字段存在
-                    }));
-                    
-                    // 為每個 cocktail 讀取配料
-                    for (const c of this.cocktails) {
-                        try {
-                            c.ingredientsList = await this.storage.getIngredients(c.id);
-                        } catch (e) {
-                            console.warn(`讀取配料 ${c.id} 失敗:`, e);
-                            c.ingredientsList = [];
-                        }
-                    }
-                    
-                    this.filteredCocktails = [...this.cocktails];
-                    this.updateCategories();
-                    this.render();
-                }
-            }
-
-            async handleAdd() {
-                if (!adminAuth.checkPermission('新增')) return;
-
-                try {
-                    const title = document.getElementById('cocktailTitle').value.trim() || '未命名酒譜';
-                    const category = document.getElementById('cocktailCategory').value.trim();
-                    const glassType = document.getElementById('glassType').value.trim();
-                    const alcoholContent = document.getElementById('alcoholContent').value.trim();
-                    const difficulty = document.getElementById('difficulty').value.trim();
-                    const servings = document.getElementById('servings').value.trim();
-                    const chips = Array.from(document.querySelectorAll('#tagsDisplay .tag')).map(x => x.dataset.tag);
-                    const tags = chips.join(';');
-                    
-                    // 收集配料數據（ingredients, quantity, unit）
-                    const ingredientsList = Array.from(document.querySelectorAll('#ingredientsList .ingredient-item')).map(row => {
-                        const inputs = row.querySelectorAll('input');
-                        return {
-                            ingredients: inputs[0]?.value.trim() || '',
-                            quantity: inputs[1]?.value.trim() || '',
-                            unit: inputs[2]?.value.trim() || ''
-                        };
-                    }).filter(ing => ing.ingredients || ing.quantity || ing.unit);
-                    
-                    const instructions = Array.from(document.querySelectorAll('#instructionsList .instruction-item input')).map(i => i.value.trim()).filter(Boolean).join('>');
-                    
-                    let image_b64 = '';
-                    const imageFile = document.getElementById('cocktailImageFile').files[0];
-                    const newId = this.makeId();
-                    if (imageFile) { try { const saved = await this.storage.saveImage(imageFile, newId); image_b64 = saved.dataUrl; } catch (err) { console.warn('圖片快取失敗（不影響文字資料）：', err); } }
-                    
-                    const rec = { id: newId, title, category, tags, instructions, glass_type: glassType, alcohol_content: alcoholContent || '', difficulty: difficulty || '', servings: servings || '', image_b64 };
-                    const recNorm = normalizeRecord(rec);
-                    await gas.upsert(recNorm);
-                    await this.storage.saveCocktail(recNorm);
-                    
-                    // 保存配料到 Ingredients 表格
-                    if (ingredientsList.length > 0) {
-                        await this.storage.saveIngredients(newId, ingredientsList);
-                    }
-                    
-                    await this.pullFromCloud({ silent: true });
-                    this.render();
-                    this.successMessage.style.display = 'block';
-                    const browseBtn = this.navButtons.find(b => b.dataset.page === 'browse'); browseBtn?.click();
-                    this.clearForm();
-                } catch (err) {
-                    console.error('新增失敗：', err);
-                    gas.showConnectionStatus('⌫ 新增失敗: ' + err.message, 'error');
-                    alert('新增失敗：' + err.message);
-                }
-            }
-
-            makeId() { return 'C' + String(Date.now()); }
-
-            // 下拉選單填值：若資料值不在選項中，動態補上以免遺失
-            setSelectValue(sel, value) {
-                if (!sel) return;
-                value = value || '';
-                if (value && !Array.from(sel.options).some(o => o.value === value)) {
-                    const opt = document.createElement('option');
-                    opt.value = value; opt.textContent = value; sel.appendChild(opt);
-                }
-                sel.value = value;
-            }
-
-            _addTagChip(display, tag) {
-                if (!display || !tag) return;
-                const chip = document.createElement('span');
-                chip.className = 'tag';
-                chip.dataset.tag = tag;
-                chip.textContent = `#${tag} ×`;
-                chip.style.cursor = 'pointer';
-                chip.addEventListener('click', () => chip.remove());
-                display.appendChild(chip);
-            }
-
-            _makeIngredientRow(value = '', quantity = '', unit = '') {
-                const div = document.createElement('div');
-                div.className = 'ingredient-item';
-                div.style.display = 'flex';
-                div.style.gap = '8px';
-                div.style.marginBottom = '8px';
-                
-                const ingInput = document.createElement('input');
-                ingInput.type = 'text'; 
-                ingInput.placeholder = '材料名稱'; 
-                ingInput.value = value;
-                ingInput.style.flex = '2';
-                
-                const qtyInput = document.createElement('input');
-                qtyInput.type = 'text'; 
-                qtyInput.placeholder = '數量'; 
-                qtyInput.value = quantity;
-                qtyInput.style.flex = '1';
-                
-                const unitInput = document.createElement('input');
-                unitInput.type = 'text'; 
-                unitInput.placeholder = '單位'; 
-                unitInput.value = unit;
-                unitInput.style.flex = '1';
-                
-                const btn = document.createElement('button');
-                btn.type = 'button'; 
-                btn.className = 'remove-btn'; 
-                btn.textContent = '移除';
-                btn.addEventListener('click', () => div.remove());
-                
-                div.appendChild(ingInput); 
-                div.appendChild(qtyInput); 
-                div.appendChild(unitInput); 
-                div.appendChild(btn);
-                return div;
-            }
-
-            renderEditIngredients(list) {
-                const wrap = document.getElementById('editIngredientsList');
-                wrap.innerHTML = '';
-                (list && list.length ? list : [{}]).forEach(ing => {
-                    const ingredients = typeof ing === 'string' ? ing : (ing.ingredients || '');
-                    const quantity = typeof ing === 'string' ? '' : (ing.quantity || '');
-                    const unit = typeof ing === 'string' ? '' : (ing.unit || '');
-                    wrap.appendChild(this._makeIngredientRow(ingredients, quantity, unit));
+            if (ingredientsText) {
+                sections.push({
+                    key: 'ingredients',
+                    content: ingredientsText
                 });
             }
 
-            addEditIngredient() {
-                document.getElementById('editIngredientsList').appendChild(this._makeIngredientRow('', '', ''));
-            }
-
-            _renumberEditInstructions() {
-                Array.from(document.querySelectorAll('#editInstructionsList .instruction-item span'))
-                    .forEach((s, i) => s.textContent = (i + 1) + '.');
-            }
-
-            _makeInstructionRow(value = '', idx = 1) {
-                const div = document.createElement('div');
-                div.className = 'instruction-item';
-                const span = document.createElement('span');
-                span.style.cssText = 'font-weight:bold;min-width:30px;';
-                span.textContent = idx + '.';
-                const input = document.createElement('input');
-                input.type = 'text'; input.placeholder = '詳細描述步驟'; input.value = value;
-                const btn = document.createElement('button');
-                btn.type = 'button'; btn.className = 'remove-btn'; btn.textContent = '移除';
-                btn.addEventListener('click', () => { div.remove(); this._renumberEditInstructions(); });
-                div.appendChild(span); div.appendChild(input); div.appendChild(btn);
-                return div;
-            }
-
-            renderEditInstructions(list) {
-                const wrap = document.getElementById('editInstructionsList');
-                wrap.innerHTML = '';
-                (list && list.length ? list : ['']).forEach((v, i) => wrap.appendChild(this._makeInstructionRow(v, i + 1)));
-            }
-
-            addEditInstruction() {
-                const wrap = document.getElementById('editInstructionsList');
-                const idx = wrap.querySelectorAll('.instruction-item').length + 1;
-                wrap.appendChild(this._makeInstructionRow('', idx));
-            }
-
-            async editCocktail(id) {
-                if (!adminAuth.checkPermission('編輯')) return;
-
-                const c = this.cocktails.find(r => r.id === id); if (!c) return;
-                this.editTargetId = id;
-
-                document.getElementById('editTitle').value = c.title || '';
-                this.setSelectValue(document.getElementById('editCategory'), c.category || '');
-                this.setSelectValue(document.getElementById('editGlassType'), c.glass_type || '');
-                this.setSelectValue(document.getElementById('editAlcoholContent'), c.alcohol_content || '');
-                this.setSelectValue(document.getElementById('editDifficulty'), c.difficulty || '');
-                document.getElementById('editServings').value = c.servings || '';
-
-                // 標籤晶片
-                const tagsDisplay = document.getElementById('editTagsDisplay');
-                tagsDisplay.innerHTML = '';
-                String(c.tags || '').split(';').map(t => t.trim()).filter(Boolean)
-                    .forEach(t => this._addTagChip(tagsDisplay, t));
-
-                // 配料（從 Ingredients 表格讀取）
-                try {
-                    const ingredientsList = await this.storage.getIngredients(id);
-                    this.renderEditIngredients(ingredientsList);
-                } catch (e) {
-                    console.warn('讀取配料失敗：', e);
-                    this.renderEditIngredients([]);
-                }
-
-                // 步驟
-                this.renderEditInstructions(String(c.instructions || '').split('>').map(s => s.trim()).filter(Boolean));
-
-                // 圖片預覽
-                const fileInput = document.getElementById('imageFile'); if (fileInput) fileInput.value = '';
-                const preview = document.getElementById('imagePreview'); preview.innerHTML = '';
-                try {
-                    const src = await this.storage.getImage(c.id);
-                    if (src) {
-                        const img = document.createElement('img'); img.src = src;
-                        Object.assign(img.style, { maxWidth: '100%', borderRadius: '8px', marginBottom: '8px' });
-                        preview.appendChild(img);
-                        const caption = document.createElement('div'); caption.textContent = '目前的圖片';
-                        Object.assign(caption.style, { fontSize: '.9rem', color: '#8a7a64' });
-                        preview.appendChild(caption);
-                    }
-                } catch (e) { console.warn('載入圖片失敗：', e); }
-
-                const drawer = document.getElementById('editDrawer');
-                drawer.classList.remove('hidden');
-                drawer.setAttribute('aria-hidden', 'false');
-                drawer.scrollTop = 0;
-            }
-
-            async saveEdited() {
-                try {
-                    const idx = this.cocktails.findIndex(r => r.id === this.editTargetId); if (idx === -1) return;
-
-                    let image_b64 = this.cocktails[idx].image_b64 || '';
-                    const imageFile = document.getElementById('imageFile').files[0];
-                    if (imageFile) { try { const saved = await this.storage.saveImage(imageFile, this.editTargetId); image_b64 = saved.dataUrl; } catch (e) { console.warn('圖片更新快取失敗：', e); } }
-
-                    const title = document.getElementById('editTitle').value.trim();
-                    const category = document.getElementById('editCategory').value.trim();
-                    const glass_type = document.getElementById('editGlassType').value.trim();
-                    const alcohol_content = document.getElementById('editAlcoholContent').value.trim();
-                    const difficulty = document.getElementById('editDifficulty').value.trim();
-                    const servings = document.getElementById('editServings').value.trim();
-                    const tags = Array.from(document.querySelectorAll('#editTagsDisplay .tag')).map(x => x.dataset.tag).join(';');
-                    
-                    // 收集配料數據（ingredients, quantity, unit）
-                    const ingredientsList = Array.from(document.querySelectorAll('#editIngredientsList .ingredient-item')).map(row => {
-                        const inputs = row.querySelectorAll('input');
-                        return {
-                            ingredients: inputs[0]?.value.trim() || '',
-                            quantity: inputs[1]?.value.trim() || '',
-                            unit: inputs[2]?.value.trim() || ''
-                        };
-                    }).filter(ing => ing.ingredients || ing.quantity || ing.unit);
-                    
-                    const instructions = Array.from(document.querySelectorAll('#editInstructionsList .instruction-item input')).map(i => i.value.trim()).filter(Boolean).join('>');
-
-                    const updated = {
-                        ...this.cocktails[idx],
-                        favorite: this.cocktails[idx].favorite === true,
-                        title, category, glass_type, alcohol_content, difficulty, tags, instructions, servings, image_b64
-                    };
-                    const updatedNorm = normalizeRecord(updated);
-                    await gas.upsert(updatedNorm);
-                    await this.storage.saveCocktail(updatedNorm);
-                    
-                    // 保存配料到 Ingredients 表格
-                    if (ingredientsList.length > 0) {
-                        await this.storage.saveIngredients(this.editTargetId, ingredientsList);
-                    } else {
-                        await this.storage.deleteIngredientsByCocktailId(this.editTargetId);
-                    }
-                    
-                    await this.pullFromCloud({ silent: true });
-                    this.render();
-                    this.closeEditDrawer();
-                    gas.showConnectionStatus('✅ 編輯儲存成功', 'success');
-                } catch (err) {
-                    console.error('儲存編輯失敗：', err);
-                    gas.showConnectionStatus('⌫ 儲存失敗: ' + err.message, 'error');
-                    alert('儲存失敗：' + err.message);
-                }
-            }
-
-            async deleteCocktail() {
-                try {
-                    const id = this.editTargetId;
-                    await gas.remove(id);
-                    await this.storage.deleteCocktail(id);
-                    await this.storage.deleteIngredientsByCocktailId(id);
-                    await this.pullFromCloud({ silent: true });
-                    this.render();
-                    this.closeEditDrawer();
-                    gas.showConnectionStatus('✅ 刪除成功', 'success');
-                } catch (err) {
-                    console.error('刪除失敗：', err);
-                    gas.showConnectionStatus('⌫ 刪除失敗: ' + err.message, 'error');
-                    alert('刪除失敗：' + err.message);
-                }
-            }
-
-            addIngredient() { 
-                document.getElementById('ingredientsList').appendChild(this._makeIngredientRow('', '', '')); 
-            }
-            removeIngredient(btn) { btn.closest('.ingredient-item')?.remove(); }
-
-            addInstruction() { const wrap = document.getElementById('instructionsList'); const idx = wrap.querySelectorAll('.instruction-item').length + 1; const div = document.createElement('div'); div.className = 'instruction-item'; div.innerHTML = `<span style="font-weight:bold;min-width:30px;">${idx}.</span><input type="text" placeholder="詳細描述步驟" /><button type="button" class="remove-btn">移除</button>`; div.querySelector('.remove-btn').addEventListener('click', () => { div.remove(); Array.from(wrap.querySelectorAll('.instruction-item span')).forEach((s, i) => s.textContent = (i + 1) + '.'); }); wrap.appendChild(div); }
-            removeInstruction(btn) { btn.closest('.instruction-item')?.remove(); }
-
-            clearForm() { 
-                document.getElementById('addCocktailForm').reset(); 
-                document.getElementById('tagsDisplay').innerHTML = ''; 
-                document.getElementById('addImagePreview').innerHTML = ''; 
-                const ingredientsList = document.getElementById('ingredientsList');
-                ingredientsList.innerHTML = '';
-                ingredientsList.appendChild(this._makeIngredientRow('', '', ''));
-                document.getElementById('instructionsList').innerHTML = `<div class="instruction-item"><span style="font-weight: bold; min-width: 30px;">1.</span><input type="text" placeholder="詳細描述第一個步驟" /><button type="button" class="remove-btn" onclick="app.removeInstruction(this)">移除</button></div>`; 
-            }
-
-            updateCategories() { const sel = document.getElementById('categorySelect'); if (!sel) return; const categories = [...new Set(this.cocktails.map(r => (r.category || '').trim()).filter(Boolean))].sort(); sel.querySelectorAll('option:not(:first-child)').forEach(o => o.remove()); categories.forEach(c => { const opt = document.createElement('option'); opt.value = c; opt.textContent = c; sel.appendChild(opt); }); }
-
-            filterCocktails() {
-                const searchTerm = this.norm(document.getElementById('searchInput')?.value || '');
-                const selectedCategoryRaw = document.getElementById('categorySelect')?.value || '';
-                const selectedCategory = (selectedCategoryRaw || '').trim();
-                const favoriteOnly = document.getElementById('favoriteOnlyFilter')?.checked || false;
-
-                if (!Array.isArray(this.cocktails)) this.cocktails = [];
-
-                this.filteredCocktails = this.cocktails.filter(r => {
-                    const title = this.norm(r?.title);
-                    const tags = this.norm(r?.tags);
-                    const category = (r?.category || '').trim();
-                    
-                    // 從 ingredientsList 搜索配料
-                    const ingredientsText = (r?.ingredientsList || [])
-                        .map(ing => ing.ingredients || '')
-                        .join(' ')
-                        .toLowerCase();
-
-                    const matchesSearch = !searchTerm ||
-                        title.includes(searchTerm) ||
-                        tags.includes(searchTerm) ||
-                        ingredientsText.includes(searchTerm);
-
-                    const matchesCategory = !selectedCategory || category === selectedCategory;
-                    const matchesFavorite = !favoriteOnly || (r?.favorite === true);
-
-                    return matchesSearch && matchesCategory && matchesFavorite;
+            if (notesText) {
+                sections.push({
+                    key: 'notes',
+                    content: notesText
                 });
-
-                // 更新收藏數量顯示
-                const favoriteCount = this.cocktails.filter(c => c.favorite === true).length;
-                const countEl = document.getElementById('favoriteCount');
-                if (countEl) {
-                    countEl.textContent = favoriteCount > 0 ? `⭐ 共有 ${favoriteCount} 個收藏` : '';
-                }
-
-                this.render();
             }
 
-            updateViewClass() { const container = document.getElementById('cocktailsContainer'); container.className = this.currentView === 'grid' ? 'cocktails-grid' : 'cocktails-list'; }
+            if (!sections.length) return '';
 
-            updateStats() { const stats = document.getElementById('stats'); const total = this.cocktails.length, showing = this.filteredCocktails.length; stats.textContent = `顯示 ${showing} / ${total} 道雞尾酒譜`; }
+            return `
+                <div class="accordion">
+                    ${sections.map(sec => `
+                        <div class="accordion-item">
+                            <div class="accordion-header">
+                                <span>${ACCORDION_LABELS[sec.key]?.[lang] || ACCORDION_LABELS[sec.key]?.en}</span>
+                                <span class="accordion-icon">ℹ️</span>
+                            </div>
+                            <div class="accordion-content">
+                                ${escapeHtml(sec.content)}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
 
-            // 獲取熱門標籤
-            getPopularTags(limit = 15) {
-                const tagFrequency = {};
+        function renderBadges(item) {
+            const state = store.getState();
+            const badges = [];
 
-                // 統計所有標籤的使用頻率
-                this.cocktails.forEach(cocktail => {
-                    if (cocktail.tags) {
-                        const tags = String(cocktail.tags).split(';').map(t => t.trim()).filter(Boolean);
-                        tags.forEach(tag => {
-                            tagFrequency[tag] = (tagFrequency[tag] || 0) + 1;
+            // Food 專用標籤
+            if (state.ui.currentMenuType === 'food') {
+                if (isVegan(item)) {
+                    badges.push('<span class="badge vegan" title="Vegan / 純素">Vegan</span>');
+                }
+
+                const spicy = getSpicyLevel(item);
+                if (spicy > 0) {
+                    const level = Math.min(spicy, MAX_SPICY_LEVEL);
+                    badges.push(`<span class="badge spicy" title="Spicy / 辣度">${'🌶'.repeat(level)}</span>`);
+                }
+
+                if (item.contains) {
+                    const list = String(item.contains).split(/[,，;；]/).map(s => s.trim()).filter(Boolean);
+                    if (list.length) {
+                        badges.push(`<span class="badge allergen" title="Allergens / 過敏原">${escapeHtml(list.join(' · '))}</span>`);
+                    }
+                }
+            }
+
+            // Drink 專用標籤
+            if (state.ui.currentMenuType === 'drink') {
+                // Alcohol 濃度（用酒杯圖示表示）
+                const alcohol = Number(item.alcohol);
+                if (isFinite(alcohol) && alcohol > 0) {
+                    const level = Math.min(Math.ceil(alcohol / 3), 3); // 分成 3 級
+                    badges.push(`<span class="badge alcohol" title="Alcohol / 酒精濃度: ${alcohol}%">${'🍷'.repeat(level)}</span>`);
+                }
+
+                // Body 濃郁度
+                const body = Number(item.body);
+                if (isFinite(body) && body > 0) {
+                    const level = Math.min(body, 3);
+                    badges.push(`<span class="badge body" title="Body / 濃郁度">${'●'.repeat(level)}</span>`);
+                }
+
+                // Flavor 風味標籤
+                if (item.flavor) {
+                    const flavors = String(item.flavor).split(/[,，;；]/).map(s => s.trim()).filter(Boolean);
+                    if (flavors.length) {
+                        badges.push(`<span class="badge flavor" title="Flavor / 風味">${escapeHtml(flavors.join(' · '))}</span>`);
+                    }
+                }
+            }
+
+            return badges.length ? `<div class="badges">${badges.join('')}</div>` : '';
+        }
+
+        // ===== RENDERING FUNCTIONS =====
+        function createSection(name, items) {
+            const state = store.getState();
+            const sec = document.createElement('section');
+            sec.className = 'menu-section';
+            sec.id = `cat-${name}`;
+
+            const title = document.createElement('div');
+            title.className = 'section-title';
+            title.textContent = name;
+            sec.appendChild(title);
+
+            items.forEach(item => {
+                const div = document.createElement('article');
+                div.className = 'menu-item';
+                if (isSoldOut(item)) {
+                    div.classList.add('soldout');
+                }
+
+                const { text: primary, langTag: pTag } = pickLang(item, state.ui.currentLang);
+                const { text: secondary, langTag: sTag } = pickSecondary(item, state.ui.currentLang);
+                const priceStr = formatTWD(item.price);
+
+                // 支援飲料菜單的 img-url 欄位
+                const imgSrc = item['img-url'] || item.img;
+                const imgAlt = item.en || item['zh-TW'] || item.zh || 'item image';
+
+                const imgHtml = imgSrc ? `
+                    <img class="thumb" src="${escapeHtml(imgSrc)}"
+                        alt="${escapeHtml(imgAlt)}"
+                        loading="lazy" decoding="async" width="${IMAGE_FALLBACK_SIZE}" height="${IMAGE_FALLBACK_SIZE}"
+                        onerror="this.style.display='none'" />` : '';
+
+                div.innerHTML = `
+                    ${imgHtml}
+                    <div class="item-name">
+                        <div class="name-primary">${escapeHtml(primary)}${pTag ? ` <small style="opacity:.7">(${pTag})</small>` : ''}</div>
+                        <div class="name-secondary">${escapeHtml(secondary)}${sTag ? ` <small style="opacity:.6">(${sTag})</small>` : ''}</div>
+                        ${renderBadges(item)}
+                    </div>
+                    ${renderAccordion(item)}
+                    <div class="price" aria-label="Price">NT ${priceStr}</div>`;
+
+                sec.appendChild(div);
+            });
+
+            return sec;
+        }
+
+        function renderColumns(left, right) {
+            const menuContent = document.getElementById('menuContent');
+            menuContent.innerHTML = '';
+
+            const leftCol = document.createElement('div');
+            const rightCol = document.createElement('div');
+
+            left.forEach(sec => leftCol.appendChild(sec));
+            right.forEach(sec => rightCol.appendChild(sec));
+
+            menuContent.appendChild(leftCol);
+            menuContent.appendChild(rightCol);
+        }
+
+        function showEmptyState() {
+            const menuContent = document.getElementById('menuContent');
+            menuContent.innerHTML = `
+                <div class="error">
+                    <h3>⚠️ 找不到符合條件的菜單</h3>
+                    <div class="error-details">
+                        可能原因：<br/>
+                        • 類別鍵名與預設不符（已嘗試動態鍵名仍無資料）<br/>
+                        • 目前的搜尋或「隱藏售罄」過濾把品項都排除了
+                    </div>
+                </div>`;
+        }
+
+        function renderMenu(data) {
+            const state = store.getState();
+            const categories = getEffectiveCategories(data, CATEGORIES);
+
+            const sections = categories
+                .map(name => {
+                    const items = data[name];
+                    if (!Array.isArray(items) || items.length === 0) return null;
+
+                    const filtered = filterItems(items, state.ui);
+                    if (filtered.length === 0) return null;
+
+                    return createSection(name, filtered);
+                })
+                .filter(Boolean);
+
+            if (sections.length === 0) {
+                showEmptyState();
+                return;
+            }
+
+            const { left, right } = distributeColumns(sections, CATEGORIES);
+            renderColumns(left, right);
+        }
+
+        function renderNotices(meta) {
+            const state = store.getState();
+            const rulesEl = document.getElementById('rulesList');
+            const notesEl = document.getElementById('notesList');
+
+            if (!rulesEl || !notesEl) return;
+
+            const rules = Array.isArray(meta?.rules) ? meta.rules : [];
+            const notes = Array.isArray(meta?.notes) ? meta.notes : [];
+
+            rulesEl.innerHTML = rules.map(it => `<li>${escapeHtml(pickText(it, state.ui.currentLang))}</li>`).join('');
+            notesEl.innerHTML = notes.map(it => `<li>${escapeHtml(pickText(it, state.ui.currentLang))}</li>`).join('');
+        }
+
+        // ===== DATA LOADING =====
+        function coerceDataGrouped(raw, menuType) {
+            if (!raw) return {};
+
+            // 如果是陣列格式（來自後端的 food 或 drink）
+            if (Array.isArray(raw)) {
+                const out = {};
+
+                // 飲料菜單：使用 categories 陣列分組
+                if (menuType === 'drink') {
+                    for (const it of raw) {
+                        // 標準化飲料項目格式
+                        const normalized = normalizeDrinkItem(it);
+
+                        // categories 是陣列，一個飲料可能屬於多個分類
+                        const cats = Array.isArray(normalized.categories)
+                            ? normalized.categories
+                            : [normalized.categories || 'Other'];
+
+                        cats.forEach(cat => {
+                            const catName = String(cat).trim();
+                            if (catName) {
+                                (out[catName] ||= []).push(normalized);
+                            }
                         });
                     }
-                });
-
-                // 按頻率排序並返回前N個
-                return Object.entries(tagFrequency)
-                    .sort((a, b) => b[1] - a[1])
-                    .slice(0, limit)
-                    .map(([tag, count]) => ({ tag, count }));
-            }
-
-            // 渲染熱門標籤按鈕
-            renderPopularTags() {
-                const container = document.getElementById('popularTagsContainer');
-                if (!container) return;
-
-                const popularTags = this.getPopularTags(15);
-
-                if (popularTags.length === 0) {
-                    container.innerHTML = '<div style="color: rgba(255,255,255,0.6); font-size: 0.9rem;">暫無標籤數據</div>';
-                    return;
+                    return out;
                 }
 
-                const searchInput = document.getElementById('searchInput');
-                const currentSearchTerm = (searchInput?.value || '').toLowerCase().trim();
+                // 食物菜單：根據後端資料結構，可能需要手動分類或全部放在一個分類
+                // 如果後端已經按 sheet 名稱分組，直接使用
+                // 否則，將所有項目放在 'ALL' 分類中
+                for (const it of raw) {
+                    const cat = (it && (it.category || it.Category || it.categoryName))
+                        ? String(it.category || it.Category || it.categoryName)
+                        : 'FOOD';  // 預設分類名稱
 
-                container.innerHTML = popularTags.map(({ tag, count }) => {
-                    const isActive = currentSearchTerm.includes(tag.toLowerCase());
-                    return `
-                        <button 
-                            class="tag-btn ${isActive ? 'active' : ''}" 
-                            type="button"
-                            onclick="app.filterByTag('${tag.replace(/'/g, "\\'")}', this)"
-                            title="${tag} (${count} 道)"
-                        >
-                            #${tag}
-                            <span class="tag-count">(${count})</span>
-                        </button>
-                    `;
-                }).join('');
-            }
-
-            // 通過標籤過濾
-            filterByTag(tag, buttonEl) {
-                const searchInput = document.getElementById('searchInput');
-                const currentValue = searchInput.value.trim();
-
-                if (currentValue.toLowerCase().includes(tag.toLowerCase())) {
-                    // 如果已經包含該標籤，則移除
-                    searchInput.value = currentValue
-                        .split(/\s+/)
-                        .filter(t => t.toLowerCase() !== tag.toLowerCase())
-                        .join(' ')
-                        .trim();
-                } else {
-                    // 添加標籤到搜索框
-                    searchInput.value = currentValue ? `${currentValue} ${tag}` : tag;
-                }
-
-                // 觸發搜索
-                searchInput.dispatchEvent(new Event('input', { bubbles: true }));
-            }
-
-            // 更新熱門標籤顯示
-            updatePopularTags() {
-                this.renderPopularTags();
-            }
-
-
-
-            async toggleFavorite(cocktailId) {
-                try {
-                    const idx = this.cocktails.findIndex(c => c.id === cocktailId);
-                    if (idx === -1) return;
-
-                    // 切換收藏狀態
-                    this.cocktails[idx].favorite = !this.cocktails[idx].favorite;
-
-                    // 保存到本機儲存
-                    await this.storage.saveCocktail(this.cocktails[idx]);
-
-                    // 嘗試同步到雲端
-                    if (this.cocktails[idx].favorite) {
-                        gas.showConnectionStatus('⭐ 已加入收藏', 'success');
-                    } else {
-                        gas.showConnectionStatus('🗑️ 已移除收藏', 'success');
-                    }
-
-                    // 重新篩選並渲染
-                    this.filterCocktails();
-                } catch (err) {
-                    console.error('切換收藏失敗：', err);
-                    gas.showConnectionStatus('⌫ 切換收藏失敗', 'error');
-                }
-            }
-
-            renderCocktails() {
-                const container = document.getElementById('cocktailsContainer');
-                if (this.filteredCocktails.length === 0) { container.innerHTML = `<div class="empty-state"><div class="icon">🔍</div><h3>找不到符合條件的雞尾酒譜</h3><p>試著調整搜尋關鍵字或分類篩選</p></div>`; return; }
-                container.innerHTML = this.filteredCocktails.map(c => {
-                    const tagsHtml = (c.tags ? String(c.tags).split(';').map(tag => `<span class="tag">${tag.trim()}</span>`).join('') : '');
-                    const glassType = c.glass_type || '', alcoholContent = c.alcohol_content || '', difficulty = c.difficulty || '';
-                    
-                    // 配料列表 - 從 ingredientsList 讀取
-                    const ingredientsList = c.ingredientsList || [];
-                    const ingredientsHtml = ingredientsList.length > 0
-                        ? ingredientsList.map(ing => `<div>• ${ing.ingredients || ''} ${ing.quantity ? ing.quantity + ' ' + (ing.unit || '') : ''}</div>`).join('')
-                        : '';
-                    
-                    const instructionsList = Array.isArray(c.instructions) ? c.instructions : String(c.instructions ?? '').split('>');
-                    return `
-        <div class="cocktail-card">
-          <div class="cocktail-image">${c.image_b64 ? `<img src="${c.image_b64}" alt="${c.title}">` : '🍸'}</div>
-          <div class="cocktail-content">
-            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px; gap: 8px;">
-              <h3 class="cocktail-title" style="flex: 1;">${c.title || ''}</h3>
-              <button onclick="app.toggleFavorite('${c.id}')" class="btn" style="font-size:.8rem; padding:4px 8px; background: ${c.favorite ? '#ffc107' : 'rgba(255,255,255,0.2)'}; color: #fff; border: none; border-radius: 4px; cursor: pointer; transition: 0.2s;" title="${c.favorite ? '移除收藏' : '加入收藏'}">⭐ ${c.favorite ? '已收藏' : '收藏'}</button>
-              <button onclick="app.editCocktail('${c.id}')" class="btn edit-only" style="font-size:.8rem; padding:4px 8px;">編輯</button>
-            </div>
-            <div class="cocktail-meta">
-              ${glassType ? `<span class="meta-item">🥃 ${glassType}</span>` : ''}
-              ${alcoholContent ? `<span class="meta-item">🌡️ ${alcoholContent}</span>` : ''}
-              ${difficulty ? `<span class="meta-item">⭐ ${difficulty}</span>` : ''}
-              <span class="meta-item">👥 ${c.servings || '1'} 杯</span>
-            </div>
-            ${tagsHtml ? `<div class="cocktail-tags">${tagsHtml}</div>` : ''}
-            <div class="cocktail-details">
-              <details><summary>🥃 配料清單</summary><div class="ingredients-list">${ingredientsHtml || '<div style="color: #999;">暫無配料</div>'}</div></details>
-              <details><summary>🍴 調製方法</summary><div class="instructions-list">${instructionsList.filter(Boolean).map(s => `<div class="instruction">${String(s).trim()}</div>`).join('')}</div></details>
-            </div>
-          </div>
-        </div>`;
-                }).join('');
-            }
-
-            render() {
-                this.updateStats();
-                this.updatePopularTags();
-                // 更新收藏計數
-                const favoriteCount = this.cocktails.filter(c => c.favorite === true).length;
-                const countEl = document.getElementById('favoriteCount');
-                if (countEl) {
-                    countEl.textContent = favoriteCount > 0 ? `⭐ 共有 ${favoriteCount} 個收藏` : '';
-                }
-                this.renderCocktails();
-                this.updateViewClass();
-            }
-
-            async updateStorageStats() {
-                try {
-                    const s = await this.storage.getStorageStats();
-                    const el = document.getElementById('storageStats');
-                    if (el) {
-                        el.innerHTML = `<p><strong>酒譜數量：</strong> ${s.cocktailCount} 個</p><p><strong>圖片數量：</strong> ${s.imageCount} 張</p><p><strong>圖片大小：</strong> ${s.formattedImageSize}</p><p><strong>最後更新：</strong> ${new Date().toLocaleString('zh-TW')}</p>`;
-                    }
-                } catch (e) {
-                    console.warn('統計失敗：', e);
-                }
-            }
-
-            async confirmClearData() {
-                if (confirm('⚠️ 確定要清除本機快取嗎？不影響雲端資料。')) {
-                    try {
-                        await this.storage.clearAllData();
-                        this.cocktails = [];
-                        this.filteredCocktails = [];
-                        this.updateCategories();
-                        this.render();
-                        await this.updateStorageStats();
-                        gas.showConnectionStatus('✅ 本機快取已清除', 'success');
-                    } catch (err) {
-                        alert('清除失敗：' + err.message);
+                    if (cat) {
+                        (out[cat] ||= []).push(stripCategory(it));
                     }
                 }
+                return out;
             }
 
-            async migrateLocalData() {
-                const all = await this.storage.getAllCocktails();
-                for (const c of all) {
-                    const fixed = normalizeRecord(c);
-                    await this.storage.saveCocktail(fixed);
-                    
-                    // 如果舊數據中有 ingredients 欄位，嘗試遷移到 Ingredients 表格
-                    if (c.ingredients) {
-                        const oldIngredients = String(c.ingredients).split('+').map(s => s.trim()).filter(Boolean);
-                        const ingredientsList = oldIngredients.map(ing => ({
-                            ingredients: ing,
-                            quantity: '',
-                            unit: ''
-                        }));
-                        if (ingredientsList.length > 0) {
-                            await this.storage.saveIngredients(c.id, ingredientsList);
-                        }
+            // 如果已經是分組格式
+            if (typeof raw === 'object' && !Array.isArray(raw)) {
+                const out = {};
+                for (const k of Object.keys(raw)) {
+                    if (k === '_meta') continue;
+                    const v = raw[k];
+                    if (Array.isArray(v)) {
+                        // 如果是飲料菜單，標準化每個項目
+                        out[k] = menuType === 'drink'
+                            ? v.map(normalizeDrinkItem)
+                            : v;
                     }
                 }
-                this.cocktails = (await this.storage.getAllCocktails()).map(c => ({
-                    ...c,
-                    favorite: c.favorite === true  // 确保favorite字段存在
-                }));
-                
-                // 為每個 cocktail 讀取配料
-                for (const c of this.cocktails) {
-                    try {
-                        c.ingredientsList = await this.storage.getIngredients(c.id);
-                    } catch (e) {
-                        console.warn(`讀取配料 ${c.id} 失敗:`, e);
-                        c.ingredientsList = [];
-                    }
-                }
-                
-                this.filteredCocktails = [...this.cocktails];
-                this.render();
-                alert('✅ 已完成本機資料格式遷移');
+                if (Object.keys(out).length) return out;
             }
 
-            showError(msg) { alert(msg); }
+            return {};
         }
 
-        // 初始化應用程式
-        const app = new CocktailApp();
-        window.app = app;
+        // 標準化飲料項目（將後端格式轉換為前端格式）
+        function normalizeDrinkItem(item) {
+            return {
+                // 主要欄位（後端已經扁平化，直接使用）
+                'zh-TW': item.zh || '',  // 修正：使用 item.zh
+                en: item.en || '',       // 修正：使用 item.en（不是 item.lang.en）
+                ja: item.ja || '',
+                ko: item.ko || '',
+                fr: item.fr || '',
+                th: item.th || '',
+                fil: item.fil || '',
+                vi: item.vi || '',
 
-        // 全域函數：檢查管理員權限
-        window.requireAdmin = function (operation = '此操作') {
-            return adminAuth.checkPermission(operation);
-        };
+                // 價格與狀態
+                price: item.price,
+                'soldout': item.soldout,
 
-        // 暴露調試函數到全域
-        window.gasDebug = {
-            test: () => gas.test(),
-            list: () => gas.list(),
-            upload: (data) => gas.upsert(data),
-            showUrl: () => console.log('GAS URL:', gas.url),
-            clearLogs: () => {
-                const debugContent = document.getElementById('debugContent');
-                if (debugContent) debugContent.innerHTML = '已清除日誌';
-            },
-            adminLogin: (username, password) => gas.adminLogin(username, password),
-            checkAdmin: () => console.log('Admin Status:', {
-                isAdmin: adminAuth.isAdmin,
-                user: adminAuth.adminUser,
-                token: adminAuth.adminToken ? 'Present' : 'None'
-            })
-        };
+                // 飲料專用屬性
+                alcohol: item.alcohol,
+                body: item.body,
+                flavor: item.flavor,
+                categories: item.categories,
+
+                // 新增欄位
+                ingredients: item.ingredients || '',
+                notes: item.notes || '',
+
+                // 圖片
+                'img': item.img || '',
+
+                // 保留原始來源
+                source: item.source
+            };
+        }
+
+        function stripCategory(it) {
+            const clone = { ...it };
+            delete clone.categories;
+            delete clone.category;
+            delete clone.Category;
+            delete clone.categoryName;
+            return clone;
+        }
+
+        async function loadMenuData(menuType, silent = false) {
+            const menuContent = document.getElementById('menuContent');
+            if (!silent) {
+                menuContent.innerHTML = '<div class="loading">正在載入菜單</div>';
+            }
+
+            const apiUrl = API_URLS[menuType];
+            if (!apiUrl) {
+                console.error(`Unknown menu type: ${menuType}`);
+                return;
+            }
+
+            try {
+                const res = await fetch(apiUrl, { cache: 'no-store' });
+                if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+
+                const raw = await res.json();
+
+                // 檢查是否有錯誤
+                if (raw.error) {
+                    throw new Error(raw.message || 'API 回傳錯誤');
+                }
+
+                // 提取 _meta
+                const metaData = (raw && typeof raw === 'object' && raw._meta)
+                    ? raw._meta
+                    : { rules: [], notes: [] };
+
+                // 根據菜單類型提取對應的資料陣列
+                // 後端格式：{ food: [...], drink: [...], _meta: {...} }
+                const rawMenuArray = raw[menuType];
+
+                if (!Array.isArray(rawMenuArray)) {
+                    console.warn(`${menuType} 資料不是陣列格式:`, rawMenuArray);
+                    throw new Error(`後端回傳的 ${menuType} 資料格式不正確`);
+                }
+
+                // 將陣列轉換為分類分組格式
+                const menuData = coerceDataGrouped(rawMenuArray, menuType);
+
+                console.log(`${menuType} 載入完成:`, {
+                    原始項目數: rawMenuArray.length,
+                    分類數: Object.keys(menuData).length,
+                    分類列表: Object.keys(menuData)
+                });
+
+                // 根據菜單類型更新對應的狀態
+                if (menuType === 'food') {
+                    store.setState({
+                        foodData: menuData,
+                        foodMeta: metaData
+                    });
+                } else if (menuType === 'drink') {
+                    store.setState({
+                        drinkData: menuData,
+                        drinkMeta: metaData
+                    });
+                }
+            } catch (err) {
+                console.error(`載入 ${menuType} 菜單失敗:`, err);
+                menuContent.innerHTML = `
+                    <div class="error">
+                        <h3>❌ 載入${menuType === 'food' ? '食物' : '飲料'}菜單失敗</h3>
+                        <p><strong>${escapeHtml(err.message)}</strong></p>
+                        <div class="error-details">
+                            請確認：API URL 正確、已部署，或直接開啟：
+                            <div style="margin-top:6px">
+                                <a href="${apiUrl}" target="_blank" style="color:#ffd700;text-decoration:underline">測試 API URL</a>
+                            </div>
+                            <div style="margin-top:8px;font-size:0.9em;opacity:0.8">
+                                錯誤詳情: ${escapeHtml(err.stack || err.toString())}
+                            </div>
+                        </div>
+                    </div>`;
+            }
+        }
+
+        // 載入所有菜單（從同一個 API，但使用不同的 key）
+        async function loadAllMenus() {
+            // 注意：如果兩個 API URL 相同，只需呼叫一次
+            if (API_URLS.food === API_URLS.drink) {
+                // 同一個 API 回傳 { food: [...], drink: [...] }
+                const menuContent = document.getElementById('menuContent');
+                menuContent.innerHTML = '<div class="loading">正在載入菜單</div>';
+
+                try {
+                    const res = await fetch(API_URLS.food, { cache: 'no-store' });
+                    if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+
+                    const raw = await res.json();
+
+                    if (raw.error) {
+                        throw new Error(raw.message || 'API 回傳錯誤');
+                    }
+
+                    const metaData = raw._meta || { rules: [], notes: [] };
+
+                    // 分別處理 food 和 drink
+                    const foodData = coerceDataGrouped(raw.food || [], 'food');
+                    const drinkData = coerceDataGrouped(raw.drink || [], 'drink');
+
+                    console.log('統一 API 載入完成:', {
+                        food: { 項目數: raw.food?.length, 分類數: Object.keys(foodData).length },
+                        drink: { 項目數: raw.drink?.length, 分類數: Object.keys(drinkData).length }
+                    });
+
+                    store.setState({
+                        foodData,
+                        drinkData,
+                        foodMeta: metaData,
+                        drinkMeta: metaData
+                    });
+                } catch (err) {
+                    console.error('載入菜單失敗:', err);
+                    menuContent.innerHTML = `
+                        <div class="error">
+                            <h3>❌ 載入菜單失敗</h3>
+                            <p><strong>${escapeHtml(err.message)}</strong></p>
+                            <div class="error-details">
+                                請確認 API 已正確部署
+                            </div>
+                        </div>`;
+                }
+            } else {
+                // 兩個不同的 API
+                await Promise.all([
+                    loadMenuData('food', false),
+                    loadMenuData('drink', true)
+                ]);
+            }
+        }
+
+        // ===== EVENT HANDLERS (EVENT DELEGATION) =====
+        function switchMenuType(menuType) {
+            const state = store.getState();
+            store.setState({ ui: { ...state.ui, currentMenuType: menuType } });
+
+            // 更新分頁按鈕狀態
+            document.querySelectorAll('.menu-tab').forEach(btn => {
+                const type = btn.getAttribute('data-menu-type');
+                btn.setAttribute('aria-selected', String(type === menuType));
+            });
+
+            // 如果該菜單資料尚未載入，則載入
+            const dataKey = menuType === 'food' ? 'foodData' : 'drinkData';
+            if (Object.keys(state[dataKey]).length === 0) {
+                loadMenuData(menuType, false);
+            }
+        }
+
+        function switchLanguage(lang) {
+            const state = store.getState();
+            store.setState({ ui: { ...state.ui, currentLang: lang } });
+
+            // 更新語言按鈕狀態
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                const code = btn.getAttribute('data-code');
+                btn.setAttribute('aria-pressed', String(code === lang));
+                btn.setAttribute('tabindex', code === lang ? '0' : '-1');
+            });
+
+            // 同步更新下拉選單 (手機版)
+            const select = document.getElementById('languageSelect');
+            if (select) {
+                select.value = lang;
+            }
+        }
+
+        function handleTabKeydown(e) {
+            const tabs = Array.from(document.querySelectorAll('.lang-btn'));
+            const currentIndex = tabs.indexOf(e.target);
+
+            let nextIndex = currentIndex;
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                nextIndex = (currentIndex + 1) % tabs.length;
+            }
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+            }
+
+            if (nextIndex !== currentIndex) {
+                e.preventDefault();
+                tabs.forEach(t => t.setAttribute('tabindex', '-1'));
+                tabs[nextIndex].setAttribute('tabindex', '0');
+                tabs[nextIndex].focus();
+                tabs[nextIndex].click();
+            }
+        }
+
+        // ===== INITIALIZATION =====
+        function setupLanguageSwitcher() {
+            const container = document.querySelector('.language-switcher');
+            const select = document.getElementById('languageSelect');
+            const state = store.getState();
+
+            // 設定按鈕 (桌面版)
+            LANGUAGES.forEach((lang, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'lang-btn';
+                btn.textContent = lang.label;
+                btn.setAttribute('role', 'tab');
+                btn.setAttribute('data-code', lang.code);
+                btn.setAttribute('tabindex', idx === 0 ? '0' : '-1');
+                btn.setAttribute('aria-pressed', String(lang.code === state.ui.currentLang));
+
+                container.appendChild(btn);
+            });
+
+            // 設定下拉選單預選值 (手機版)
+            if (select) {
+                select.value = state.ui.currentLang;
+
+                // 下拉選單變更事件
+                select.addEventListener('change', (e) => {
+                    const code = e.target.value;
+                    store.setState({ ui: { currentLang: code } });
+
+                    // 同步更新按鈕狀態
+                    document.querySelectorAll('.lang-btn').forEach(btn => {
+                        const isActive = btn.getAttribute('data-code') === code;
+                        btn.setAttribute('aria-pressed', String(isActive));
+                    });
+                });
+            }
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        function init() {
+            setupLanguageSwitcher();
+
+            // 事件委派：分頁切換
+            document.addEventListener('click', (e) => {
+                const tab = e.target.closest('.menu-tab');
+                if (!tab) return;
+
+                const menuType = tab.getAttribute('data-menu-type');
+                if (menuType) switchMenuType(menuType);
+            });
+
+            // 事件委派：語言切換
+            document.addEventListener('click', (e) => {
+                const btn = e.target.closest('.lang-btn');
+                if (!btn) return;
+
+                const lang = btn.getAttribute('data-code');
+                if (lang) switchLanguage(lang);
+            });
+
+            // 事件委派：語言切換鍵盤支援
+            document.addEventListener('keydown', (e) => {
+                const btn = e.target.closest('.lang-btn');
+                if (!btn) return;
+                handleTabKeydown(e);
+            });
+
+            // 事件委派：篩選按鈕
+            document.addEventListener('click', (e) => {
+                const btn = e.target.closest('.filter-btn');
+                if (!btn) return;
+
+                const filter = btn.getAttribute('data-filter') || 'all';
+                const state = store.getState();
+                store.setState({ ui: { ...state.ui, currentFilter: filter } });
+
+                // 更新 aria-pressed
+                document.querySelectorAll('.filter-btn').forEach(b =>
+                    b.setAttribute('aria-pressed', String(b === btn))
+                );
+            });
+
+            // 搜尋輸入（加入防抖）
+            const searchInput = document.getElementById('q');
+            const debouncedSearch = debounce((value) => {
+                const state = store.getState();
+                store.setState({ ui: { ...state.ui, query: value.toLowerCase().trim() } });
+            }, SEARCH_DEBOUNCE_MS);
+
+            searchInput.addEventListener('input', (e) => {
+                debouncedSearch(e.target.value);
+            });
+
+            // 隱藏售罄
+            const soldoutCheckbox = document.getElementById('hideSoldout');
+            soldoutCheckbox.addEventListener('change', (e) => {
+                const state = store.getState();
+                store.setState({ ui: { ...state.ui, hideSoldOut: e.target.checked } });
+            });
+
+            // 刷新按鈕
+            const refreshBtn = document.getElementById('refreshBtn');
+            refreshBtn.addEventListener('click', () => {
+                refreshBtn.disabled = true;
+                const icon = document.getElementById('refreshIcon');
+                icon.classList.add('spin');
+
+                const state = store.getState();
+                loadMenuData(state.ui.currentMenuType, true).finally(() => {
+                    refreshBtn.disabled = false;
+                    icon.classList.remove('spin');
+                });
+            });
+
+            // Popover 控制函數
+            function openPopover(itemData, itemName, clickedElement) {
+                const state = store.getState();
+                const lang = state.ui.currentLang;
+
+                const popover = document.getElementById('infoPopover');
+                const popoverTitle = document.getElementById('popoverTitle');
+                const popoverBody = document.getElementById('popoverBody');
+
+                // 設定標題
+                popoverTitle.textContent = itemName;
+
+                // 建立內容
+                const sections = [];
+
+                const allergensText = pickLangText(itemData.contains, lang);
+                const ingredientsText = pickLangText(itemData.ingredients, lang);
+                const notesText = pickLangText(itemData.notes, lang);
+
+                if (allergensText) {
+                    sections.push({
+                        key: 'allergens',
+                        content: allergensText
+                    });
+                }
+
+                if (ingredientsText) {
+                    sections.push({
+                        key: 'ingredients',
+                        content: ingredientsText
+                    });
+                }
+
+                if (notesText) {
+                    sections.push({
+                        key: 'notes',
+                        content: notesText
+                    });
+                }
+
+                if (sections.length === 0) {
+                    const noInfoMsg = NO_INFO_MESSAGES[lang] || NO_INFO_MESSAGES.en;
+                    popoverBody.innerHTML = `
+                        <div style="text-align: center; padding: 20px; color: var(--text-secondary);">
+                            <p style="font-size: 0.95em;">${escapeHtml(noInfoMsg)}</p>
+                        </div>
+                    `;
+                } else {
+                    popoverBody.innerHTML = sections.map(sec => `
+                        <div class="popover-section">
+                            <div class="popover-section-title">
+                                <span>${ACCORDION_LABELS[sec.key]?.[lang] || ACCORDION_LABELS[sec.key]?.en}</span>
+                            </div>
+                            <div class="popover-section-content">
+                                ${escapeHtml(sec.content)}
+                            </div>
+                        </div>
+                    `).join('');
+                }
+
+                // 計算 Popover 位置（相對於點擊的元素）
+                const rect = clickedElement.getBoundingClientRect();
+                const popoverWidth = 350; // 預估寬度
+                const popoverHeight = 200; // 預估高度
+                const spacing = 12;
+
+                // 預設顯示在右側
+                let left = rect.right + spacing;
+                let top = rect.top;
+
+                // 如果右側空間不足，顯示在左側
+                if (left + popoverWidth > window.innerWidth) {
+                    left = rect.left - popoverWidth - spacing;
+                }
+
+                // 如果左側也不足，改為顯示在下方
+                if (left < 0) {
+                    left = rect.left;
+                    top = rect.bottom + spacing;
+                }
+
+                // 確保不超出視窗
+                left = Math.max(10, Math.min(left, window.innerWidth - popoverWidth - 10));
+                top = Math.max(10, Math.min(top, window.innerHeight - popoverHeight - 10));
+
+                popover.style.left = `${left}px`;
+                popover.style.top = `${top}px`;
+
+                // 顯示 Popover
+                popover.classList.add('active');
+            }
+
+            function closePopover() {
+                const popover = document.getElementById('infoPopover');
+                popover.classList.remove('active');
+            }
+
+            // 事件委派：點擊品名顯示 Popover
+            document.addEventListener('click', (e) => {
+                const namePrimary = e.target.closest('.name-primary');
+
+                if (namePrimary) {
+                    // 找到對應的菜單項目
+                    const menuItem = namePrimary.closest('.menu-item');
+                    if (!menuItem) return;
+
+                    // 從 DOM 中取得品名
+                    const itemName = namePrimary.textContent.replace(/\s*\(.*?\)\s*/g, '').trim();
+
+                    // 從當前資料中找到對應的項目
+                    const state = store.getState();
+                    const currentData = state.ui.currentMenuType === 'food' ? state.foodData : state.drinkData;
+
+                    // 搜尋所有分類中的項目
+                    let itemData = null;
+                    for (const category in currentData) {
+                        const items = currentData[category];
+                        if (Array.isArray(items)) {
+                            itemData = items.find(item => {
+                                const names = [item.zh, item['zh-TW'], item.en, item.ja, item.ko, item.fr, item.th, item.fil, item.vi]
+                                    .filter(Boolean)
+                                    .map(n => n.trim());
+                                return names.some(n => n === itemName || itemName.includes(n));
+                            });
+                            if (itemData) break;
+                        }
+                    }
+
+                    if (itemData) {
+                        openPopover(itemData, itemName, namePrimary);
+                    }
+                } else {
+                    // 點擊其他地方關閉 Popover
+                    const popover = document.getElementById('infoPopover');
+                    const popoverClose = document.getElementById('popoverClose');
+
+                    if (popover && !popover.contains(e.target) && e.target !== popoverClose) {
+                        closePopover();
+                    }
+                }
+            });
+
+            // Popover 關閉按鈕
+            document.getElementById('popoverClose').addEventListener('click', (e) => {
+                e.stopPropagation();
+                closePopover();
+            });
+
+            // ESC 鍵關閉
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closePopover();
+                }
+            });
+
+            // 載入初始資料（同時載入兩個菜單）
+            loadAllMenus();
+        }
+
+        // ===== START =====
+        init();
     </script>
 </body>
-
 </html>
