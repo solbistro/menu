@@ -1044,7 +1044,8 @@
                 <div class="language-switcher" role="tablist" aria-label="Language switcher">
                     <!-- 手機版下拉選單 -->
                     <select class="language-select" id="languageSelect" aria-label="Select language">
-                        <option value="zh">中文</option>
+                        <option value="zh">繁體中文</option>
+                        <option value="zh-CN">简体中文</option>
                         <option value="en">English</option>
                         <option value="ja">日本語</option>
                         <option value="ko">한국어</option>
@@ -1126,7 +1127,8 @@
         ];
 
         const LANGUAGES = [
-            { code: 'zh', label: '中文' },
+            { code: 'zh', label: '繁體中文' },
+            { code: 'zh-CN', label: '简体中文' },
             { code: 'en', label: 'English' },
             { code: 'ja', label: '日本語' },
             { code: 'ko', label: '한국어' },
@@ -1139,6 +1141,7 @@
         const ACCORDION_LABELS = {
             ingredients: {
                 zh: '成分',
+                'zh-CN': '成分',
                 en: 'Ingredients',
                 ja: '成分',
                 ko: '성분',
@@ -1149,6 +1152,7 @@
             },
             allergens: {
                 zh: '過敏原',
+                'zh-CN': '过敏原',
                 en: 'Allergens',
                 ja: 'アレルゲン',
                 ko: '알레르겐',
@@ -1159,6 +1163,7 @@
             },
             notes: {
                 zh: '備註',
+                'zh-CN': '备注',
                 en: 'Notes',
                 ja: '備考',
                 ko: '비고',
@@ -1171,6 +1176,7 @@
 
         const NO_INFO_MESSAGES = {
             zh: '暫無詳細資訊',
+            'zh-CN': '暂无详细信息',
             en: 'No additional information available',
             ja: '詳細情報はありません',
             ko: '추가 정보 없음',
@@ -1285,7 +1291,7 @@
                 if (query) {
                     // 包含飲料菜單的 zh-TW 欄位和其他飲料相關欄位
                     const searchText = [
-                        it['zh-TW'], it.zh, it.en, it.ja, it.ko, it.fr, it.th, it.fil, it.vi,
+                        it['zh-TW'], it.zh, it['zh-CN'], it.zhCN, it.en, it.ja, it.ko, it.fr, it.th, it.fil, it.vi,
                         it.contains, it.flavor, it.categories, it.img, it['img-url']
                     ].filter(Boolean).join(' ').toLowerCase();
                     if (!searchText.includes(query)) return false;
@@ -1327,6 +1333,7 @@
                     field.en ||
                     field.zh ||
                     field['zh-TW'] ||
+                    field['zh-CN'] ||
                     Object.values(field).find(v => v) ||
                     ''
                 );
@@ -1337,44 +1344,76 @@
         }
 
         function pickLang(item, lang) {
-            // 處理飲料菜單的 zh-TW 欄位（映射到 zh）
-            const langKey = lang === 'zh' && item['zh-TW'] ? 'zh-TW' : lang;
-
-            const val = (item[langKey] || '').trim();
+            const val = (item?.[lang] || '').trim();
             if (val) return { text: val, langTag: lang };
 
-            // Fallback 順序
-            if ((item.en || '').trim()) return { text: item.en.trim(), langTag: 'en' };
-            if ((item['zh-TW'] || '').trim()) return { text: item['zh-TW'].trim(), langTag: 'zh' };
-            if ((item.zh || '').trim()) return { text: item.zh.trim(), langTag: 'zh' };
+            // 中文互相 fallback
+            if (lang === 'zh-CN' && (item?.zh || '').trim()) {
+                return { text: item.zh.trim(), langTag: 'zh' };
+            }
 
-            const alt = ['ja', 'ko', 'fr', 'th', 'fil', 'vi'].map(k => item[k]).find(v => v && v.trim());
-            return { text: alt ? alt.trim() : '—', langTag: alt ? 'other' : '' };
+            if (lang === 'zh' && (item?.['zh-CN'] || '').trim()) {
+                return { text: item['zh-CN'].trim(), langTag: 'zh-CN' };
+            }
+
+            // English fallback
+            if ((item?.en || '').trim()) {
+                return { text: item.en.trim(), langTag: 'en' };
+            }
+
+            // 其他語言 fallback
+            const fallbackKeys = ['zh', 'zh-CN', 'ja', 'ko', 'fr', 'th', 'fil', 'vi'];
+            for (const key of fallbackKeys) {
+                if ((item?.[key] || '').trim()) {
+                    return { text: item[key].trim(), langTag: key };
+                }
+            }
+
+            return { text: '—', langTag: '' };
         }
 
         function pickSecondary(item, lang) {
             if (lang === 'en') {
-                const s = (item['zh-TW'] || item.zh || '').trim();
-                return { text: s, langTag: s ? 'zh' : '' };
-            } else {
-                const s = (item.en || item['zh-TW'] || item.zh || '').trim();
-                return { text: s, langTag: s ? (item.en ? 'en' : 'zh') : '' };
+                const s = (item['zh-CN'] || item.zh || '').trim();
+                return { text: s, langTag: s ? (item['zh-CN'] ? 'zh-CN' : 'zh') : '' };
             }
+
+            if (lang === 'zh') {
+                const s = (item.en || item['zh-CN'] || '').trim();
+                return { text: s, langTag: s ? (item.en ? 'en' : 'zh-CN') : '' };
+            }
+
+            if (lang === 'zh-CN') {
+                const s = (item.zh || item.en || '').trim();
+                return { text: s, langTag: s ? (item.zh ? 'zh' : 'en') : '' };
+            }
+
+            const s = (item.en || item.zh || item['zh-CN'] || '').trim();
+            return {
+                text: s,
+                langTag: s ? (item.en ? 'en' : (item.zh ? 'zh' : 'zh-CN')) : ''
+            };
         }
 
         function pickText(item, lang) {
-            // 處理飲料菜單的 zh-TW 欄位
-            const langKey = lang === 'zh' && item?.['zh-TW'] ? 'zh-TW' : lang;
-
-            const val = (item?.[langKey] || '').trim();
+            const val = (item?.[lang] || '').trim();
             if (val) return val;
 
-            // Fallback
-            if ((item?.en || '').trim()) return item.en.trim();
-            if ((item?.['zh-TW'] || '').trim()) return item['zh-TW'].trim();
-            if ((item?.zh || '').trim()) return item.zh.trim();
+            if (lang === 'zh-CN' && (item?.zh || '').trim()) {
+                return item.zh.trim();
+            }
 
-            const altKey = ['ja', 'ko', 'fr', 'th', 'fil', 'vi'].find(k => (item?.[k] || '').trim());
+            if (lang === 'zh' && (item?.['zh-CN'] || '').trim()) {
+                return item['zh-CN'].trim();
+            }
+
+            if ((item?.en || '').trim()) return item.en.trim();
+            if ((item?.zh || '').trim()) return item.zh.trim();
+            if ((item?.['zh-CN'] || '').trim()) return item['zh-CN'].trim();
+
+            const altKey = ['ja', 'ko', 'fr', 'th', 'fil', 'vi']
+                .find(k => (item?.[k] || '').trim());
+
             return altKey ? item[altKey].trim() : '';
         }
 
@@ -1673,8 +1712,10 @@
         function normalizeDrinkItem(item) {
             return {
                 // 主要欄位（後端已經扁平化，直接使用）
-                'zh-TW': item.zh || '',  // 修正：使用 item.zh
-                en: item.en || '',       // 修正：使用 item.en（不是 item.lang.en）
+                'zh-TW': item.zh || '',
+                zh: item.zh || '',
+                'zh-CN': item['zh-CN'] || item.zhCN || '',
+                en: item.en || '',
                 ja: item.ja || '',
                 ko: item.ko || '',
                 fr: item.fr || '',
