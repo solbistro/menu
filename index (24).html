@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SOL Bistro · Menu</title>
+<meta name="description" content="SOL Bistro 電子菜單 · Food & Drink menu in 9 languages · 繁中 简中 English 日本語 한국어 Français ไทย Filipino Tiếng Việt">
+<meta name="theme-color" content="#141518">
+<meta property="og:title" content="SOL Bistro · Menu">
+<meta property="og:description" content="Food & Drink menu in 9 languages">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='29' fill='%23141518' stroke='%23e9c440' stroke-width='4'/%3E%3Ctext x='32' y='39' font-family='Arial' font-weight='700' font-size='20' fill='%23f4efe4' text-anchor='middle'%3ESOL%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://script.google.com">
+<link rel="preconnect" href="https://script.googleusercontent.com">
+<style>
+:root{
+  --gold:#e9c440; --gold-2:#f3d763; --gold-dim:rgba(233,196,64,.35);
+  --bg:#141518; --bg-2:#1b1d21; --card:#202227; --line:rgba(255,255,255,.08);
+  --text:#f4efe4; --muted:#a39d90; --veg:#8fd19e; --spicy:#ff8a6b; --danger:#ff6b6b;
+  --radius:16px; --bar-h:0px;
+  --safe-b:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{background:var(--bg);color:var(--text);min-height:100vh;
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  line-height:1.45;padding-bottom:calc(24px + var(--safe-b))}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:8px}
+.sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px}
+
+/* ---------- Header ---------- */
+.hero{background:radial-gradient(120% 120% at 50% 0%,#2a2620 0%,var(--bg) 70%);padding:18px 0 14px}
+.hero .wrap:first-child{display:flex;align-items:center;gap:14px}
+.logo{flex:0 0 auto;width:58px;height:58px;border-radius:50%;border:2.5px solid var(--gold);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;line-height:1}
+.logo b{font-weight:800;font-size:19px;letter-spacing:.02em}.logo i{font-style:normal;font-size:11px;opacity:.8;margin-top:2px}
+.brand{flex:1;min-width:0}
+.brand h1{font-size:22px;font-weight:800;letter-spacing:.02em}
+.wifi{margin-top:12px;display:inline-flex;white-space:nowrap;align-items:center;gap:6px;font-size:13px;color:var(--muted);
+  background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:999px;padding:4px 10px}
+.wifi strong{color:var(--text);font-weight:600;letter-spacing:.02em}
+.wifi .cp{color:var(--gold);font-size:12px}
+.lang-btn{flex:0 0 auto;display:flex;align-items:center;gap:6px;border:1px solid var(--gold-dim);background:rgba(233,196,64,.08);
+  border-radius:999px;padding:9px 14px;font-size:15px;font-weight:600;min-height:44px}
+.lang-btn svg{width:18px;height:18px}
+
+/* ---------- Sticky bar ---------- */
+.bar{position:sticky;top:0;z-index:20;background:rgba(20,21,24,.92);backdrop-filter:saturate(1.4) blur(10px);
+  -webkit-backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line)}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:var(--bg-2);border:1px solid var(--line);border-radius:14px;padding:4px;margin:10px 0 8px}
+.seg button{border-radius:10px;padding:10px 8px;font-weight:700;font-size:16px;color:var(--muted);min-height:44px}
+.seg button[aria-selected="true"]{background:linear-gradient(90deg,var(--gold),var(--gold-2));color:#1a1a1a}
+.chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:2px 0 10px;scroll-padding:0 16px}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;border:1px solid var(--line);background:var(--bg-2);border-radius:999px;padding:7px 14px;font-size:14px;
+  white-space:nowrap;color:#d8d2c5;min-height:36px;text-decoration:none;display:inline-flex;align-items:center}
+.chip[aria-current="true"]{border-color:var(--gold);color:var(--gold);background:rgba(233,196,64,.1)}
+.tools{display:flex;gap:8px;align-items:center;padding-top:14px;flex-wrap:wrap}
+.search{flex:1 1 220px;position:relative}
+.search input{width:100%;background:var(--bg-2);border:1px solid var(--line);border-radius:12px;padding:10px 36px 10px 38px;font-size:16px;min-height:44px}
+.search input::placeholder{color:#7d786d}
+.search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:18px;height:18px;opacity:.6}
+.search .x{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:32px;height:32px;border-radius:50%;display:none;font-size:18px;color:var(--muted)}
+.search.has .x{display:block}
+.toggle{flex:0 0 auto;border:1px solid var(--line);background:var(--bg-2);border-radius:12px;padding:9px 12px;font-size:14px;min-height:44px;color:#d8d2c5}
+.toggle[aria-pressed="true"]{border-color:var(--gold);color:var(--gold);background:rgba(233,196,64,.1)}
+.toggle.veg[aria-pressed="true"]{border-color:var(--veg);color:var(--veg);background:rgba(143,209,158,.1)}
+.toggle.spicy[aria-pressed="true"]{border-color:var(--spicy);color:var(--spicy);background:rgba(255,138,107,.1)}
+
+/* ---------- Notices ---------- */
+.notices{margin:16px 0 4px;display:grid;gap:10px}
+.notice{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.notice summary{list-style:none;display:flex;align-items:center;gap:8px;padding:12px 16px;font-weight:700;color:var(--gold);cursor:pointer;font-size:15px}
+.notice summary::-webkit-details-marker{display:none}
+.notice summary::after{content:"";margin-left:auto;width:9px;height:9px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);transition:.2s}
+.notice[open] summary::after{transform:rotate(-135deg)}
+.notice ul{list-style:none;padding:0 16px 14px;display:grid;gap:6px;font-size:15px;color:#ddd6c8}
+.notice li{display:flex;gap:8px}.notice li::before{content:"•";color:var(--gold)}
+.banner{margin-top:12px;font-size:13px;color:#ffd58a;background:rgba(255,183,3,.08);border:1px solid rgba(255,183,3,.3);border-radius:12px;padding:8px 12px;display:none}
+.banner.show{display:block}
+
+/* ---------- Menu ---------- */
+main{padding-top:6px}
+.cols{columns:1;column-gap:28px}
+@media (min-width:860px){.cols{columns:2}}
+.sec{break-inside:avoid;padding-top:18px;margin-bottom:8px;scroll-margin-top:calc(var(--bar-h) + 8px)}
+.sec h2{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+.sec h2 .t{display:inline-block;background:linear-gradient(90deg,var(--gold),var(--gold-2));color:#1a1a1a;font-size:18px;font-weight:800;
+  letter-spacing:.06em;padding:5px 30px 5px 12px;clip-path:polygon(0 0,90% 0,100% 50%,90% 100%,0 100%)}
+.sec h2 .s{font-size:13px;color:var(--muted);font-weight:500;letter-spacing:.04em}
+.item{display:flex;gap:12px;align-items:flex-start;padding:13px 4px;border-bottom:1px solid var(--line);width:100%;text-align:left;border-radius:10px}
+button.item:hover{background:rgba(255,255,255,.03)}
+.item .th{flex:0 0 64px;width:64px;height:64px;border-radius:12px;object-fit:cover;background:var(--bg-2)}
+.item .nm{flex:1;min-width:0}
+.item .p1{font-size:17px;font-weight:700;line-height:1.3}
+.item .p2{font-size:13.5px;color:var(--muted);margin-top:2px}
+.item .info{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;border:1.5px solid var(--gold-dim);
+  color:var(--gold);font-size:11px;font-weight:800;margin-left:6px;vertical-align:2px;font-style:normal}
+.item .pr{flex:0 0 auto;font-weight:800;color:var(--gold);font-size:17px;white-space:nowrap;padding-top:1px}
+.item .pr small{font-size:11px;font-weight:700;opacity:.85;margin-right:2px}
+.badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
+.bd{font-size:12px;font-weight:600;border-radius:999px;padding:2px 9px;border:1px solid var(--line);color:#cfc8ba;line-height:1.5}
+.bd.veg{color:var(--veg);border-color:rgba(143,209,158,.55)}
+.bd.spicy{color:var(--spicy);border-color:rgba(255,138,107,.55)}
+.bd.al{color:#f3a6c0;border-color:rgba(243,166,192,.45)}
+.bd.body{color:#9cc3ff;border-color:rgba(156,195,255,.45);letter-spacing:.08em}
+.bd.so{color:#fff;background:var(--danger);border-color:var(--danger)}
+.item.out .p1,.item.out .p2,.item.out .pr{opacity:.45}.item.out .p1{text-decoration:line-through}
+.legend{font-size:12.5px;color:var(--muted);margin:14px 0 0;display:flex;gap:14px;flex-wrap:wrap}
+.state{text-align:center;padding:56px 16px;color:var(--muted)}
+.state h3{color:var(--text);font-size:18px;margin-bottom:8px}
+.state .btn{margin-top:14px}
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--gold);color:var(--gold);border-radius:12px;padding:10px 18px;font-weight:700;min-height:44px}
+.sk{height:62px;border-radius:12px;background:linear-gradient(90deg,#1d1f23 0%,#25282d 50%,#1d1f23 100%);background-size:200% 100%;animation:sh 1.2s infinite;margin:12px 0}
+@keyframes sh{to{background-position:-200% 0}}
+footer{margin-top:28px;padding-top:16px;border-top:1px solid var(--line);color:#7d786d;font-size:13px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+footer button{color:var(--gold);font-size:13px;padding:8px 0}
+.spin{display:inline-block;animation:rot 1s linear infinite}@keyframes rot{to{transform:rotate(360deg)}}
+
+/* ---------- Sheets (dialog) ---------- */
+dialog{border:0;padding:0;background:var(--card);color:var(--text);width:min(520px,100%);max-height:85vh;border-radius:22px;
+  box-shadow:0 20px 60px rgba(0,0,0,.6);margin:auto}
+dialog::backdrop{background:rgba(0,0,0,.6)}
+@media (max-width:640px){dialog{margin:auto 0 0;width:100%;max-width:100%;border-radius:22px 22px 0 0;padding-bottom:var(--safe-b)}
+  dialog[open]{animation:up .22s ease-out}}
+@keyframes up{from{transform:translateY(40px);opacity:.4}}
+.dh{display:flex;align-items:center;gap:10px;padding:16px 18px 10px}
+.dh h3{flex:1;font-size:19px}
+.dx{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.07);font-size:20px;line-height:1}
+.db{padding:0 18px 20px;overflow:auto;max-height:calc(85vh - 70px)}
+.langs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.langs button{border:1px solid var(--line);background:var(--bg-2);border-radius:12px;padding:13px 12px;text-align:left;font-size:16px;min-height:48px}
+.langs button[aria-current="true"]{border-color:var(--gold);color:var(--gold);background:rgba(233,196,64,.1);font-weight:700}
+.det img{width:100%;max-height:260px;object-fit:cover;border-radius:14px;margin-bottom:12px}
+.det .p2{color:var(--muted);margin-top:-6px;margin-bottom:10px}
+.det .row{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.det .pr{font-size:22px;font-weight:800;color:var(--gold)}
+.det h4{font-size:13px;color:var(--gold);letter-spacing:.06em;margin:14px 0 4px}
+.det p{color:#ddd6c8;font-size:15px;white-space:pre-line}
+.toast{position:fixed;left:50%;bottom:calc(24px + var(--safe-b));transform:translate(-50%,20px);background:#2b2d33;border:1px solid var(--gold-dim);
+  color:var(--text);padding:10px 18px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:50}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="logo" aria-hidden="true"><b>SOL</b><i>bistro</i></div>
+    <div class="brand"><h1>SOL Bistro</h1></div>
+    <button class="lang-btn" id="langBtn" type="button" aria-haspopup="dialog">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>
+      <span id="langLabel"></span>
+    </button>
+  </div>
+  <div class="wrap">
+    <button class="wifi" id="wifiBtn" type="button">
+      <span aria-hidden="true">📶</span><span data-i="wifi"></span> <strong id="wifiPw"></strong> <span class="cp">⧉ <span data-i="copy"></span></span>
+    </button>
+  </div>
+</header>
+
+<div class="bar" id="bar">
+  <div class="wrap">
+    <div class="seg" role="tablist" aria-label="Menu">
+      <button role="tab" id="tab-food" data-type="food" aria-selected="true" data-i="food"></button>
+      <button role="tab" id="tab-drink" data-type="drink" aria-selected="false" data-i="drink"></button>
+    </div>
+    <nav class="chips" id="chips" aria-label="Categories"></nav>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="tools">
+      <label class="search" id="searchBox">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <span class="sr" data-i="search"></span>
+        <input id="q" type="search" autocomplete="off" enterkeyhint="search">
+        <button class="x" id="qClear" type="button" aria-label="Clear">×</button>
+      </label>
+      <button class="toggle veg" id="fVeg" type="button" aria-pressed="false">🌱 <span data-i="veg"></span></button>
+      <button class="toggle spicy" id="fSpicy" type="button" aria-pressed="false">🌶 <span data-i="spicy"></span></button>
+      <button class="toggle" id="fSold" type="button" aria-pressed="false" data-i="hideSold"></button>
+    </div>
+  <div class="banner" id="banner" role="status"></div>
+  <section class="notices" id="notices" aria-label="Info"></section>
+  <main id="menu" aria-live="polite"></main>
+  <footer>
+    <span id="updated"></span>
+    <button id="refreshBtn" type="button"><span id="refreshIcon" aria-hidden="true">↻</span> <span data-i="refresh"></span></button>
+  </footer>
+</div>
+
+<dialog id="langDlg" aria-labelledby="langTitle">
+  <div class="dh"><h3 id="langTitle" data-i="language"></h3><button class="dx" data-close aria-label="Close">×</button></div>
+  <div class="db"><div class="langs" id="langList"></div></div>
+</dialog>
+<dialog id="detDlg" aria-labelledby="detTitle">
+  <div class="dh"><h3 id="detTitle"></h3><button class="dx" data-close aria-label="Close">×</button></div>
+  <div class="db det" id="detBody"></div>
+</dialog>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(() => {
+'use strict';
+
+// ===================== 設定（店家可修改） =====================
+const API_URL = 'https://script.google.com/macros/s/AKfycbyupxncbMBRvQE9efRpDMUZcE1lSyELlBMjIlReQ-JtgwYN_7W-KhMBi_YCf2pzJD2u/exec';
+const WIFI_PASSWORD = 'solbistro2018';
+const FOOD_ORDER = ['SALAD', 'PAELLA', 'PASTA', 'PIZZA', 'TAPAS', 'DESSERT']; // 其他分類會接在後面
+const AUTO_REFRESH_MS = 5 * 60 * 1000;   // 每 5 分鐘自動更新售罄狀態（頁面在前景時）
+const FETCH_TIMEOUT_MS = 15000;
+const CACHE_KEY = 'sol-menu-cache-v2';
+const LANG_KEY = 'sol-menu-lang';
+
+// ===================== 語言 =====================
+const LANGS = [
+  { code: 'zh',    label: '繁體中文',   html: 'zh-Hant-TW' },
+  { code: 'zh-CN', label: '简体中文',   html: 'zh-Hans-CN' },
+  { code: 'en',    label: 'English',    html: 'en' },
+  { code: 'ja',    label: '日本語',     html: 'ja' },
+  { code: 'ko',    label: '한국어',     html: 'ko' },
+  { code: 'fr',    label: 'Français',   html: 'fr' },
+  { code: 'th',    label: 'ไทย',        html: 'th' },
+  { code: 'fil',   label: 'Filipino',   html: 'fil' },
+  { code: 'vi',    label: 'Tiếng Việt', html: 'vi' }
+];
+const CODES = LANGS.map(l => l.code);
+const htmlLang = c => (LANGS.find(l => l.code === c) || {}).html || c;
+
+// 介面文字：[zh, zh-CN, en, ja, ko, fr, th, fil, vi]
+const UI = {
+  food:     ['餐點','餐点','Food','フード','음식','Cuisine','อาหาร','Pagkain','Món ăn'],
+  drink:    ['飲品','饮品','Drinks','ドリンク','음료','Boissons','เครื่องดื่ม','Inumin','Đồ uống'],
+  search:   ['搜尋菜名…','搜索菜名…','Search the menu…','メニューを検索…','메뉴 검색…','Rechercher…','ค้นหาเมนู…','Maghanap sa menu…','Tìm món…'],
+  veg:      ['可做蔬食','可做素食','Veg option','ベジ対応','채식 가능','Option végé','มังสวิรัติได้','May vegetarian','Có món chay'],
+  spicy:    ['辣','辣','Spicy','辛口','매운맛','Épicé','เผ็ด','Maanghang','Cay'],
+  hideSold: ['隱藏售罄','隐藏售罄','Hide sold out','売り切れを隠す','품절 숨기기','Masquer épuisés','ซ่อนที่หมด','Itago ang ubos','Ẩn món hết'],
+  soldout:  ['售罄','售罄','Sold out','売り切れ','품절','Épuisé','หมด','Ubos na','Hết món'],
+  rules:    ['店內規則','店内规则','House Rules','店内のルール','이용 안내','Règlement','กฎของร้าน','Mga Patakaran','Nội quy'],
+  notes:    ['備註','备注','Notes','お知らせ','안내','Remarques','หมายเหตุ','Mga Tala','Ghi chú'],
+  loading:  ['菜單載入中…','菜单加载中…','Loading menu…','メニューを読み込み中…','메뉴 불러오는 중…','Chargement du menu…','กำลังโหลดเมนู…','Nilo-load ang menu…','Đang tải thực đơn…'],
+  empty:    ['找不到符合的品項','找不到符合的菜品','No matching items','該当するメニューがありません','일치하는 메뉴가 없습니다','Aucun résultat','ไม่พบเมนูที่ตรงกัน','Walang tugmang item','Không tìm thấy món phù hợp'],
+  clear:    ['清除篩選','清除筛选','Clear filters','条件をクリア','필터 초기화','Effacer les filtres','ล้างตัวกรอง','I-clear ang filter','Xóa bộ lọc'],
+  error:    ['菜單暫時無法載入，請檢查網路或洽服務人員','菜单暂时无法加载，请检查网络或询问服务员','Couldn’t load the menu. Check your connection or ask our staff.','メニューを読み込めませんでした。通信状況をご確認いただくか、スタッフにお声がけください。','메뉴를 불러올 수 없습니다. 네트워크를 확인하거나 직원에게 문의해 주세요.','Impossible de charger le menu. Vérifiez votre connexion ou demandez au personnel.','โหลดเมนูไม่ได้ กรุณาตรวจสอบอินเทอร์เน็ตหรือสอบถามพนักงาน','Hindi ma-load ang menu. Suriin ang koneksyon o magtanong sa staff.','Không tải được thực đơn. Vui lòng kiểm tra mạng hoặc hỏi nhân viên.'],
+  retry:    ['重試','重试','Try again','再試行','다시 시도','Réessayer','ลองอีกครั้ง','Subukan muli','Thử lại'],
+  wifi:     ['免費 Wi-Fi','免费 Wi-Fi','Free Wi-Fi','無料 Wi-Fi','무료 Wi-Fi','Wi-Fi gratuit','Wi-Fi ฟรี','Libreng Wi-Fi','Wi-Fi miễn phí'],
+  copy:     ['複製','复制','Copy','コピー','복사','Copier','คัดลอก','Kopyahin','Sao chép'],
+  copied:   ['已複製 Wi-Fi 密碼','已复制 Wi-Fi 密码','Wi-Fi password copied','Wi-Fi パスワードをコピーしました','Wi-Fi 비밀번호가 복사되었습니다','Mot de passe Wi-Fi copié','คัดลอกรหัส Wi-Fi แล้ว','Nakopya ang Wi-Fi password','Đã sao chép mật khẩu Wi-Fi'],
+  updated:  ['更新於','更新于','Updated','更新','업데이트','Mis à jour','อัปเดต','Na-update','Cập nhật'],
+  refresh:  ['重新整理','刷新','Refresh','更新','새로고침','Actualiser','รีเฟรช','I-refresh','Làm mới'],
+  cached:   ['網路不穩，目前顯示上次載入的菜單','网络不稳，目前显示上次加载的菜单','Connection issue — showing the last saved menu','通信が不安定なため、前回保存したメニューを表示しています','연결이 불안정하여 마지막으로 저장된 메뉴를 표시합니다','Connexion instable — menu enregistré affiché','การเชื่อมต่อไม่เสถียร กำลังแสดงเมนูที่บันทึกไว้ล่าสุด','Mahina ang koneksyon — ipinapakita ang huling na-save na menu','Mạng không ổn định — đang hiển thị thực đơn đã lưu'],
+  language: ['選擇語言','选择语言','Language','言語','언어','Langue','ภาษา','Wika','Ngôn ngữ'],
+  alcohol:  ['酒精度','酒精度','Strength','アルコール度','알코올 도수','Alcool','ความแรง','Lakas','Độ cồn'],
+  body:     ['濃郁度','浓郁度','Body','コク','바디감','Corps','ความเข้มข้น','Body','Độ đậm'],
+  allergens:['過敏原','过敏原','Allergens','アレルゲン','알레르기 유발 성분','Allergènes','สารก่อภูมิแพ้','Allergen','Chất gây dị ứng'],
+  ingredients:['成分','成分','Ingredients','原材料','재료','Ingrédients','ส่วนผสม','Sangkap','Thành phần'],
+  itemNotes:['備註','备注','Notes','備考','비고','Remarques','หมายเหตุ','Tala','Ghi chú'],
+  flavor:   ['風味','风味','Flavor','風味','풍미','Saveur','รสชาติ','Lasa','Hương vị']
+};
+
+// 分類名稱翻譯（試算表裡的分類英文名，不分大小寫）
+const CAT_I18N = {
+  SALAD:   ['沙拉','沙拉','Salad','サラダ','샐러드','Salades','สลัด','Salad','Salad'],
+  PAELLA:  ['西班牙燉飯','西班牙炖饭','Paella','パエリア','파에야','Paella','ปาเอย่า','Paella','Cơm Paella'],
+  PASTA:   ['義大利麵','意大利面','Pasta','パスタ','파스타','Pâtes','พาสต้า','Pasta','Mì Ý'],
+  PIZZA:   ['披薩','披萨','Pizza','ピザ','피자','Pizzas','พิซซ่า','Pizza','Pizza'],
+  TAPAS:   ['西班牙小點','西班牙小吃','Tapas','タパス','타파스','Tapas','ทาปาส','Tapas','Tapas'],
+  DESSERT: ['甜點','甜点','Dessert','デザート','디저트','Desserts','ของหวาน','Panghimagas','Tráng miệng'],
+  WINE:    ['葡萄酒','葡萄酒','Wine','ワイン','와인','Vins','ไวน์','Alak','Rượu vang'],
+  BEER:    ['啤酒','啤酒','Beer','ビール','맥주','Bières','เบียร์','Serbesa','Bia'],
+  GIN:     ['琴酒','金酒','Gin','ジン','진','Gin','จิน','Gin','Rượu Gin'],
+  VODKA:   ['伏特加','伏特加','Vodka','ウォッカ','보드카','Vodka','วอดก้า','Vodka','Vodka'],
+  RUM:     ['蘭姆酒','朗姆酒','Rum','ラム','럼','Rhum','รัม','Rum','Rượu Rum'],
+  TEQUILA: ['龍舌蘭','龙舌兰','Tequila','テキーラ','데킬라','Tequila','เตกีล่า','Tequila','Tequila'],
+  WHISKEY: ['威士忌','威士忌','Whisky','ウイスキー','위스키','Whisky','วิสกี้','Whisky','Whisky'],
+  WHISKY:  ['威士忌','威士忌','Whisky','ウイスキー','위스키','Whisky','วิสกี้','Whisky','Whisky'],
+  COCKTAIL:['調酒','调酒','Cocktails','カクテル','칵테일','Cocktails','ค็อกเทล','Cocktail','Cocktail'],
+  SHOT:    ['Shot 純飲','一口杯','Shots','ショット','샷','Shots','ช็อต','Shot','Shot'],
+  'SOFT DRINK': ['無酒精飲料','无酒精饮料','Soft Drinks','ソフトドリンク','음료(무알코올)','Sans alcool','ไม่มีแอลกอฮอล์','Soft Drinks','Đồ uống không cồn']
+};
+
+// ===================== 狀態 =====================
+const S = {
+  lang: 'zh', type: 'food', q: '', veg: false, spicy: false, hideSold: false,
+  food: [], drink: [], meta: { rules: [], notes: [] },   // food/drink: [{key, items:[...]}]
+  updatedAt: 0, loading: false, loaded: false, error: false
+};
+let FIRST_VISIT = true; try { FIRST_VISIT = !localStorage.getItem('sol-seen'); } catch (e) {}
+const ITEMS = new Map(); // id -> item（給詳細資訊視窗用）
+
+const $ = s => document.querySelector(s);
+const t = key => { const a = UI[key]; return a ? (a[CODES.indexOf(S.lang)] || a[2]) : key; };
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const truthy = v => v === true || /^(true|yes|y|1|v)$/i.test(String(v ?? '').trim());
+const num = v => { const n = Number(String(v ?? '').replace(/[^\d.]/g, '')); return isFinite(n) ? n : 0; };
+const safeUrl = u => /^https?:\/\//i.test(String(u || '').trim()) ? String(u).trim() : '';
+
+// ===================== 多語內容 =====================
+function fieldFor(item, code) {
+  if (code === 'zh') return item.zh || item['zh-TW'] || '';
+  if (code === 'zh-CN') return item['zh-CN'] || item.zhCN || '';
+  return item[code] || '';
+}
+// 主要名稱：目前語言 → 中文互補 → 英文 → 任何有值的語言
+function primaryName(item, lang) {
+  const order = [lang];
+  if (lang === 'zh') order.push('zh-CN'); if (lang === 'zh-CN') order.push('zh');
+  order.push('en', 'zh', 'zh-CN', 'ja', 'ko', 'fr', 'th', 'fil', 'vi');
+  for (const c of order) { const v = String(fieldFor(item, c)).trim(); if (v) return { text: v, code: c }; }
+  return { text: '—', code: lang };
+}
+// 第二行：中文介面顯示英文，其他語言顯示中文（方便跟店員溝通）
+function secondaryName(item, lang, primaryText) {
+  const order = (lang === 'zh' || lang === 'zh-CN') ? ['en'] : ['zh', 'en'];
+  for (const c of order) {
+    const v = String(fieldFor(item, c)).trim();
+    if (v && v !== primaryText) return { text: v, code: c };
+  }
+  return null;
+}
+function pickLangText(field, lang) {
+  if (!field) return '';
+  if (typeof field === 'object' && !Array.isArray(field)) {
+    const p = primaryName(field, lang).text; return p === '—' ? '' : p;
+  }
+  return String(field).trim();
+}
+function catLabel(key) {
+  const a = CAT_I18N[key.toUpperCase()];
+  if (!a) return { main: key, sub: '' };
+  const i = CODES.indexOf(S.lang);
+  const main = a[i] || a[2];
+  const sub = (S.lang === 'en') ? '' : (main.toUpperCase() === key.toUpperCase() ? '' : key.toUpperCase());
+  return { main, sub };
+}
+
+// ===================== 資料整理 =====================
+function normCat(c) { return String(c ?? '').trim().replace(/\s+/g, ' ').toUpperCase(); }
+
+function group(list, type) {
+  const map = new Map();
+  (list || []).forEach((raw, idx) => {
+    if (!raw || typeof raw !== 'object') return;
+    let cats = type === 'drink' ? raw.categories : (raw.category ?? raw.Category ?? raw.categoryName ?? raw.categories);
+    if (typeof cats === 'string') cats = cats.split(/[,，、]/);
+    if (!Array.isArray(cats) || !cats.length) cats = [type === 'food' ? 'FOOD' : 'OTHER'];
+    const item = { ...raw, _id: `${type}-${idx}` };
+    ITEMS.set(item._id, item);
+    [...new Set(cats.map(normCat).filter(Boolean))].forEach(k => {
+      if (!map.has(k)) map.set(k, []);
+      map.get(k).push(item);
+    });
+  });
+  let keys = [...map.keys()];
+  if (type === 'food') {
+    keys.sort((a, b) => {
+      const ia = FOOD_ORDER.indexOf(a), ib = FOOD_ORDER.indexOf(b);
+      return (ia < 0 ? 999 : ia) - (ib < 0 ? 999 : ib);
+    });
+  }
+  return keys.map(key => ({ key, items: map.get(key) }));
+}
+
+function applyData(raw) {
+  ITEMS.clear();
+  S.food = group(raw.food, 'food');
+  S.drink = group(raw.drink, 'drink');
+  const m = raw._meta || {};
+  S.meta = { rules: Array.isArray(m.rules) ? m.rules : [], notes: Array.isArray(m.notes) ? m.notes : [] };
+  S.loaded = true;
+}
+
+// ===================== 載入 =====================
+async function fetchMenu() {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), FETCH_TIMEOUT_MS);
+  try {
+    const res = await fetch(API_URL, { cache: 'no-store', signal: ctrl.signal });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const raw = await res.json();
+    if (!raw || raw.error) throw new Error(raw?.message || 'API error');
+    if (!Array.isArray(raw.food) && !Array.isArray(raw.drink)) throw new Error('Unexpected data format');
+    return raw;
+  } finally { clearTimeout(timer); }
+}
+
+async function load({ silent = false } = {}) {
+  if (S.loading) return;
+  S.loading = true; setRefreshing(true);
+  if (!S.loaded && !silent) renderMenu();
+  try {
+    const raw = await fetchMenu();
+    applyData(raw);
+    S.updatedAt = Date.now(); S.error = false;
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify({ t: S.updatedAt, raw })); } catch (e) {}
+    $('#banner').classList.remove('show');
+  } catch (err) {
+    console.error('Menu load failed:', err);
+    S.error = true;
+    if (S.loaded) { $('#banner').textContent = '⚠️ ' + t('cached'); $('#banner').classList.add('show'); }
+  } finally {
+    S.loading = false; setRefreshing(false); renderAll();
+  }
+}
+
+function loadCache() {
+  try {
+    const c = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
+    if (c && c.raw) { applyData(c.raw); S.updatedAt = c.t || 0; return true; }
+  } catch (e) {}
+  return false;
+}
+
+// ===================== 繪製 =====================
+function renderStatic() {
+  document.documentElement.lang = htmlLang(S.lang);
+  document.querySelectorAll('[data-i]').forEach(el => { el.textContent = t(el.dataset.i); });
+  $('#q').placeholder = t('search');
+  $('#wifiPw').textContent = WIFI_PASSWORD;
+  $('#langLabel').textContent = (LANGS.find(l => l.code === S.lang) || LANGS[0]).label;
+  $('#fSpicy').hidden = S.type !== 'food';
+  $('#fVeg').hidden = S.type !== 'food';
+  document.querySelectorAll('.seg button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.type === S.type)));
+  $('#langList').innerHTML = LANGS.map(l =>
+    `<button type="button" data-lang="${l.code}" lang="${l.html}" aria-current="${l.code === S.lang}">${esc(l.label)}</button>`).join('');
+  if (S.error && S.loaded) $('#banner').textContent = '⚠️ ' + t('cached');
+}
+
+function renderNotices() {
+  const box = $('#notices');
+  const li = arr => arr.map(it => {
+    const txt = typeof it === 'object' ? pickLangText(it, S.lang) : String(it);
+    return txt ? `<li>${esc(txt)}</li>` : '';
+  }).join('');
+  const parts = [];
+  const rules = li(S.meta.rules), notes = li(S.meta.notes);
+  if (rules) parts.push(`<details class="notice" ${FIRST_VISIT ? 'open' : ''}><summary>📋 ${esc(t('rules'))}</summary><ul>${rules}</ul></details>`);
+  if (notes) parts.push(`<details class="notice"><summary>💬 ${esc(t('notes'))}</summary><ul>${notes}</ul></details>`);
+  box.innerHTML = parts.join('');
+  try { localStorage.setItem('sol-seen', '1'); } catch (e) {}
+}
+
+function matches(item) {
+  if (S.hideSold && truthy(item.soldout)) return false;
+  if (S.type === 'food' && S.veg && !truthy(item.vegan)) return false;
+  if (S.type === 'food' && S.spicy && num(item.spicy) <= 0) return false;
+  if (S.q) {
+    const hay = ['zh', 'zh-TW', 'zh-CN', 'zhCN', 'en', 'ja', 'ko', 'fr', 'th', 'fil', 'vi', 'flavor', 'ingredients']
+      .map(k => typeof item[k] === 'object' ? Object.values(item[k] || {}).join(' ') : item[k])
+      .filter(Boolean).join(' ').toLowerCase();
+    if (!S.q.split(/\s+/).every(w => hay.includes(w))) return false;
+  }
+  return true;
+}
+
+function hasDetails(item) {
+  return !!(pickLangText(item.contains, S.lang) || pickLangText(item.ingredients, S.lang) || pickLangText(item.notes, S.lang) || safeUrl(item['img-url'] || item.img));
+}
+
+function badges(item) {
+  const b = [];
+  if (truthy(item.soldout)) b.push(`<span class="bd so">${esc(t('soldout'))}</span>`);
+  if (S.type === 'food') {
+    if (truthy(item.vegan)) b.push(`<span class="bd veg">🌱 ${esc(t('veg'))}</span>`);
+    const sp = Math.min(num(item.spicy), 3);
+    if (sp > 0) b.push(`<span class="bd spicy" title="${esc(t('spicy'))}">${'🌶'.repeat(sp)}</span>`);
+  } else {
+    const al = num(item.alcohol);
+    if (al > 0) b.push(`<span class="bd al" title="${esc(t('alcohol'))}">🍷 ${'●'.repeat(Math.min(Math.ceil(al / 3), 3))}${'○'.repeat(3 - Math.min(Math.ceil(al / 3), 3))}</span>`);
+    const bo = Math.min(num(item.body), 3);
+    if (bo > 0) b.push(`<span class="bd body" title="${esc(t('body'))}">◆${'●'.repeat(bo)}${'○'.repeat(3 - bo)}</span>`);
+    const fl = pickLangText(item.flavor, S.lang);
+    if (fl) fl.split(/[,，;；、]/).map(s => s.trim()).filter(Boolean).slice(0, 3).forEach(f => b.push(`<span class="bd">${esc(f)}</span>`));
+  }
+  return b.length ? `<div class="badges">${b.join('')}</div>` : '';
+}
+
+function itemHtml(item) {
+  const p = primaryName(item, S.lang);
+  const s = secondaryName(item, S.lang, p.text);
+  const img = safeUrl(item['img-url'] || item.img);
+  const det = hasDetails(item);
+  const out = truthy(item.soldout);
+  const price = num(item.price);
+  const tag = det ? 'button' : 'div';
+  return `<${tag} class="item${out ? ' out' : ''}" ${det ? `type="button" data-id="${item._id}" aria-haspopup="dialog"` : ''}>
+    ${img ? `<img class="th" src="${esc(img)}" alt="" loading="lazy" decoding="async" width="64" height="64" onerror="this.remove()">` : ''}
+    <div class="nm">
+      <div class="p1" lang="${htmlLang(p.code)}">${esc(p.text)}${det ? '<i class="info" aria-hidden="true">i</i>' : ''}</div>
+      ${s ? `<div class="p2" lang="${htmlLang(s.code)}">${esc(s.text)}</div>` : ''}
+      ${badges(item)}
+    </div>
+    <div class="pr">${price ? `<small>NT$</small>${price.toLocaleString('en-US')}` : esc(item.price ?? '')}</div>
+  </${tag}>`;
+}
+
+const secId = k => `c-${S.type}-${k.replace(/[^A-Za-z0-9]+/g, '-')}`;
+function renderMenu() {
+  const menu = $('#menu'), chips = $('#chips');
+  if (!S.loaded) {
+    chips.innerHTML = '';
+    if (S.error) {
+      menu.innerHTML = `<div class="state"><h3>😥</h3><p>${esc(t('error'))}</p><button class="btn" type="button" id="retryBtn">↻ ${esc(t('retry'))}</button></div>`;
+    } else {
+      menu.innerHTML = `<p class="sr">${esc(t('loading'))}</p>` + '<div class="sk"></div>'.repeat(8);
+    }
+    return;
+  }
+  const groups = S[S.type].map(g => ({ key: g.key, items: g.items.filter(matches) })).filter(g => g.items.length);
+  if (!groups.length) {
+    chips.innerHTML = '';
+    menu.innerHTML = `<div class="state"><h3>🔍 ${esc(t('empty'))}</h3><button class="btn" type="button" id="clearBtn">${esc(t('clear'))}</button></div>`;
+    return;
+  }
+  chips.innerHTML = groups.map((g, i) => {
+    const l = catLabel(g.key);
+    return `<a class="chip" href="#${secId(g.key)}" data-k="${esc(g.key)}" aria-current="${i === 0}">${esc(l.main)}</a>`;
+  }).join('');
+  const legend = S.type === 'drink' && groups.some(g => g.items.some(it => num(it.alcohol) > 0 || num(it.body) > 0))
+    ? `<p class="legend"><span>🍷 ●●○ = ${esc(t('alcohol'))}</span><span>◆●●○ = ${esc(t('body'))}</span></p>` : '';
+  menu.innerHTML = legend + `<div class="cols">${groups.map(g => {
+    const l = catLabel(g.key);
+    return `<section class="sec" id="${secId(g.key)}" data-k="${esc(g.key)}">
+      <h2><span class="t">${esc(l.main)}</span>${l.sub ? `<span class="s">${esc(l.sub)}</span>` : ''}</h2>
+      ${g.items.map(itemHtml).join('')}
+    </section>`;
+  }).join('')}</div>`;
+  observeSections();
+}
+
+function renderUpdated() {
+  if (!S.updatedAt) { $('#updated').textContent = ''; return; }
+  const d = new Date(S.updatedAt);
+  $('#updated').textContent = `${t('updated')} ${d.toLocaleString(htmlLang(S.lang), { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })}`;
+}
+
+function renderAll() { renderStatic(); renderNotices(); renderMenu(); renderUpdated(); measureBar(); }
+
+function setRefreshing(on) {
+  $('#refreshBtn').disabled = on;
+  $('#refreshIcon').classList.toggle('spin', on);
+}
+
+// ===================== 分類導覽（捲動時自動標示） =====================
+let io;
+function observeSections() {
+  if (io) io.disconnect();
+  if (!('IntersectionObserver' in window)) return;
+  const visible = new Map();
+  io = new IntersectionObserver(entries => {
+    entries.forEach(e => visible.set(e.target.dataset.k, e.isIntersecting ? e.boundingClientRect.top : null));
+    let best = null, bestTop = Infinity;
+    visible.forEach((top, k) => { if (top !== null && top < bestTop) { best = k; bestTop = top; } });
+    if (best) setChip(best);
+  }, { rootMargin: `-${(S.barH || 0) + 10}px 0px -55% 0px` });
+  document.querySelectorAll('.sec').forEach(s => io.observe(s));
+}
+function setChip(k) {
+  document.querySelectorAll('.chip').forEach(c => {
+    const on = c.dataset.k === k;
+    if (on && c.getAttribute('aria-current') !== 'true') {
+      const box = $('#chips');
+      box.scrollTo({ left: c.offsetLeft - box.clientWidth / 2 + c.clientWidth / 2, behavior: 'smooth' });
+    }
+    c.setAttribute('aria-current', String(on));
+  });
+}
+function measureBar() {
+  S.barH = $('#bar').offsetHeight;
+  document.documentElement.style.setProperty('--bar-h', S.barH + 'px');
+}
+
+// ===================== 詳細資訊 =====================
+function openDetails(id) {
+  const item = ITEMS.get(id); if (!item) return;
+  const p = primaryName(item, S.lang), s = secondaryName(item, S.lang, p.text);
+  const img = safeUrl(item['img-url'] || item.img);
+  const sec = (k, v) => v ? `<h4>${esc(t(k))}</h4><p>${esc(v)}</p>` : '';
+  const price = num(item.price);
+  $('#detTitle').textContent = p.text;
+  $('#detTitle').lang = htmlLang(p.code);
+  $('#detBody').innerHTML = `
+    ${img ? `<img src="${esc(img)}" alt="" onerror="this.remove()">` : ''}
+    ${s ? `<p class="p2" lang="${htmlLang(s.code)}">${esc(s.text)}</p>` : ''}
+    <div class="row">${badges(item) || '<span></span>'}<span class="pr">${price ? 'NT$' + price.toLocaleString('en-US') : esc(item.price ?? '')}</span></div>
+    ${sec('ingredients', pickLangText(item.ingredients, S.lang))}
+    ${sec('allergens', pickLangText(item.contains, S.lang))}
+    ${sec('itemNotes', pickLangText(item.notes, S.lang))}`;
+  $('#detDlg').showModal();
+}
+
+// ===================== 語言 =====================
+function detectLang() {
+  const param = new URLSearchParams(location.search).get('lang');
+  const norm = c => {
+    c = String(c || '').toLowerCase();
+    if (!c) return '';
+    if (/^zh-(cn|sg|hans)/.test(c)) return 'zh-CN';
+    if (c.startsWith('zh')) return 'zh';
+    if (c.startsWith('tl') || c.startsWith('fil')) return 'fil';
+    const base = c.split('-')[0];
+    return CODES.includes(base) ? base : '';
+  };
+  if (norm(param)) return norm(param);
+  try { const saved = localStorage.getItem(LANG_KEY); if (CODES.includes(saved)) return saved; } catch (e) {}
+  for (const l of (navigator.languages || [navigator.language])) { const n = norm(l); if (n) return n; }
+  return 'zh';
+}
+function setLang(code) {
+  if (!CODES.includes(code)) return;
+  S.lang = code;
+  try { localStorage.setItem(LANG_KEY, code); } catch (e) {}
+  const url = new URL(location.href); url.searchParams.set('lang', code);
+  history.replaceState(null, '', url);
+  renderAll();
+}
+
+// ===================== 其他 =====================
+let toastTimer;
+function toast(msg) {
+  const el = $('#toast'); el.textContent = msg; el.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('show'), 2000);
+}
+async function copyWifi() {
+  try { await navigator.clipboard.writeText(WIFI_PASSWORD); }
+  catch (e) {
+    const ta = document.createElement('textarea'); ta.value = WIFI_PASSWORD; document.body.appendChild(ta);
+    ta.select(); try { document.execCommand('copy'); } catch (_) {} ta.remove();
+  }
+  toast('✓ ' + t('copied'));
+}
+function setType(type) {
+  if (S.type === type) return;
+  S.type = type;
+  renderStatic(); renderMenu(); measureBar();
+  const top = $('#bar').getBoundingClientRect().top + scrollY;
+  if (scrollY > top) scrollTo({ top, behavior: 'auto' });
+}
+function clearFilters() {
+  S.q = ''; S.veg = S.spicy = S.hideSold = false; $('#q').value = '';
+  $('#searchBox').classList.remove('has');
+  ['#fVeg', '#fSpicy', '#fSold'].forEach(s => $(s).setAttribute('aria-pressed', 'false'));
+  renderMenu();
+}
+
+// ===================== 事件 =====================
+function bind() {
+  $('#langBtn').addEventListener('click', () => $('#langDlg').showModal());
+  $('#langList').addEventListener('click', e => {
+    const b = e.target.closest('[data-lang]'); if (!b) return;
+    setLang(b.dataset.lang); $('#langDlg').close();
+  });
+  document.querySelectorAll('dialog').forEach(d => {
+    d.addEventListener('click', e => { if (e.target === d || e.target.closest('[data-close]')) d.close(); });
+  });
+  $('#wifiBtn').addEventListener('click', copyWifi);
+  document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => setType(b.dataset.type)));
+  document.querySelector('.seg').addEventListener('keydown', e => {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    const next = S.type === 'food' ? 'drink' : 'food'; setType(next); $('#tab-' + next).focus();
+  });
+  let qt;
+  $('#q').addEventListener('input', e => {
+    $('#searchBox').classList.toggle('has', !!e.target.value);
+    clearTimeout(qt); qt = setTimeout(() => { S.q = e.target.value.trim().toLowerCase(); renderMenu(); }, 200);
+  });
+  $('#qClear').addEventListener('click', e => { e.preventDefault(); $('#q').value = ''; S.q = ''; $('#searchBox').classList.remove('has'); renderMenu(); $('#q').focus(); });
+  [['#fVeg', 'veg'], ['#fSpicy', 'spicy'], ['#fSold', 'hideSold']].forEach(([sel, key]) => {
+    $(sel).addEventListener('click', () => { S[key] = !S[key]; $(sel).setAttribute('aria-pressed', String(S[key])); renderMenu(); });
+  });
+  $('#menu').addEventListener('click', e => {
+    if (e.target.closest('#retryBtn')) { S.error = false; load(); return; }
+    if (e.target.closest('#clearBtn')) { clearFilters(); return; }
+    const it = e.target.closest('[data-id]'); if (it) openDetails(it.dataset.id);
+  });
+  $('#chips').addEventListener('click', e => {
+    const a = e.target.closest('.chip'); if (!a) return;
+    e.preventDefault();
+    const sec = document.getElementById(a.getAttribute('href').slice(1));
+    if (sec) { setChip(a.dataset.k); sec.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); }
+  });
+  $('#refreshBtn').addEventListener('click', () => load({ silent: true }));
+  addEventListener('resize', () => { measureBar(); });
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && Date.now() - S.updatedAt > 2 * 60 * 1000) load({ silent: true });
+  });
+  setInterval(() => { if (document.visibilityState === 'visible') load({ silent: true }); }, AUTO_REFRESH_MS);
+}
+
+// ===================== 啟動 =====================
+S.lang = detectLang();
+bind();
+const hadCache = loadCache();
+renderAll();
+load({ silent: hadCache });
+})();
+</script>
+</body>
+</html>
