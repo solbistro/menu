@@ -98,6 +98,15 @@ button.item:hover{background:rgba(255,255,255,.03)}
 .item .info{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;border:1.5px solid var(--gold-dim);
   color:var(--gold);font-size:11px;font-weight:800;margin-left:6px;vertical-align:2px;font-style:normal}
 .item .pr{flex:0 0 auto;font-weight:800;color:var(--gold);font-size:17px;white-space:nowrap;padding-top:1px}
+.hrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.fxbtn{color:var(--text);font-weight:600}
+.item .pr{text-align:right}
+.fx{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-top:2px}
+.det .fx{font-size:14px}
+.curs button:disabled{opacity:.35;cursor:not-allowed}
+.curs button small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.fxnote{font-size:12.5px;color:var(--muted);margin-top:14px;line-height:1.5}
+.fxbar{font-size:12.5px;color:var(--muted);margin:14px 0 0;line-height:1.5}
 .item .pr small{font-size:11px;font-weight:700;opacity:.85;margin-right:2px}
 .badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
 .bd{font-size:12px;font-weight:600;border-radius:999px;padding:2px 9px;border:1px solid var(--line);color:#cfc8ba;line-height:1.5}
@@ -153,10 +162,11 @@ dialog::backdrop{background:rgba(0,0,0,.6)}
       <span id="langLabel"></span>
     </button>
   </div>
-  <div class="wrap">
+  <div class="wrap hrow">
     <button class="wifi" id="wifiBtn" type="button">
       <span aria-hidden="true">📶</span><span data-i="wifi"></span> <strong id="wifiPw"></strong> <span class="cp">⧉ <span data-i="copy"></span></span>
     </button>
+    <button class="wifi fxbtn" id="curBtn" type="button" aria-haspopup="dialog">💱 <span id="curLabel"></span></button>
   </div>
 </header>
 
@@ -188,6 +198,10 @@ dialog::backdrop{background:rgba(0,0,0,.6)}
   <div class="dh"><h3 id="langTitle" data-i="language"></h3><button class="dx" data-close aria-label="Close">×</button></div>
   <div class="db"><div class="langs" id="langList"></div></div>
 </dialog>
+<dialog id="curDlg" aria-labelledby="curTitle">
+  <div class="dh"><h3 id="curTitle" data-i="currency"></h3><button class="dx" data-close aria-label="Close">×</button></div>
+  <div class="db"><div class="langs curs" id="curList"></div><p class="fxnote" id="curNote"></p></div>
+</dialog>
 <dialog id="detDlg" aria-labelledby="detTitle">
   <div class="dh"><h3 id="detTitle"></h3><button class="dx" data-close aria-label="Close">×</button></div>
   <div class="db det" id="detBody"></div>
@@ -206,6 +220,20 @@ const AUTO_REFRESH_MS = 5 * 60 * 1000;   // 每 5 分鐘自動更新售罄狀態
 const FETCH_TIMEOUT_MS = 15000;
 const CACHE_KEY = 'sol-menu-cache-v2';
 const LANG_KEY = 'sol-menu-lang';
+
+// 匯率換算（Frankfurter v2：https://frankfurter.dev ，免 API key）
+const FX_API = 'https://api.frankfurter.dev/v2/rates';
+const FX_CACHE_KEY = 'sol-fx-v1';
+const FX_CACHE_MS = 6 * 60 * 60 * 1000;      // 匯率快取 6 小時（參考匯率每天只更新一兩次）
+const CUR_KEY = 'sol-menu-currency';
+// 可選幣別（第一個 TWD = 不換算）
+const CURRENCIES = [
+  ['TWD','🇹🇼'],['USD','🇺🇸'],['JPY','🇯🇵'],['KRW','🇰🇷'],['CNY','🇨🇳'],['HKD','🇭🇰'],['MOP','🇲🇴'],
+  ['SGD','🇸🇬'],['MYR','🇲🇾'],['THB','🇹🇭'],['PHP','🇵🇭'],['VND','🇻🇳'],['IDR','🇮🇩'],['EUR','🇪🇺'],
+  ['GBP','🇬🇧'],['AUD','🇦🇺'],['NZD','🇳🇿'],['CAD','🇨🇦'],['CHF','🇨🇭'],['INR','🇮🇳']
+];
+// 選語言時預設的幣別（客人自己選過幣別後就以客人的選擇為準）
+const LANG_CURRENCY = { zh: 'TWD', 'zh-CN': 'CNY', en: 'USD', ja: 'JPY', ko: 'KRW', fr: 'EUR', th: 'THB', fil: 'PHP', vi: 'VND' };
 
 // ===================== 語言 =====================
 const LANGS = [
@@ -238,6 +266,11 @@ const UI = {
   retry:    ['重試','重试','Try again','再試行','다시 시도','Réessayer','ลองอีกครั้ง','Subukan muli','Thử lại'],
   wifi:     ['免費 Wi-Fi','免费 Wi-Fi','Free Wi-Fi','無料 Wi-Fi','무료 Wi-Fi','Wi-Fi gratuit','Wi-Fi ฟรี','Libreng Wi-Fi','Wi-Fi miễn phí'],
   copy:     ['複製','复制','Copy','コピー','복사','Copier','คัดลอก','Kopyahin','Sao chép'],
+  currency: ['顯示幣別','显示币种','Show prices in','通貨表示','통화 표시','Afficher en','แสดงราคาเป็น','Ipakita sa pera','Hiển thị tiền tệ'],
+  fxNote:   ['換算價格僅供參考，依 Frankfurter 公布之參考匯率計算；實際以新台幣（TWD）結帳。','换算价格仅供参考，依 Frankfurter 公布的参考汇率计算；实际以新台币（TWD）结账。','Converted prices are estimates based on Frankfurter reference rates. You pay in New Taiwan Dollars (TWD).','換算価格は Frankfurter の参考レートによる目安です。お支払いは台湾ドル（TWD）となります。','환산 가격은 Frankfurter 참고 환율 기준 예상 금액이며, 결제는 대만 달러(TWD)로 합니다.','Prix convertis indicatifs (taux de référence Frankfurter). Paiement en dollars taïwanais (TWD).','ราคาที่แปลงเป็นค่าประมาณตามอัตราอ้างอิงของ Frankfurter ชำระเงินเป็นดอลลาร์ไต้หวัน (TWD)','Tantiya lamang ang na-convert na presyo batay sa reference rate ng Frankfurter. Babayaran sa New Taiwan Dollar (TWD).','Giá quy đổi chỉ mang tính tham khảo theo tỷ giá Frankfurter. Thanh toán bằng Đài tệ (TWD).'],
+  fxRate:   ['參考匯率','参考汇率','Reference rate','参考レート','참고 환율','Taux indicatif','อัตราอ้างอิง','Reference rate','Tỷ giá tham khảo'],
+  fxFail:   ['暫時無法取得匯率，先顯示新台幣價格','暂时无法获取汇率，先显示新台币价格','Exchange rates unavailable — showing TWD prices','為替レートを取得できないため、台湾ドルで表示しています','환율을 불러올 수 없어 대만 달러로 표시합니다','Taux indisponibles — prix affichés en TWD','ไม่สามารถดึงอัตราแลกเปลี่ยนได้ แสดงราคาเป็น TWD','Hindi makuha ang palitan — ipinapakita sa TWD','Không lấy được tỷ giá — hiển thị giá TWD'],
+  noConv:   ['不換算','不换算','No conversion','換算しない','환산 안 함','Pas de conversion','ไม่แปลง','Walang conversion','Không quy đổi'],
   copied:   ['已複製 Wi-Fi 密碼','已复制 Wi-Fi 密码','Wi-Fi password copied','Wi-Fi パスワードをコピーしました','Wi-Fi 비밀번호가 복사되었습니다','Mot de passe Wi-Fi copié','คัดลอกรหัส Wi-Fi แล้ว','Nakopya ang Wi-Fi password','Đã sao chép mật khẩu Wi-Fi'],
   updated:  ['更新於','更新于','Updated','更新','업데이트','Mis à jour','อัปเดต','Na-update','Cập nhật'],
   refresh:  ['重新整理','刷新','Refresh','更新','새로고침','Actualiser','รีเฟรช','I-refresh','Làm mới'],
@@ -278,6 +311,8 @@ const S = {
   food: [], drink: [], meta: { rules: [], notes: [] },   // food/drink: [{key, items:[...]}]
   updatedAt: 0, loading: false, loaded: false, error: false
 };
+const FX = { rates: null, date: '', failed: false, manual: null };   // rates: { CODE: 1 TWD 換多少 }
+try { const c = localStorage.getItem(CUR_KEY); if (c && CURRENCIES.some(x => x[0] === c)) FX.manual = c; } catch (e) {}
 let FIRST_VISIT = true; try { FIRST_VISIT = !localStorage.getItem('sol-seen'); } catch (e) {}
 const ITEMS = new Map(); // id -> item（給詳細資訊視窗用）
 
@@ -409,6 +444,8 @@ function renderStatic() {
   document.documentElement.lang = htmlLang(S.lang);
   document.querySelectorAll('[data-i]').forEach(el => { el.textContent = t(el.dataset.i); });
   $('#wifiPw').textContent = WIFI_PASSWORD;
+  $('#curLabel').textContent = curCode() === 'TWD' ? 'TWD' : `TWD → ${curCode()}`;
+  renderCurList();
   $('#langLabel').textContent = (LANGS.find(l => l.code === S.lang) || LANGS[0]).label;
   $('#fSpicy').hidden = S.type !== 'food';
   $('#fVeg').hidden = S.type !== 'food';
@@ -483,8 +520,74 @@ function itemHtml(item) {
       ${s ? `<div class="p2" lang="${htmlLang(s.code)}">${esc(s.text)}</div>` : ''}
       ${badges(item)}
     </div>
-    <div class="pr">${price ? `<small>NT$</small>${price.toLocaleString('en-US')}` : esc(item.price ?? '')}</div>
+    <div class="pr">${price ? `<small>NT$</small>${price.toLocaleString('en-US')}` : esc(item.price ?? '')}${fxPrice(price) ? `<span class="fx">≈ ${esc(fxPrice(price))}</span>` : ''}</div>
   </${tag}>`;
+}
+
+// ===================== 匯率 =====================
+const curCode = () => FX.manual || LANG_CURRENCY[S.lang] || 'TWD';
+function fxPrice(twd) {
+  const c = curCode();
+  if (c === 'TWD' || !FX.rates || !FX.rates[c] || !twd) return '';
+  try {
+    return new Intl.NumberFormat(htmlLang(S.lang), { style: 'currency', currency: c, currencyDisplay: 'narrowSymbol' })
+      .format(twd * FX.rates[c]);
+  } catch (e) { return `${c} ${(twd * FX.rates[c]).toFixed(2)}`; }
+}
+function curName(code) {
+  try { return new Intl.DisplayNames([htmlLang(S.lang)], { type: 'currency' }).of(code); } catch (e) { return code; }
+}
+function applyFx(rows) {
+  // v2 回傳扁平陣列：[{date, base, quote, rate}]；以 USD 為基準再交叉換算成「1 TWD = ?」
+  const map = {}; let date = '';
+  if (Array.isArray(rows)) rows.forEach(r => { if (r && r.quote && isFinite(r.rate)) { map[String(r.quote).toUpperCase()] = Number(r.rate); date = r.date || date; } });
+  else if (rows && rows.rates) { Object.assign(map, rows.rates); date = rows.date || ''; }  // 舊版格式相容
+  map.USD = 1;
+  const twd = map.TWD;
+  if (!twd) throw new Error('No TWD rate');
+  const rates = {};
+  Object.keys(map).forEach(k => { rates[k] = map[k] / twd; });
+  FX.rates = rates; FX.date = date; FX.failed = false;
+}
+async function loadFx() {
+  try {
+    const c = JSON.parse(localStorage.getItem(FX_CACHE_KEY) || 'null');
+    if (c && c.rows) { applyFx(c.rows); if (Date.now() - c.t < FX_CACHE_MS) return; }
+  } catch (e) {}
+  try {
+    const quotes = CURRENCIES.map(x => x[0]).filter(c => c !== 'USD').join(',');
+    const ctrl = new AbortController(); const tm = setTimeout(() => ctrl.abort(), 10000);
+    const res = await fetch(`${FX_API}?base=USD&quotes=${quotes}`, { signal: ctrl.signal });
+    clearTimeout(tm);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const rows = await res.json();
+    applyFx(rows);
+    try { localStorage.setItem(FX_CACHE_KEY, JSON.stringify({ t: Date.now(), rows })); } catch (e) {}
+  } catch (err) {
+    console.warn('FX load failed:', err);
+    if (!FX.rates) FX.failed = true;
+  }
+  renderStatic(); renderMenu();
+}
+function fxBar() {
+  const c = curCode();
+  if (c === 'TWD') return '';
+  if (!FX.rates || !FX.rates[c]) return FX.failed ? `<p class="fxbar">💱 ${esc(t('fxFail'))}</p>` : '';
+  const one = new Intl.NumberFormat(htmlLang(S.lang), { maximumSignificantDigits: 4 }).format(FX.rates[c]);
+  return `<p class="fxbar">💱 ${esc(t('fxRate'))} ${esc(FX.date)}：1 TWD ≈ ${one} ${c}<br>${esc(t('fxNote'))}</p>`;
+}
+function renderCurList() {
+  const cur = curCode();
+  $('#curList').innerHTML = CURRENCIES.map(([code, flag]) => {
+    const disabled = code !== 'TWD' && FX.rates && !FX.rates[code];
+    return `<button type="button" data-cur="${code}" aria-current="${code === cur}" ${disabled ? 'disabled' : ''}>${flag} ${code}<small>${esc(code === 'TWD' ? t('noConv') : curName(code))}</small></button>`;
+  }).join('');
+  $('#curNote').textContent = t('fxNote');
+}
+function setCurrency(code) {
+  FX.manual = code;
+  try { localStorage.setItem(CUR_KEY, code); } catch (e) {}
+  renderStatic(); renderMenu();
 }
 
 const secId = k => `c-${S.type}-${k.replace(/[^A-Za-z0-9]+/g, '-')}`;
@@ -511,7 +614,7 @@ function renderMenu() {
   }).join('');
   const legend = S.type === 'drink' && groups.some(g => g.items.some(it => num(it.alcohol) > 0 || num(it.body) > 0))
     ? `<p class="legend"><span>🍷 ●●○ = ${esc(t('alcohol'))}</span><span>◆●●○ = ${esc(t('body'))}</span></p>` : '';
-  menu.innerHTML = legend + `<div class="cols">${groups.map(g => {
+  menu.innerHTML = fxBar() + legend + `<div class="cols">${groups.map(g => {
     const l = catLabel(g.key);
     return `<section class="sec" id="${secId(g.key)}" data-k="${esc(g.key)}">
       <h2><span class="t">${esc(l.main)}</span>${l.sub ? `<span class="s">${esc(l.sub)}</span>` : ''}</h2>
@@ -575,7 +678,7 @@ function openDetails(id) {
   $('#detBody').innerHTML = `
     ${img ? `<img src="${esc(img)}" alt="" onerror="this.remove()">` : ''}
     ${s ? `<p class="p2" lang="${htmlLang(s.code)}">${esc(s.text)}</p>` : ''}
-    <div class="row">${badges(item) || '<span></span>'}<span class="pr">${price ? 'NT$' + price.toLocaleString('en-US') : esc(item.price ?? '')}</span></div>
+    <div class="row">${badges(item) || '<span></span>'}<span class="pr">${price ? 'NT$' + price.toLocaleString('en-US') : esc(item.price ?? '')}${fxPrice(price) ? `<span class="fx">≈ ${esc(fxPrice(price))}</span>` : ''}</span></div>
     ${sec('ingredients', ingredientsText(item))}
     ${sec('allergens', pickLangText(item.contains, S.lang))}
     ${sec('itemNotes', pickLangText(item.notes, S.lang))}`;
@@ -646,6 +749,11 @@ function bind() {
     d.addEventListener('click', e => { if (e.target === d || e.target.closest('[data-close]')) d.close(); });
   });
   $('#wifiBtn').addEventListener('click', copyWifi);
+  $('#curBtn').addEventListener('click', () => $('#curDlg').showModal());
+  $('#curList').addEventListener('click', e => {
+    const b = e.target.closest('[data-cur]'); if (!b || b.disabled) return;
+    setCurrency(b.dataset.cur); $('#curDlg').close();
+  });
   document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => setType(b.dataset.type)));
   document.querySelector('.seg').addEventListener('keydown', e => {
     if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
@@ -679,6 +787,7 @@ bind();
 const hadCache = loadCache();
 renderAll();
 load({ silent: hadCache });
+loadFx();
 })();
 </script>
 </body>
