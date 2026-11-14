@@ -29,6 +29,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;
 button,input,select{font:inherit;color:inherit}
 button{cursor:pointer;background:none;border:0}
 :focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:8px}
+[hidden]{display:none!important}
 .sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .wrap{max-width:1100px;margin:0 auto;padding:0 16px}
 
@@ -60,12 +61,6 @@ button{cursor:pointer;background:none;border:0}
   white-space:nowrap;color:#d8d2c5;min-height:36px;text-decoration:none;display:inline-flex;align-items:center}
 .chip[aria-current="true"]{border-color:var(--gold);color:var(--gold);background:rgba(233,196,64,.1)}
 .tools{display:flex;gap:8px;align-items:center;padding-top:14px;flex-wrap:wrap}
-.search{flex:1 1 220px;position:relative}
-.search input{width:100%;background:var(--bg-2);border:1px solid var(--line);border-radius:12px;padding:10px 36px 10px 38px;font-size:16px;min-height:44px}
-.search input::placeholder{color:#7d786d}
-.search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:18px;height:18px;opacity:.6}
-.search .x{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:32px;height:32px;border-radius:50%;display:none;font-size:18px;color:var(--muted)}
-.search.has .x{display:block}
 .toggle{flex:0 0 auto;border:1px solid var(--line);background:var(--bg-2);border-radius:12px;padding:9px 12px;font-size:14px;min-height:44px;color:#d8d2c5}
 .toggle[aria-pressed="true"]{border-color:var(--gold);color:var(--gold);background:rgba(233,196,64,.1)}
 .toggle.veg[aria-pressed="true"]{border-color:var(--veg);color:var(--veg);background:rgba(143,209,158,.1)}
@@ -97,6 +92,8 @@ button.item:hover{background:rgba(255,255,255,.03)}
 .item .th{flex:0 0 64px;width:64px;height:64px;border-radius:12px;object-fit:cover;background:var(--bg-2)}
 .item .nm{flex:1;min-width:0}
 .item .p1{font-size:17px;font-weight:700;line-height:1.3}
+.item .p1 .ing{word-break:keep-all;overflow-wrap:anywhere;font-size:13.5px;font-weight:500;color:var(--muted);margin-left:8px}
+.item.out .p1 .ing{text-decoration:none}
 .item .p2{font-size:13.5px;color:var(--muted);margin-top:2px}
 .item .info{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;border:1.5px solid var(--gold-dim);
   color:var(--gold);font-size:11px;font-weight:800;margin-left:6px;vertical-align:2px;font-style:normal}
@@ -175,15 +172,8 @@ dialog::backdrop{background:rgba(0,0,0,.6)}
 
 <div class="wrap">
   <div class="tools">
-      <label class="search" id="searchBox">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-        <span class="sr" data-i="search"></span>
-        <input id="q" type="search" autocomplete="off" enterkeyhint="search">
-        <button class="x" id="qClear" type="button" aria-label="Clear">×</button>
-      </label>
       <button class="toggle veg" id="fVeg" type="button" aria-pressed="false">🌱 <span data-i="veg"></span></button>
       <button class="toggle spicy" id="fSpicy" type="button" aria-pressed="false">🌶 <span data-i="spicy"></span></button>
-      <button class="toggle" id="fSold" type="button" aria-pressed="false" data-i="hideSold"></button>
     </div>
   <div class="banner" id="banner" role="status"></div>
   <section class="notices" id="notices" aria-label="Info"></section>
@@ -236,10 +226,8 @@ const htmlLang = c => (LANGS.find(l => l.code === c) || {}).html || c;
 const UI = {
   food:     ['餐點','餐点','Food','フード','음식','Cuisine','อาหาร','Pagkain','Món ăn'],
   drink:    ['飲品','饮品','Drinks','ドリンク','음료','Boissons','เครื่องดื่ม','Inumin','Đồ uống'],
-  search:   ['搜尋菜名…','搜索菜名…','Search the menu…','メニューを検索…','메뉴 검색…','Rechercher…','ค้นหาเมนู…','Maghanap sa menu…','Tìm món…'],
   veg:      ['可做蔬食','可做素食','Veg option','ベジ対応','채식 가능','Option végé','มังสวิรัติได้','May vegetarian','Có món chay'],
   spicy:    ['辣','辣','Spicy','辛口','매운맛','Épicé','เผ็ด','Maanghang','Cay'],
-  hideSold: ['隱藏售罄','隐藏售罄','Hide sold out','売り切れを隠す','품절 숨기기','Masquer épuisés','ซ่อนที่หมด','Itago ang ubos','Ẩn món hết'],
   soldout:  ['售罄','售罄','Sold out','売り切れ','품절','Épuisé','หมด','Ubos na','Hết món'],
   rules:    ['店內規則','店内规则','House Rules','店内のルール','이용 안내','Règlement','กฎของร้าน','Mga Patakaran','Nội quy'],
   notes:    ['備註','备注','Notes','お知らせ','안내','Remarques','หมายเหตุ','Mga Tala','Ghi chú'],
@@ -286,7 +274,7 @@ const CAT_I18N = {
 
 // ===================== 狀態 =====================
 const S = {
-  lang: 'zh', type: 'food', q: '', veg: false, spicy: false, hideSold: false,
+  lang: 'zh', type: 'food', veg: false, spicy: false,
   food: [], drink: [], meta: { rules: [], notes: [] },   // food/drink: [{key, items:[...]}]
   updatedAt: 0, loading: false, loaded: false, error: false
 };
@@ -420,11 +408,11 @@ function loadCache() {
 function renderStatic() {
   document.documentElement.lang = htmlLang(S.lang);
   document.querySelectorAll('[data-i]').forEach(el => { el.textContent = t(el.dataset.i); });
-  $('#q').placeholder = t('search');
   $('#wifiPw').textContent = WIFI_PASSWORD;
   $('#langLabel').textContent = (LANGS.find(l => l.code === S.lang) || LANGS[0]).label;
   $('#fSpicy').hidden = S.type !== 'food';
   $('#fVeg').hidden = S.type !== 'food';
+  document.querySelector('.tools').hidden = S.type !== 'food';
   document.querySelectorAll('.seg button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.type === S.type)));
   $('#langList').innerHTML = LANGS.map(l =>
     `<button type="button" data-lang="${l.code}" lang="${l.html}" aria-current="${l.code === S.lang}">${esc(l.label)}</button>`).join('');
@@ -446,20 +434,19 @@ function renderNotices() {
 }
 
 function matches(item) {
-  if (S.hideSold && truthy(item.soldout)) return false;
   if (S.type === 'food' && S.veg && !truthy(item.vegan)) return false;
   if (S.type === 'food' && S.spicy && num(item.spicy) <= 0) return false;
-  if (S.q) {
-    const hay = ['zh', 'zh-TW', 'zh-CN', 'zhCN', 'en', 'ja', 'ko', 'fr', 'th', 'fil', 'vi', 'flavor', 'ingredients']
-      .map(k => typeof item[k] === 'object' ? Object.values(item[k] || {}).join(' ') : item[k])
-      .filter(Boolean).join(' ').toLowerCase();
-    if (!S.q.split(/\s+/).every(w => hay.includes(w))) return false;
-  }
   return true;
 }
 
+// 成分：試算表可用逗號、頓號、分號或斜線分隔，統一用「 / 」顯示
+function ingredientsText(item) {
+  return pickLangText(item.ingredients, S.lang)
+    .split(/\s*[,，、;；\/／|\n]\s*/).map(x => x.trim()).filter(Boolean).join(' / ');
+}
+
 function hasDetails(item) {
-  return !!(pickLangText(item.contains, S.lang) || pickLangText(item.ingredients, S.lang) || pickLangText(item.notes, S.lang) || safeUrl(item['img-url'] || item.img));
+  return !!(pickLangText(item.contains, S.lang) || pickLangText(item.notes, S.lang) || safeUrl(item['img-url'] || item.img));
 }
 
 function badges(item) {
@@ -485,13 +472,14 @@ function itemHtml(item) {
   const s = secondaryName(item, S.lang, p.text);
   const img = safeUrl(item['img-url'] || item.img);
   const det = hasDetails(item);
+  const ing = ingredientsText(item);
   const out = truthy(item.soldout);
   const price = num(item.price);
   const tag = det ? 'button' : 'div';
   return `<${tag} class="item${out ? ' out' : ''}" ${det ? `type="button" data-id="${item._id}" aria-haspopup="dialog"` : ''}>
     ${img ? `<img class="th" src="${esc(img)}" alt="" loading="lazy" decoding="async" width="64" height="64" onerror="this.remove()">` : ''}
     <div class="nm">
-      <div class="p1" lang="${htmlLang(p.code)}">${esc(p.text)}${det ? '<i class="info" aria-hidden="true">i</i>' : ''}</div>
+      <div class="p1"><span lang="${htmlLang(p.code)}">${esc(p.text)}</span>${ing ? `<span class="ing">${esc(ing)}</span>` : ''}${det ? '<i class="info" aria-hidden="true">i</i>' : ''}</div>
       ${s ? `<div class="p2" lang="${htmlLang(s.code)}">${esc(s.text)}</div>` : ''}
       ${badges(item)}
     </div>
@@ -588,7 +576,7 @@ function openDetails(id) {
     ${img ? `<img src="${esc(img)}" alt="" onerror="this.remove()">` : ''}
     ${s ? `<p class="p2" lang="${htmlLang(s.code)}">${esc(s.text)}</p>` : ''}
     <div class="row">${badges(item) || '<span></span>'}<span class="pr">${price ? 'NT$' + price.toLocaleString('en-US') : esc(item.price ?? '')}</span></div>
-    ${sec('ingredients', pickLangText(item.ingredients, S.lang))}
+    ${sec('ingredients', ingredientsText(item))}
     ${sec('allergens', pickLangText(item.contains, S.lang))}
     ${sec('itemNotes', pickLangText(item.notes, S.lang))}`;
   $('#detDlg').showModal();
@@ -642,9 +630,8 @@ function setType(type) {
   if (scrollY > top) scrollTo({ top, behavior: 'auto' });
 }
 function clearFilters() {
-  S.q = ''; S.veg = S.spicy = S.hideSold = false; $('#q').value = '';
-  $('#searchBox').classList.remove('has');
-  ['#fVeg', '#fSpicy', '#fSold'].forEach(s => $(s).setAttribute('aria-pressed', 'false'));
+  S.veg = S.spicy = false;
+  ['#fVeg', '#fSpicy'].forEach(s => $(s).setAttribute('aria-pressed', 'false'));
   renderMenu();
 }
 
@@ -664,13 +651,7 @@ function bind() {
     if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
     const next = S.type === 'food' ? 'drink' : 'food'; setType(next); $('#tab-' + next).focus();
   });
-  let qt;
-  $('#q').addEventListener('input', e => {
-    $('#searchBox').classList.toggle('has', !!e.target.value);
-    clearTimeout(qt); qt = setTimeout(() => { S.q = e.target.value.trim().toLowerCase(); renderMenu(); }, 200);
-  });
-  $('#qClear').addEventListener('click', e => { e.preventDefault(); $('#q').value = ''; S.q = ''; $('#searchBox').classList.remove('has'); renderMenu(); $('#q').focus(); });
-  [['#fVeg', 'veg'], ['#fSpicy', 'spicy'], ['#fSold', 'hideSold']].forEach(([sel, key]) => {
+  [['#fVeg', 'veg'], ['#fSpicy', 'spicy']].forEach(([sel, key]) => {
     $(sel).addEventListener('click', () => { S[key] = !S[key]; $(sel).setAttribute('aria-pressed', String(S[key])); renderMenu(); });
   });
   $('#menu').addEventListener('click', e => {
